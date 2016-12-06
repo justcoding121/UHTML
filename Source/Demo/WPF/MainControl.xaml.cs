@@ -1,14 +1,14 @@
-﻿// "Therefore those skilled at the unorthodox
-// are infinite as heaven and earth,
-// inexhaustible as the great rivers.
-// When they come to an end,
-// they begin again,
-// like the days and months;
-// they die and are reborn,
-// like the four seasons."
+﻿
+
+
+
+
+
+
+
 // 
-// - Sun Tsu,
-// "The Art of War"
+
+
 
 using System;
 using System.IO;
@@ -19,11 +19,11 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Demo.Common;
-using TheArtOfDev.HtmlRenderer.WPF;
+using UHtml.Core.Entities;
+using UHtml.Demo.Common;
+using UHtml.WPF;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.WPF
+namespace UHtml.Demo.WPF
 {
     /// <summary>
     /// Interaction logic for MainControl.xaml

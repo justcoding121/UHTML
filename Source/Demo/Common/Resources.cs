@@ -1,18 +1,18 @@
-﻿// "Therefore those skilled at the unorthodox
-// are infinite as heaven and earth,
-// inexhaustible as the great rivers.
-// When they come to an end,
-// they begin again,
-// like the days and months;
-// they die and are reborn,
-// like the four seasons."
+﻿
+
+
+
+
+
+
+
 // 
-// - Sun Tsu,
-// "The Art of War"
+
+
 
 using System.IO;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.Common
+namespace UHtml.Demo.Common
 {
     /// <summary>
     /// Get font, image and text resources for HtmlRenderer demo.
@@ -96,7 +96,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
 
         private static Stream GetManifestResourceStream(string name)
         {
-            return typeof(Resources).Assembly.GetManifestResourceStream("TheArtOfDev.HtmlRenderer.Demo.Common.Resources." + name);
+            return typeof(Resources).Assembly.GetManifestResourceStream("UHtml.Demo.Common.Resources." + name);
         }
     }
 }
