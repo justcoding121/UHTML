@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Entities;
@@ -220,9 +221,9 @@ namespace UHtml.Core.Handlers
                 foreach (var part in s[0].Split(new[] { ';' }))
                 {
                     var pPart = part.Trim();
-                    if (pPart.StartsWith("image/", StringComparison.InvariantCultureIgnoreCase))
+                    if (pPart.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
                         imagePartsCount++;
-                    if (pPart.Equals("base64", StringComparison.InvariantCultureIgnoreCase))
+                    if (pPart.Equals("base64", StringComparison.OrdinalIgnoreCase))
                         base64PartsCount++;
                 }
 
@@ -272,7 +273,7 @@ namespace UHtml.Core.Handlers
                 if (_htmlContainer.AvoidAsyncImagesLoading)
                     LoadImageFromFile(source.FullName);
                 else
-                    ThreadPool.QueueUserWorkItem(state => LoadImageFromFile(source.FullName));
+                    Task.Run(()=> LoadImageFromFile(source.FullName));
             }
             else
             {

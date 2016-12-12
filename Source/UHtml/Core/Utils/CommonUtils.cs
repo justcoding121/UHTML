@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using UHtml.Adapters.Entities;
@@ -189,7 +188,7 @@ namespace UHtml.Core.Utils
         {
             foreach (string header in client.ResponseHeaders)
             {
-                if (header.Equals("Content-Type", StringComparison.InvariantCultureIgnoreCase))
+                if (header.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
                     return client.ResponseHeaders[header];
             }
             return null;
@@ -334,41 +333,41 @@ namespace UHtml.Core.Utils
             if (number == 0)
                 return string.Empty;
 
-            if (style.Equals(CssConstants.LowerGreek, StringComparison.InvariantCultureIgnoreCase))
+            if (style.Equals(CssConstants.LowerGreek, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToGreekNumber(number);
             }
-            else if (style.Equals(CssConstants.LowerRoman, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.LowerRoman, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToRomanNumbers(number, true);
             }
-            else if (style.Equals(CssConstants.UpperRoman, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.UpperRoman, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToRomanNumbers(number, false);
             }
-            else if (style.Equals(CssConstants.Armenian, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Armenian, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers(number, _armenianDigitsTable);
             }
-            else if (style.Equals(CssConstants.Georgian, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Georgian, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers(number, _georgianDigitsTable);
             }
-            else if (style.Equals(CssConstants.Hebrew, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Hebrew, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers(number, _hebrewDigitsTable);
             }
-            else if (style.Equals(CssConstants.Hiragana, StringComparison.InvariantCultureIgnoreCase) || style.Equals(CssConstants.HiraganaIroha, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Hiragana, StringComparison.OrdinalIgnoreCase) || style.Equals(CssConstants.HiraganaIroha, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers2(number, _hiraganaDigitsTable);
             }
-            else if (style.Equals(CssConstants.Katakana, StringComparison.InvariantCultureIgnoreCase) || style.Equals(CssConstants.KatakanaIroha, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Katakana, StringComparison.OrdinalIgnoreCase) || style.Equals(CssConstants.KatakanaIroha, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers2(number, _satakanaDigitsTable);
             }
             else
             {
-                var lowercase = style.Equals(CssConstants.LowerAlpha, StringComparison.InvariantCultureIgnoreCase) || style.Equals(CssConstants.LowerLatin, StringComparison.InvariantCultureIgnoreCase);
+                var lowercase = style.Equals(CssConstants.LowerAlpha, StringComparison.OrdinalIgnoreCase) || style.Equals(CssConstants.LowerLatin, StringComparison.OrdinalIgnoreCase);
                 return ConvertToEnglishNumber(number, lowercase);
             }
         }

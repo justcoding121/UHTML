@@ -130,7 +130,7 @@ namespace UHtml.Core.Dom
         public bool IsBrElement
         {
             get {
-                return _htmltag != null && _htmltag.Name.Equals("br", StringComparison.InvariantCultureIgnoreCase);
+                return _htmltag != null && _htmltag.Name.Equals("br", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -781,23 +781,23 @@ namespace UHtml.Core.Dom
                     _listItemBox.Display = CssConstants.Inline;
                     _listItemBox.HtmlContainer = HtmlContainer;
 
-                    if (ListStyleType.Equals(CssConstants.Disc, StringComparison.InvariantCultureIgnoreCase))
+                    if (ListStyleType.Equals(CssConstants.Disc, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString("•");
                     }
-                    else if (ListStyleType.Equals(CssConstants.Circle, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ListStyleType.Equals(CssConstants.Circle, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString("o");
                     }
-                    else if (ListStyleType.Equals(CssConstants.Square, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ListStyleType.Equals(CssConstants.Square, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString("♠");
                     }
-                    else if (ListStyleType.Equals(CssConstants.Decimal, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ListStyleType.Equals(CssConstants.Decimal, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString(GetIndexForList().ToString(CultureInfo.InvariantCulture) + ".");
                     }
-                    else if (ListStyleType.Equals(CssConstants.DecimalLeadingZero, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ListStyleType.Equals(CssConstants.DecimalLeadingZero, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString(GetIndexForList().ToString("00", CultureInfo.InvariantCulture) + ".");
                     }

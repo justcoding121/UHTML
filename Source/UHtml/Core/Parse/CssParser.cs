@@ -220,7 +220,7 @@ namespace UHtml.Core.Parse
             while ((atrule = RegexParserUtils.GetCssAtRules(stylesheet, ref startIdx)) != null)
             {
                 //Just process @media rules
-                if (!atrule.StartsWith("@media", StringComparison.InvariantCultureIgnoreCase))
+                if (!atrule.StartsWith("@media", StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 //Extract specified media types
@@ -230,7 +230,7 @@ namespace UHtml.Core.Parse
                 {
                     string line = types[0].Value;
 
-                    if (line.StartsWith("@media", StringComparison.InvariantCultureIgnoreCase) && line.EndsWith("{"))
+                    if (line.StartsWith("@media", StringComparison.OrdinalIgnoreCase) && line.EndsWith("{"))
                     {
                         //Get specified media types in the at-rule
                         string[] media = line.Substring(6, line.Length - 7).Split(' ');
@@ -403,7 +403,7 @@ namespace UHtml.Core.Parse
                     if (adjEndIdx >= splitIdx)
                     {
                         string propValue = blockSource.Substring(splitIdx, adjEndIdx - splitIdx + 1).Trim();
-                        if (!propValue.StartsWith("url", StringComparison.InvariantCultureIgnoreCase))
+                        if (!propValue.StartsWith("url", StringComparison.OrdinalIgnoreCase))
                             propValue = propValue.ToLower();
                         AddProperty(propName, propValue, properties);
                     }
@@ -584,7 +584,7 @@ namespace UHtml.Core.Parse
         /// <returns>parsed value</returns>
         private static string ParseImageProperty(string propValue)
         {
-            int startIdx = propValue.IndexOf("url(", StringComparison.InvariantCultureIgnoreCase);
+            int startIdx = propValue.IndexOf("url(", StringComparison.OrdinalIgnoreCase);
             if (startIdx > -1)
             {
                 startIdx += 4;

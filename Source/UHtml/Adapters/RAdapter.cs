@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UHtml.Adapters.Entities;
 using UHtml.Core;
-using UHtml.Core.Entities;
 using UHtml.Core.Handlers;
 using UHtml.Core.Utils;
+using System.Reflection;
 
 namespace UHtml.Adapters
 {
@@ -200,7 +200,7 @@ namespace UHtml.Adapters
         {
             if (_loadImage == null)
             {
-                var stream = typeof(HtmlRendererUtils).Assembly.GetManifestResourceStream("UHtml.Core.Utils.ImageLoad.png");
+                var stream = typeof(HtmlRendererUtils).GetTypeInfo().Assembly.GetManifestResourceStream("UHtml.Core.Utils.ImageLoad.png");
                 if (stream != null)
                     _loadImage = ImageFromStream(stream);
             }
@@ -214,7 +214,7 @@ namespace UHtml.Adapters
         {
             if (_errorImage == null)
             {
-                var stream = typeof(HtmlRendererUtils).Assembly.GetManifestResourceStream("UHtml.Core.Utils.ImageError.png");
+                var stream = typeof(HtmlRendererUtils).GetTypeInfo().Assembly.GetManifestResourceStream("UHtml.Core.Utils.ImageError.png");
                 if (stream != null)
                     _errorImage = ImageFromStream(stream);
             }

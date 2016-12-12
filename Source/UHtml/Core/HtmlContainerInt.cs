@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Dom;

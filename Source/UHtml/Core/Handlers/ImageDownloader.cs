@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using UHtml.Core.Utils;
 
 namespace UHtml.Core.Handlers
@@ -67,7 +68,7 @@ namespace UHtml.Core.Handlers
             {
                 var tempPath = Path.GetTempFileName();
                 if (async)
-                    ThreadPool.QueueUserWorkItem(DownloadImageFromUrlAsync, new DownloadData(imageUri, tempPath, filePath));
+                   Task.Run(()=> DownloadImageFromUrlAsync(new DownloadData(imageUri, tempPath, filePath)));
                 else
                     DownloadImageFromUrl(imageUri, tempPath, filePath);
             }

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Entities;
@@ -70,12 +71,12 @@ namespace UHtml.Core.Dom
             Uri uri;
             if (Uri.TryCreate(GetAttribute("src"), UriKind.Absolute, out uri))
             {
-                if (uri.Host.IndexOf("youtube.com", StringComparison.InvariantCultureIgnoreCase) > -1)
+                if (uri.Host.IndexOf("youtube.com", StringComparison.OrdinalIgnoreCase) > -1)
                 {
                     _isVideo = true;
                     LoadYoutubeDataAsync(uri);
                 }
-                else if (uri.Host.IndexOf("vimeo.com", StringComparison.InvariantCultureIgnoreCase) > -1)
+                else if (uri.Host.IndexOf("vimeo.com", StringComparison.OrdinalIgnoreCase) > -1)
                 {
                     _isVideo = true;
                     LoadVimeoDataAsync(uri);
@@ -266,7 +267,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         private void LoadVimeoDataAsync(Uri uri)
         {
-            ThreadPool.QueueUserWorkItem(state =>
+            Task.Run(() =>
             {
                 try
                 {

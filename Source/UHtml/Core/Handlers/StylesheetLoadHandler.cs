@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using UHtml.Core.Entities;
 using UHtml.Core.Utils;
 

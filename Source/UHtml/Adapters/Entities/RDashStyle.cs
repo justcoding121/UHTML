@@ -1,4 +1,3 @@
-
 namespace UHtml.Adapters.Entities
 {
     /// <summary>

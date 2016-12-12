@@ -26,7 +26,7 @@ namespace UHtml.Core
         /// <summary>
         /// dictionary of media type to dictionary of css class name to the cssBlocks collection with all the data.
         /// </summary>
-        private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> _mediaBlocks = new Dictionary<string, Dictionary<string, List<CssBlock>>>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> _mediaBlocks = new Dictionary<string, Dictionary<string, List<CssBlock>>>(StringComparer.OrdinalIgnoreCase);
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace UHtml.Core
         /// </summary>
         internal CssData()
         {
-            _mediaBlocks.Add("all", new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase));
+            _mediaBlocks.Add("all", new Dictionary<string, List<CssBlock>>(StringComparer.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace UHtml.Core
             Dictionary<string, List<CssBlock>> mid;
             if (!_mediaBlocks.TryGetValue(media, out mid))
             {
-                mid = new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase);
+                mid = new Dictionary<string, List<CssBlock>>(StringComparer.OrdinalIgnoreCase);
                 _mediaBlocks.Add(media, mid);
             }
 
@@ -184,7 +184,7 @@ namespace UHtml.Core
             var clone = new CssData();
             foreach (var mid in _mediaBlocks)
             {
-                var cloneMid = new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase);
+                var cloneMid = new Dictionary<string, List<CssBlock>>(StringComparer.OrdinalIgnoreCase);
                 foreach (var blocks in mid.Value)
                 {
                     var cloneList = new List<CssBlock>();

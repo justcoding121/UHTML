@@ -233,7 +233,7 @@ namespace UHtml.Core.Parse
                     if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
                     {
                         if (attributes == null)
-                            attributes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+                            attributes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                         attributes[key.ToLower()] = value;
                     }
 

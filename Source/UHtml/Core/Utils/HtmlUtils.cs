@@ -33,7 +33,7 @@ namespace UHtml.Core.Utils
         /// <summary>
         /// the html decode only pairs
         /// </summary>
-        private static readonly Dictionary<string, char> _decodeOnly = new Dictionary<string, char>(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly Dictionary<string, char> _decodeOnly = new Dictionary<string, char>(StringComparer.OrdinalIgnoreCase);
 
         #endregion
 

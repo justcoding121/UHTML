@@ -296,20 +296,20 @@ namespace UHtml.Core.Parse
                     if (box == null)
                         return false;
 
-                    if (box.HtmlTag.Name.Equals(selector.Class, StringComparison.InvariantCultureIgnoreCase))
+                    if (box.HtmlTag.Name.Equals(selector.Class, StringComparison.OrdinalIgnoreCase))
                         matched = true;
 
                     if (!matched && box.HtmlTag.HasAttribute("class"))
                     {
                         var className = box.HtmlTag.TryGetAttribute("class");
-                        if (selector.Class.Equals("." + className, StringComparison.InvariantCultureIgnoreCase) || selector.Class.Equals(box.HtmlTag.Name + "." + className, StringComparison.InvariantCultureIgnoreCase))
+                        if (selector.Class.Equals("." + className, StringComparison.OrdinalIgnoreCase) || selector.Class.Equals(box.HtmlTag.Name + "." + className, StringComparison.OrdinalIgnoreCase))
                             matched = true;
                     }
 
                     if (!matched && box.HtmlTag.HasAttribute("id"))
                     {
                         var id = box.HtmlTag.TryGetAttribute("id");
-                        if (selector.Class.Equals("#" + id, StringComparison.InvariantCultureIgnoreCase))
+                        if (selector.Class.Equals("#" + id, StringComparison.OrdinalIgnoreCase))
                             matched = true;
                     }
 
