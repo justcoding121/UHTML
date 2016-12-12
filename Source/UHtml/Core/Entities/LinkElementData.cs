@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-namespace UHtml.Core.Entities
+﻿namespace UHtml.Core.Entities
 {
     /// <summary>
     /// Holds data on link element in HTML.<br/>

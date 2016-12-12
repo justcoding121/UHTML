@@ -163,6 +163,12 @@
   <ItemGroup>
     <EmbeddedResource Include="TestSamples\35.Breaking pages 2 - Tables.htm" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\UHtml\UHtml.csproj">
+      <Project>{C04B679F-52A7-4D24-8AC6-EADB9B9C20EF}</Project>
+      <Name>UHtml</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

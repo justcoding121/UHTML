@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-// 
-
-
-
 using System;
 
 namespace UHtml.Core.Utils

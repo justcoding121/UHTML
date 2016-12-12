@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-// 
-
-
-
 using UHtml.Core.Entities;
 
 namespace UHtml.Core.Dom

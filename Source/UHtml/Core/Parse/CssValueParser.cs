@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-// 
-
-
-
 using System;
 using System.Globalization;
 using UHtml.Adapters;

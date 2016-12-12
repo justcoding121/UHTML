@@ -56,7 +56,6 @@
     <Compile Include="Adapters\RGraphicsPath.cs" />
     <Compile Include="Adapters\RImage.cs" />
     <Compile Include="Adapters\RPen.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Core\CssData.cs" />
     <Compile Include="Core\CssDefaults.cs" />
     <Compile Include="Core\Dom\Border.cs" />

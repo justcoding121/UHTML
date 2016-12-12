@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Handlers;

@@ -1,20 +1,9 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using UHtml.Adapters.Entities;
 
@@ -211,7 +200,7 @@ namespace UHtml.Core.Utils
         /// </summary>
         /// <param name="imageUri">The online image uri.</param>
         /// <returns>The path of the file on the disk.</returns>
-        public static FileInfo GetLocalfileName(Uri imageUri)
+        public static FieldInfo GetLocalfileName(Uri imageUri)
         {
             StringBuilder fileNameBuilder = new StringBuilder();
             string absoluteUri = imageUri.AbsoluteUri;

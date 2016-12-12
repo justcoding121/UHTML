@@ -1,5 +1,4 @@
-﻿
-using UHtml.Adapters;
+﻿using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Handlers;
 using UHtml.Core.Parse;

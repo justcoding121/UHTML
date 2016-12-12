@@ -1,5 +1,3 @@
-
-
 using UHtml.Adapters.Entities;
 using UHtml.Core.Utils;
 

@@ -1,5 +1,3 @@
-
-
 namespace UHtml.Core.Dom
 {
     /// <summary>

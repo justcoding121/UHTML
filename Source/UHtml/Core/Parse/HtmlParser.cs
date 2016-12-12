@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UHtml.Core.Dom;
 using UHtml.Core.Utils;
