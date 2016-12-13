@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using UHtml.Adapters.Entities;
@@ -184,7 +185,7 @@ namespace UHtml.Core.Utils
         /// </summary>
         /// <param name="client">the web client to get the response content type from</param>
         /// <returns>response content type or null</returns>
-        public static string GetResponseContentType(WebClient client)
+        public static string GetResponseContentType(HttpClient client)
         {
             foreach (string header in client.ResponseHeaders)
             {
@@ -460,7 +461,7 @@ namespace UHtml.Core.Utils
             {
                 var n = number % 10;
                 if (n > 0)
-                    sb = alphabet[level, number % 10 - 1].ToString(CultureInfo.InvariantCulture) + sb;
+                    sb = alphabet[level, number % 10 - 1].ToString() + sb;
                 number /= 10;
                 level++;
             }
@@ -484,7 +485,7 @@ namespace UHtml.Core.Utils
             var sb = string.Empty;
             while (number > 0)
             {
-                sb = alphabet[Math.Max(0, number % 49 - 1)].ToString(CultureInfo.InvariantCulture) + sb;
+                sb = alphabet[Math.Max(0, number % 49 - 1)].ToString() + sb;
                 number /= 49;
             }
             return sb;

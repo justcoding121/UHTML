@@ -46,7 +46,7 @@ namespace UHtml.Core.Handlers
         /// <summary>
         /// Must be open as long as the image is in use
         /// </summary>
-        private FileStream _imageFileStream;
+        private Stream _imageFileStream;
 
         /// <summary>
         /// the image instance of the loaded image

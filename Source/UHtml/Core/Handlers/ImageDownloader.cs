@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using UHtml.Core.Utils;
@@ -30,7 +31,7 @@ namespace UHtml.Core.Handlers
         /// <summary>
         /// the web client used to download image from URL (to cancel on dispose)
         /// </summary>
-        private readonly List<WebClient> _clients = new List<WebClient>();
+        private readonly List<HttpClient> _clients = new List<HttpClient>();
 
         /// <summary>
         /// dictionary of image cache path to callbacks of download to handle multiple requests to download the same image 
@@ -93,7 +94,8 @@ namespace UHtml.Core.Handlers
         {
             try
             {
-                using (var client = new WebClient())
+                var handler = IocModule.Container.GetInstance<HttpClientHandler>();
+                using (var client = new HttpClient(handler))
                 {
                     _clients.Add(client);
                     client.DownloadFile(source, tempPath);
@@ -116,7 +118,8 @@ namespace UHtml.Core.Handlers
             var downloadData = (DownloadData)data;
             try
             {
-                var client = new WebClient();
+                var handler = IocModule.Container.GetInstance<HttpClientHandler>();
+                var client = new HttpClient(handler);
                 _clients.Add(client);
                 client.DownloadFileCompleted += OnDownloadImageAsyncCompleted;
                 client.DownloadFileAsync(downloadData._uri, downloadData._tempPath, downloadData);
@@ -136,7 +139,7 @@ namespace UHtml.Core.Handlers
             var downloadData = (DownloadData)e.UserState;
             try
             {
-                using (var client = (WebClient)sender)
+                using (var client = (HttpClient)sender)
                 {
                     client.DownloadFileCompleted -= OnDownloadImageAsyncCompleted;
                     OnDownloadImageCompleted(client, downloadData._uri, downloadData._tempPath, downloadData._filePath, e.Error, e.Cancelled);
@@ -151,7 +154,7 @@ namespace UHtml.Core.Handlers
         /// <summary>
         /// Checks if the file was downloaded and raises the cachedFileCallback from <see cref="_imageDownloadCallbacks"/>
         /// </summary>
-        private void OnDownloadImageCompleted(WebClient client, Uri source, string tempPath, string filePath, Exception error, bool cancelled)
+        private void OnDownloadImageCompleted(HttpClient client, Uri source, string tempPath, string filePath, Exception error, bool cancelled)
         {
             if (!cancelled)
             {

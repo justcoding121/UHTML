@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using UHtml.Core.Entities;
 using UHtml.Core.Utils;
 
@@ -116,7 +117,8 @@ namespace UHtml.Core.Handlers
         /// <returns>the loaded stylesheet string</returns>
         private static string LoadStylesheetFromUri(HtmlContainerInt htmlContainer, Uri uri)
         {
-            using (var client = new WebClient())
+            var handler = IocModule.Container.GetInstance<HttpClientHandler>();
+            using (var client = new HttpClient(handler))
             {
                 var stylesheet = client.DownloadString(uri);
                 try
