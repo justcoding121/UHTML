@@ -7,7 +7,7 @@ namespace UHtml.Core
     /// <summary>
     /// General utilities.
     /// </summary>
-    public static class HtmlRendererUtils
+    public static class UHtmlUtils
     {
         /// <summary>
         /// Measure the size of the html by performing layout under the given restrictions.

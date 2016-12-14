@@ -437,7 +437,7 @@ namespace UHtml.Core.Dom
             }
             catch (Exception ex)
             {
-                HtmlContainer.ReportError(HtmlRenderErrorType.Layout, "Exception in box layout", ex);
+                HtmlContainer.ReportError(UHtmlrorType.Layout, "Exception in box layout", ex);
             }
         }
 
@@ -489,7 +489,7 @@ namespace UHtml.Core.Dom
             }
             catch (Exception ex)
             {
-                HtmlContainer.ReportError(HtmlRenderErrorType.Paint, "Exception in box paint", ex);
+                HtmlContainer.ReportError(UHtmlrorType.Paint, "Exception in box paint", ex);
             }
         }
 

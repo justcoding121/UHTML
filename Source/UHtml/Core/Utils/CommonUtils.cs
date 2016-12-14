@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using UHtml.Adapters.Entities;
+using System.Linq;
+using PCLStorage;
 
 namespace UHtml.Core.Utils
 {
@@ -168,14 +170,10 @@ namespace UHtml.Core.Utils
         /// </summary>
         /// <param name="path">the path to get file info for</param>
         /// <returns>file info or null if not valid</returns>
-        public static FileInfo TryGetFileInfo(string path)
+        public static string TryGetFileInfo(string path)
         {
-            try
-            {
-                return new FileInfo(path);
-            }
-            catch
-            { }
+            if(StorageUtils.FileExists(path))
+                return path;
 
             return null;
         }
@@ -185,13 +183,14 @@ namespace UHtml.Core.Utils
         /// </summary>
         /// <param name="client">the web client to get the response content type from</param>
         /// <returns>response content type or null</returns>
-        public static string GetResponseContentType(HttpClient client)
+        public static string GetResponseContentType(HttpResponseMessage response)
         {
-            foreach (string header in client.ResponseHeaders)
+            foreach (var header in response.Content.Headers)
             {
-                if (header.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
-                    return client.ResponseHeaders[header];
+                if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+                    return header.Value.FirstOrDefault();
             }
+
             return null;
         }
 
@@ -200,7 +199,7 @@ namespace UHtml.Core.Utils
         /// </summary>
         /// <param name="imageUri">The online image uri.</param>
         /// <returns>The path of the file on the disk.</returns>
-        public static FieldInfo GetLocalfileName(Uri imageUri)
+        public static string GetLocalfilePath(Uri imageUri)
         {
             StringBuilder fileNameBuilder = new StringBuilder();
             string absoluteUri = imageUri.AbsoluteUri;
@@ -257,12 +256,11 @@ namespace UHtml.Core.Utils
 
             if (_tempPath == null)
             {
-                _tempPath = Path.Combine(Path.GetTempPath(), "HtmlRenderer");
-                if (!Directory.Exists(_tempPath))
-                    Directory.CreateDirectory(_tempPath);
+                _tempPath = "UHtml";
+                StorageUtils.CreateTempDirIfNotExists(_tempPath);
             }
 
-            return new FileInfo(Path.Combine(_tempPath, validFileName));
+            return PortablePath.Combine(_tempPath, validFileName);
         }
 
         /// <summary>

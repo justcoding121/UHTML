@@ -121,7 +121,7 @@ namespace UHtml.Core.Dom
             }
             catch (Exception ex)
             {
-                tableBox.HtmlContainer.ReportError(HtmlRenderErrorType.Layout, "Failed table layout", ex);
+                tableBox.HtmlContainer.ReportError(UHtmlrorType.Layout, "Failed table layout", ex);
             }
         }
 

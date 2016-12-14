@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCLStorage;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -67,7 +68,7 @@ namespace UHtml.Core.Handlers
 
             if (download)
             {
-                var tempPath = Path.GetTempFileName();
+                var tempPath = StorageUtils.GetTempFileName();
                 if (async)
                    Task.Run(()=> DownloadImageFromUrlAsync(new DownloadData(imageUri, tempPath, filePath)));
                 else
@@ -98,13 +99,23 @@ namespace UHtml.Core.Handlers
                 using (var client = new HttpClient(handler))
                 {
                     _clients.Add(client);
-                    client.DownloadFile(source, tempPath);
-                    OnDownloadImageCompleted(client, source, tempPath, filePath, null, false);
+
+                    var response = client.GetAsync(source).Result;
+                    var result = response.Content.ReadAsByteArrayAsync().Result;
+                    var folder = StorageUtils.GetStorageFolder();
+                    var file = folder.CreateFileAsync(tempPath, CreationCollisionOption.ReplaceExisting).Result;
+
+                    using (var stream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
+                    {
+                        stream.Write(result, 0, result.Length);
+                    }
+
+                    OnDownloadImageCompleted(client, response, source, tempPath, filePath, null, false);
                 }
             }
             catch (Exception ex)
             {
-                OnDownloadImageCompleted(null, source, tempPath, filePath, ex, false);
+                OnDownloadImageCompleted(null,null, source, tempPath, filePath, ex, false);
             }
         }
 
@@ -121,12 +132,23 @@ namespace UHtml.Core.Handlers
                 var handler = IocModule.Container.GetInstance<HttpClientHandler>();
                 var client = new HttpClient(handler);
                 _clients.Add(client);
-                client.DownloadFileCompleted += OnDownloadImageAsyncCompleted;
-                client.DownloadFileAsync(downloadData._uri, downloadData._tempPath, downloadData);
+
+                var response = client.GetAsync(downloadData._uri).Result;
+                var result = response.Content.ReadAsByteArrayAsync().Result;
+                var folder = StorageUtils.GetStorageFolder();
+                var file = folder.CreateFileAsync(downloadData._tempPath, CreationCollisionOption.ReplaceExisting).Result;
+
+                using (var stream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
+                {
+                    stream.Write(result, 0, result.Length);
+                }
+
+                OnDownloadImageAsyncCompleted(client, response, downloadData);
+
             }
             catch (Exception ex)
             {
-                OnDownloadImageCompleted(null, downloadData._uri, downloadData._tempPath, downloadData._filePath, ex, false);
+                OnDownloadImageCompleted(null,null,  downloadData._uri, downloadData._tempPath, downloadData._filePath, ex, false);
             }
         }
 
@@ -134,33 +156,31 @@ namespace UHtml.Core.Handlers
         /// On download image complete to local file.<br/>
         /// If the download canceled do nothing, if failed report error.
         /// </summary>
-        private void OnDownloadImageAsyncCompleted(object sender, AsyncCompletedEventArgs e)
+        private void OnDownloadImageAsyncCompleted(object sender, HttpResponseMessage response, DownloadData downloadData)
         {
-            var downloadData = (DownloadData)e.UserState;
             try
             {
                 using (var client = (HttpClient)sender)
                 {
-                    client.DownloadFileCompleted -= OnDownloadImageAsyncCompleted;
-                    OnDownloadImageCompleted(client, downloadData._uri, downloadData._tempPath, downloadData._filePath, e.Error, e.Cancelled);
+                    OnDownloadImageCompleted(client, response, downloadData._uri, downloadData._tempPath, downloadData._filePath, null, false);
                 }
             }
             catch (Exception ex)
             {
-                OnDownloadImageCompleted(null, downloadData._uri, downloadData._tempPath, downloadData._filePath, ex, false);
+                OnDownloadImageCompleted(null, null, downloadData._uri, downloadData._tempPath, downloadData._filePath, ex, false);
             }
         }
 
         /// <summary>
         /// Checks if the file was downloaded and raises the cachedFileCallback from <see cref="_imageDownloadCallbacks"/>
         /// </summary>
-        private void OnDownloadImageCompleted(HttpClient client, Uri source, string tempPath, string filePath, Exception error, bool cancelled)
+        private void OnDownloadImageCompleted(HttpClient client,HttpResponseMessage response, Uri source, string tempPath, string filePath, Exception error, bool cancelled)
         {
             if (!cancelled)
             {
                 if (error == null)
                 {
-                    var contentType = CommonUtils.GetResponseContentType(client);
+                    var contentType = CommonUtils.GetResponseContentType(response);
                     if (contentType == null || !contentType.StartsWith("image", StringComparison.OrdinalIgnoreCase))
                     {
                         error = new Exception("Failed to load image, not image content type: " + contentType);
@@ -170,11 +190,11 @@ namespace UHtml.Core.Handlers
 
                 if (error == null)
                 {
-                    if (File.Exists(tempPath))
+                    if (StorageUtils.FileExists(tempPath))
                     {
                         try
                         {
-                            File.Move(tempPath, filePath);
+                            StorageUtils.Move(tempPath, filePath);
                         }
                         catch (Exception ex)
                         {
@@ -182,7 +202,7 @@ namespace UHtml.Core.Handlers
                         }
                     }
 
-                    error = File.Exists(filePath) ? null : (error ?? new Exception("Failed to download image, unknown error"));
+                    error = StorageUtils.FileExists(filePath) ? null : (error ?? new Exception("Failed to download image, unknown error"));
                 }
             }
 
@@ -218,7 +238,7 @@ namespace UHtml.Core.Handlers
                 try
                 {
                     var client = _clients[0];
-                    client.CancelAsync();
+                    client.CancelPendingRequests();
                     client.Dispose();
                     _clients.RemoveAt(0);
                 }

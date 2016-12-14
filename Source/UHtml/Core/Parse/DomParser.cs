@@ -703,7 +703,7 @@ namespace UHtml.Core.Parse
             }
             catch (Exception ex)
             {
-                box.HtmlContainer.ReportError(HtmlRenderErrorType.HtmlParsing, "Failed in block inside inline box correction", ex);
+                box.HtmlContainer.ReportError(UHtmlrorType.HtmlParsing, "Failed in block inside inline box correction", ex);
             }
         }
 

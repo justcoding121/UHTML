@@ -15,7 +15,7 @@ using System.IO;
 namespace UHtml.Demo.Common
 {
     /// <summary>
-    /// Get font, image and text resources for HtmlRenderer demo.
+    /// Get font, image and text resources for UHtml demo.
     /// </summary>
     public static class Resources
     {

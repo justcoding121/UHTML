@@ -200,7 +200,7 @@ namespace UHtml.Adapters
         {
             if (_loadImage == null)
             {
-                var stream = typeof(HtmlRendererUtils).GetTypeInfo().Assembly.GetManifestResourceStream("UHtml.Core.Utils.ImageLoad.png");
+                var stream = typeof(UHtmlUtils).GetTypeInfo().Assembly.GetManifestResourceStream("UHtml.Core.Utils.ImageLoad.png");
                 if (stream != null)
                     _loadImage = ImageFromStream(stream);
             }
@@ -214,7 +214,7 @@ namespace UHtml.Adapters
         {
             if (_errorImage == null)
             {
-                var stream = typeof(HtmlRendererUtils).GetTypeInfo().Assembly.GetManifestResourceStream("UHtml.Core.Utils.ImageError.png");
+                var stream = typeof(UHtmlUtils).GetTypeInfo().Assembly.GetManifestResourceStream("UHtml.Core.Utils.ImageError.png");
                 if (stream != null)
                     _errorImage = ImageFromStream(stream);
             }

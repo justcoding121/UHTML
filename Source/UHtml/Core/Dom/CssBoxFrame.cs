@@ -150,7 +150,7 @@ namespace UHtml.Core.Dom
                  catch (Exception ex)
                  {
                      HandleDataLoadFailure(ex, "YouTube");
-                     HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
+                     HtmlContainer.ReportError(UHtmlrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
                      HtmlContainer.RequestRefresh(false);
                  }
              });
@@ -255,7 +255,7 @@ namespace UHtml.Core.Dom
             }
             catch (Exception ex)
             {
-                HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to parse YouTube video response", ex);
+                HtmlContainer.ReportError(UHtmlrorType.Iframe, "Failed to parse YouTube video response", ex);
             }
 
             HandlePostApiCall(sender);
@@ -285,7 +285,7 @@ namespace UHtml.Core.Dom
                     HandleDataLoadFailure(ex, "Vimeo");
                     _imageLoadingComplete = true;
                     SetErrorBorder();
-                    HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
+                    HtmlContainer.ReportError(UHtmlrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
                     HtmlContainer.RequestRefresh(false);
                 }
             });
@@ -372,7 +372,7 @@ namespace UHtml.Core.Dom
             }
             catch (Exception ex)
             {
-                HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to parse Vimeo video response", ex);
+                HtmlContainer.ReportError(UHtmlrorType.Iframe, "Failed to parse Vimeo video response", ex);
             }
 
             HandlePostApiCall(sender);
@@ -393,7 +393,7 @@ namespace UHtml.Core.Dom
             }
             else
             {
-                HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to load " + source + " video data", ex);
+                HtmlContainer.ReportError(UHtmlrorType.Iframe, "Failed to load " + source + " video data", ex);
             }
         }
 

@@ -248,7 +248,7 @@ namespace UHtml.Core
         /// <remarks>
         /// There is no guarantee that the event will be raised on the main thread, it can be raised on thread-pool thread.
         /// </remarks>
-        public event EventHandler<HtmlRenderErrorEventArgs> RenderError;
+        public event EventHandler<UHtmlrorEventArgs> RenderError;
 
         /// <summary>
         /// Raised when a stylesheet is about to be loaded by file path or URI by link element.<br/>
@@ -686,7 +686,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse down handle", ex);
+                ReportError(UHtmlrorType.KeyboardMouse, "Failed mouse down handle", ex);
             }
         }
 
@@ -722,7 +722,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse up handle", ex);
+                ReportError(UHtmlrorType.KeyboardMouse, "Failed mouse up handle", ex);
             }
         }
 
@@ -742,7 +742,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse double click handle", ex);
+                ReportError(UHtmlrorType.KeyboardMouse, "Failed mouse double click handle", ex);
             }
         }
 
@@ -784,7 +784,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse move handle", ex);
+                ReportError(UHtmlrorType.KeyboardMouse, "Failed mouse move handle", ex);
             }
         }
 
@@ -803,7 +803,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse leave handle", ex);
+                ReportError(UHtmlrorType.KeyboardMouse, "Failed mouse leave handle", ex);
             }
         }
 
@@ -836,7 +836,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed key down handle", ex);
+                ReportError(UHtmlrorType.KeyboardMouse, "Failed key down handle", ex);
             }
         }
 
@@ -854,7 +854,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.CssParsing, "Failed stylesheet load event", ex);
+                ReportError(UHtmlrorType.CssParsing, "Failed stylesheet load event", ex);
             }
         }
 
@@ -872,7 +872,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.Image, "Failed image load event", ex);
+                ReportError(UHtmlrorType.Image, "Failed image load event", ex);
             }
         }
 
@@ -890,7 +890,7 @@ namespace UHtml.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.General, "Failed refresh request", ex);
+                ReportError(UHtmlrorType.General, "Failed refresh request", ex);
             }
         }
 
@@ -900,13 +900,13 @@ namespace UHtml.Core
         /// <param name="type">the type of error to report</param>
         /// <param name="message">the error message</param>
         /// <param name="exception">optional: the exception that occured</param>
-        internal void ReportError(HtmlRenderErrorType type, string message, Exception exception = null)
+        internal void ReportError(UHtmlrorType type, string message, Exception exception = null)
         {
             try
             {
-                EventHandler<HtmlRenderErrorEventArgs> handler = RenderError;
+                EventHandler<UHtmlrorEventArgs> handler = RenderError;
                 if (handler != null)
-                    handler(this, new HtmlRenderErrorEventArgs(type, message, exception));
+                    handler(this, new UHtmlrorEventArgs(type, message, exception));
             }
             catch
             { }
@@ -953,9 +953,7 @@ namespace UHtml.Core
                 }
                 else
                 {
-                    var nfo = new ProcessStartInfo(link.HrefLink);
-                    nfo.UseShellExecute = true;
-                    Process.Start(nfo);
+                    throw new NotImplementedException();
                 }
             }
         }

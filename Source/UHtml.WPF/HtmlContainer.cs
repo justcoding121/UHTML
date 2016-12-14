@@ -99,7 +99,7 @@ namespace UHtml.WPF
         /// <remarks>
         /// There is no guarantee that the event will be raised on the main thread, it can be raised on thread-pool thread.
         /// </remarks>
-        public event EventHandler<HtmlRenderErrorEventArgs> RenderError
+        public event EventHandler<UHtmlrorEventArgs> RenderError
         {
             add { _htmlContainerInt.RenderError += value; }
             remove { _htmlContainerInt.RenderError -= value; }
@@ -457,7 +457,7 @@ namespace UHtml.WPF
         #region Private methods
 
         /// <summary>
-        /// Create HtmlRenderer key event from WPF key event.
+        /// Create UHtml key event from WPF key event.
         /// </summary>
         private static RKeyEvent CreateKeyEevent(KeyEventArgs e)
         {

@@ -104,6 +104,14 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\UHtml.WPF\UHtml.WPF.csproj">
+      <Project>{7e4e8db5-85ad-4388-bdcb-38c6f423b8b0}</Project>
+      <Name>UHtml.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UHtml\UHtml.csproj">
+      <Project>{c04b679f-52a7-4d24-8ac6-eadb9b9c20ef}</Project>
+      <Name>UHtml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\UHtml.Demo.Common.csproj">
       <Project>{2390B71F-9400-47F4-B23A-7F2649C87D35}</Project>
       <Name>UHtml.Demo.Common</Name>

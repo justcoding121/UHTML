@@ -110,6 +110,7 @@
     <Compile Include="Core\Utils\HtmlConstants.cs" />
     <Compile Include="Core\Utils\HtmlUtils.cs" />
     <Compile Include="Core\Utils\RenderUtils.cs" />
+    <Compile Include="Core\Utils\StorageUtils.cs" />
     <Compile Include="Core\Utils\SubString.cs" />
     <Compile Include="IocSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

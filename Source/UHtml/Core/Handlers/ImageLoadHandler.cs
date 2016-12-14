@@ -1,3 +1,4 @@
+using PCLStorage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -149,7 +150,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Exception in handling image source", ex);
+                _htmlContainer.ReportError(UHtmlrorType.Image, "Exception in handling image source", ex);
                 ImageLoadComplete(false);
             }
         }
@@ -202,7 +203,7 @@ namespace UHtml.Core.Handlers
         {
             _image = GetImageFromData(src);
             if (_image == null)
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed extract image from inline data");
+                _htmlContainer.ReportError(UHtmlrorType.Image, "Failed extract image from inline data");
             _releaseImageObject = true;
             ImageLoadComplete(false);
         }
@@ -256,7 +257,7 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed load image, invalid source: " + path);
+                    _htmlContainer.ReportError(UHtmlrorType.Image, "Failed load image, invalid source: " + path);
                     ImageLoadComplete(false);
                 }
             }
@@ -266,14 +267,14 @@ namespace UHtml.Core.Handlers
         /// Load the image file on thread-pool thread and calling <see cref="ImageLoadComplete"/> after.
         /// </summary>
         /// <param name="source">the file path to get the image from</param>
-        private void SetImageFromFile(FileInfo source)
+        private void SetImageFromFile(string src)
         {
-            if (source.Exists)
+            if (StorageUtils.FileExists(src))
             {
                 if (_htmlContainer.AvoidAsyncImagesLoading)
-                    LoadImageFromFile(source.FullName);
+                    LoadImageFromFile(src);
                 else
-                    Task.Run(()=> LoadImageFromFile(source.FullName));
+                    Task.Run(()=> LoadImageFromFile(src));
             }
             else
             {
@@ -290,7 +291,8 @@ namespace UHtml.Core.Handlers
         {
             try
             {
-                var imageFileStream = File.Open(source, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                var file = FileSystem.Current.GetFileFromPathAsync(source).Result;
+                var imageFileStream = file.OpenAsync(FileAccess.ReadAndWrite).Result;
                 lock (_loadCompleteCallback)
                 {
                     _imageFileStream = imageFileStream;
@@ -302,7 +304,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from disk: " + source, ex);
+                _htmlContainer.ReportError(UHtmlrorType.Image, "Failed to load image from disk: " + source, ex);
                 ImageLoadComplete();
             }
         }
@@ -314,14 +316,14 @@ namespace UHtml.Core.Handlers
         /// </summary>
         private void SetImageFromUrl(Uri source)
         {
-            var filePath = CommonUtils.GetLocalfileName(source);
-            if (filePath.Exists && filePath.Length > 0)
+            var filePath = CommonUtils.GetLocalfilePath(source);
+            if (StorageUtils.FileExists(filePath) && filePath.Length > 0)
             {
                 SetImageFromFile(filePath);
             }
             else
             {
-                _htmlContainer.GetImageDownloader().DownloadImage(source, filePath.FullName, !_htmlContainer.AvoidAsyncImagesLoading, OnDownloadImageCompleted);
+                _htmlContainer.GetImageDownloader().DownloadImage(source, filePath, !_htmlContainer.AvoidAsyncImagesLoading, OnDownloadImageCompleted);
             }
         }
 
@@ -339,7 +341,7 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from URL: " + imageUri, error);
+                    _htmlContainer.ReportError(UHtmlrorType.Image, "Failed to load image from URL: " + imageUri, error);
                     ImageLoadComplete();
                 }
             }

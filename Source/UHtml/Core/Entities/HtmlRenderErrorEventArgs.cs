@@ -5,12 +5,12 @@ namespace UHtml.Core.Entities
     /// <summary>
     /// Raised when an error occurred during html rendering.
     /// </summary>
-    public sealed class HtmlRenderErrorEventArgs : EventArgs
+    public sealed class UHtmlrorEventArgs : EventArgs
     {
         /// <summary>
         /// error type that is reported
         /// </summary>
-        private readonly HtmlRenderErrorType _type;
+        private readonly UHtmlrorType _type;
 
         /// <summary>
         /// the error message
@@ -28,7 +28,7 @@ namespace UHtml.Core.Entities
         /// <param name="type">the type of error to report</param>
         /// <param name="message">the error message</param>
         /// <param name="exception">optional: the exception that occurred</param>
-        public HtmlRenderErrorEventArgs(HtmlRenderErrorType type, string message, Exception exception = null)
+        public UHtmlrorEventArgs(UHtmlrorType type, string message, Exception exception = null)
         {
             _type = type;
             _message = message;
@@ -38,7 +38,7 @@ namespace UHtml.Core.Entities
         /// <summary>
         /// error type that is reported
         /// </summary>
-        public HtmlRenderErrorType Type
+        public UHtmlrorType Type
         {
             get { return _type; }
         }

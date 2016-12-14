@@ -96,7 +96,7 @@ namespace UHtml.Core.Utils
         {
             AssertArgNotNullOrEmpty(arg, argName);
 
-            if (false == File.Exists(arg))
+            if (false == StorageUtils.FileExists(arg))
             {
                 throw new FileNotFoundException(string.Format("Given file in argument '{0}' not exist.", argName), arg);
             }

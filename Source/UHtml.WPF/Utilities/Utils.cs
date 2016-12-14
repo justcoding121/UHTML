@@ -18,7 +18,7 @@ using UHtml.Adapters.Entities;
 namespace UHtml.WPF.Utilities
 {
     /// <summary>
-    /// Utilities for converting WPF entities to HtmlRenderer core entities.
+    /// Utilities for converting WPF entities to UHtml core entities.
     /// </summary>
     internal static class Utils
     {

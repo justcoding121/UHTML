@@ -1,3 +1,4 @@
+using PCLStorage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,7 +54,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Exception in handling stylesheet source", ex);
+                htmlContainer.ReportError(UHtmlrorType.CssParsing, "Exception in handling stylesheet source", ex);
             }
         }
 
@@ -87,24 +88,28 @@ namespace UHtml.Core.Handlers
         /// <returns>the loaded stylesheet string</returns>
         private static string LoadStylesheetFromFile(HtmlContainerInt htmlContainer, string path)
         {
-            var fileInfo = CommonUtils.TryGetFileInfo(path);
-            if (fileInfo != null)
+            var filePath = CommonUtils.TryGetFileInfo(path);
+            if (filePath != null)
             {
-                if (fileInfo.Exists)
+                if (StorageUtils.FileExists(filePath))
                 {
-                    using (var sr = new StreamReader(fileInfo.FullName))
+                    var file = FileSystem.Current.GetFileFromPathAsync(filePath).Result;
+                    using (var cssFileStream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
                     {
-                        return sr.ReadToEnd();
+                        using (var sr = new StreamReader(cssFileStream))
+                        {
+                            return sr.ReadToEnd();
+                        }
                     }
                 }
                 else
                 {
-                    htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "No stylesheet found by path: " + path);
+                    htmlContainer.ReportError(UHtmlrorType.CssParsing, "No stylesheet found by path: " + path);
                 }
             }
             else
             {
-                htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Failed load image, invalid source: " + path);
+                htmlContainer.ReportError(UHtmlrorType.CssParsing, "Failed load image, invalid source: " + path);
             }
             return string.Empty;
         }
@@ -120,14 +125,14 @@ namespace UHtml.Core.Handlers
             var handler = IocModule.Container.GetInstance<HttpClientHandler>();
             using (var client = new HttpClient(handler))
             {
-                var stylesheet = client.DownloadString(uri);
+                var stylesheet = client.GetStringAsync(uri).Result;
                 try
                 {
                     stylesheet = CorrectRelativeUrls(stylesheet, uri);
                 }
                 catch (Exception ex)
                 {
-                    htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
+                    htmlContainer.ReportError(UHtmlrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
                 }
                 return stylesheet;
             }

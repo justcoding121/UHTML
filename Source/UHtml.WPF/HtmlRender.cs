@@ -31,7 +31,7 @@ namespace UHtml.WPF
     /// <para>
     /// <b>Rendering to image</b><br/>
     /// // TODO:a update!
-    /// See https://htmlrenderer.codeplex.com/wikipage?title=Image%20generation <br/>
+    /// See https://UHtml.codeplex.com/wikipage?title=Image%20generation <br/>
     /// Because of GDI text rendering issue with alpha channel clear type text rendering rendering to image requires special handling.<br/>
     /// <u>Solid color background -</u> generate an image where the background is filled with solid color and all the html is rendered on top
     /// of the background color, GDI text rendering will be used. (RenderToImage method where the first argument is html string)<br/>
@@ -337,7 +337,7 @@ namespace UHtml.WPF
             // use desktop created graphics to measure the HTML
             using (var mg = new GraphicsAdapter())
             {
-                var sizeInt = HtmlRendererUtils.MeasureHtmlByRestrictions(mg, htmlContainer.HtmlContainerInt, Utils.Convert(minSize), Utils.Convert(maxSize));
+                var sizeInt = UHtmlUtils.MeasureHtmlByRestrictions(mg, htmlContainer.HtmlContainerInt, Utils.Convert(minSize), Utils.Convert(maxSize));
                 if (maxSize.Width < 1 && sizeInt.Width > 4096)
                     sizeInt.Width = 4096;
                 return Utils.ConvertRound(sizeInt);
