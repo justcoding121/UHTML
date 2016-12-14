@@ -112,7 +112,7 @@
     <Compile Include="Core\Utils\RenderUtils.cs" />
     <Compile Include="Core\Utils\StorageUtils.cs" />
     <Compile Include="Core\Utils\SubString.cs" />
-    <Compile Include="IocSetup.cs" />
+    <Compile Include="IocModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

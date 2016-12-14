@@ -24,6 +24,7 @@ namespace UHtml.Demo.WPF
     {
         public App()
         {
+            IocModule.Register(new SimpleInjector.Container());
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
         }
 

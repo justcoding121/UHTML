@@ -28,7 +28,7 @@ namespace UHtml.Core.Utils
             var storageFolder = GetStorageFolder();
             var tempFolder = storageFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists).Result;
             var fileName = Guid.NewGuid().ToString();
-            var tmpFilePath = PortablePath.Combine(tempFolder.Path, fileName);
+            var tmpFilePath = PortablePath.Combine(tempFolder.Path, fileName + ".tmp");
             tempFolder.CreateFileAsync(tmpFilePath, CreationCollisionOption.ReplaceExisting).Wait();
 
             return tmpFilePath;
@@ -58,9 +58,10 @@ namespace UHtml.Core.Utils
             return FileSystem.Current.GetFileFromPathAsync(src).Result!=null;
         }
 
-        internal static void Move(string tempPath, string filePath)
+        internal static void Move(string src, string dst)
         {
-            throw new NotImplementedException();
+            var sourceFile = FileSystem.Current.GetFileFromPathAsync(src).Result;
+            sourceFile.MoveAsync(dst).Wait();
         }
     }
 }

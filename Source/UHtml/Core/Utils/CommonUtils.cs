@@ -256,7 +256,7 @@ namespace UHtml.Core.Utils
 
             if (_tempPath == null)
             {
-                _tempPath = "UHtml";
+                _tempPath = StorageUtils.GetTempPath();
                 StorageUtils.CreateTempDirIfNotExists(_tempPath);
             }
 
