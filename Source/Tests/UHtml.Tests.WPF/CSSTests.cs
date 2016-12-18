@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHtml.WPF;
-using System.Windows;
 using System.IO;
 using UHtml.Tests.WPF.Utility;
 using System.Drawing;
@@ -21,8 +20,8 @@ namespace UHtml.Tests.WPF
         [TestMethod]
         public void Color_Test()
         {
-            var htmlTest = File.ReadAllText(TestFileManager.GetHtmlTestFilePath(TestFiles.Color));
-            using (Bitmap expectedResultFile = new Bitmap(Image.FromFile(TestFileManager.GetTestImagePath(TestFiles.Color))))
+            var htmlTest = File.ReadAllText(TestFileManager.GetHtmlTestFilePath(TestFiles.Color_1));
+            using (Bitmap expectedResultFile = new Bitmap(Image.FromFile(TestFileManager.GetTestImagePath(TestFiles.Color_1))))
             using (Bitmap expectedResult = expectedResultFile.Clone(new Rectangle(0, 0, expectedResultFile.Width, expectedResultFile.Height), PixelFormat.Format32bppRgb))
             {
 
@@ -32,7 +31,7 @@ namespace UHtml.Tests.WPF
                 using (var actualResult = BitmapFromSource(actualResultBitmapSource))
                 {
                    
-                    TestFileManager.WriteResultFile(TestFiles.Color, actualResult);
+                    TestFileManager.WriteResultFile(TestFiles.Color_1, actualResult);
                 }
 
             }

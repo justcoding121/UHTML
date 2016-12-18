@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UHtml.Tests.WPF.Utility
 {
@@ -16,27 +11,20 @@ namespace UHtml.Tests.WPF.Utility
         {
             var executingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            return Path.Combine(executingDir, "TestFiles", testFileName, testFileName + ".html");
+            return Path.Combine(executingDir, "TestFiles", testFileName + ".html");
         }
 
         internal static string GetTestImagePath(string testFileName)
         {
             var executingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            return Path.Combine(executingDir, "TestFiles", testFileName, testFileName + ".png");
+            return Path.Combine(executingDir, "TestFiles",  testFileName + ".png");
         }
 
         internal static void WriteResultFile(string resultFileName, Bitmap result)
         {
             var executingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var resultDir = Path.Combine(executingDir, "TestFiles", resultFileName);
-
-            if(!Directory.Exists(resultDir))
-            {
-                Directory.CreateDirectory(resultDir);
-            }
-
-            var resultFilePath = Path.Combine(resultDir, "Result_"+ resultFileName + ".png");
+            var resultFilePath = Path.Combine(executingDir, "TestFiles", resultFileName + "_result.png");
 
             new Bitmap(result).Save(resultFilePath, ImageFormat.Png);
         }

@@ -83,10 +83,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestFiles\Color\Color.png">
+    <Content Include="TestFiles\Color\Color_1\Color_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Color\Color.html">
+    <Content Include="TestFiles\Color\Color_1\Color_1.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

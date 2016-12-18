@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UHtml.Tests.WPF
+﻿namespace UHtml.Tests.WPF.Utility
 {
     public static class TestFiles
     {
-        public static string Color  = "Color";
+        public static string Color_1  = @"Color\Color_1\Color_1";
     }
 }
