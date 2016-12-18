@@ -150,7 +150,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.Image, "Exception in handling image source", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Exception in handling image source", ex);
                 ImageLoadComplete(false);
             }
         }
@@ -203,7 +203,7 @@ namespace UHtml.Core.Handlers
         {
             _image = GetImageFromData(src);
             if (_image == null)
-                _htmlContainer.ReportError(UHtmlrorType.Image, "Failed extract image from inline data");
+                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed extract image from inline data");
             _releaseImageObject = true;
             ImageLoadComplete(false);
         }
@@ -257,7 +257,7 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    _htmlContainer.ReportError(UHtmlrorType.Image, "Failed load image, invalid source: " + path);
+                    _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed load image, invalid source: " + path);
                     ImageLoadComplete(false);
                 }
             }
@@ -304,7 +304,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.Image, "Failed to load image from disk: " + source, ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from disk: " + source, ex);
                 ImageLoadComplete();
             }
         }
@@ -341,7 +341,7 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    _htmlContainer.ReportError(UHtmlrorType.Image, "Failed to load image from URL: " + imageUri, error);
+                    _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from URL: " + imageUri, error);
                     ImageLoadComplete();
                 }
             }

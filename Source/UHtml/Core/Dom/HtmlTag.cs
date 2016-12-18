@@ -1,8 +1,10 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
 {
+    [JsonObject(MemberSerialization.OptIn)]
     internal sealed class HtmlTag
     {
         #region Fields and Consts
@@ -43,6 +45,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the name of this tag
         /// </summary>
+        [JsonProperty]
         public string Name
         {
             get { return _name; }

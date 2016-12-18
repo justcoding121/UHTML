@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 namespace UHtml.Adapters.Entities
@@ -5,6 +6,7 @@ namespace UHtml.Adapters.Entities
     /// <summary>
     /// Stores an ordered pair of floating-point numbers, typically the width and height of a rectangle.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public struct RSize
     {
         #region Fields and Consts
@@ -86,6 +88,7 @@ namespace UHtml.Adapters.Entities
         ///     This property returns true when this <see cref="RSize" /> structure has both a width and height of zero; otherwise, false.
         /// </returns>
         /// <filterpriority>1</filterpriority>
+        [JsonProperty]
         public bool IsEmpty
         {
             get
@@ -104,6 +107,8 @@ namespace UHtml.Adapters.Entities
         ///     The horizontal component of this <see cref="RSize" /> structure, typically measured in pixels.
         /// </returns>
         /// <filterpriority>1</filterpriority>
+
+        [JsonProperty]
         public double Width
         {
             get { return _width; }
@@ -117,6 +122,7 @@ namespace UHtml.Adapters.Entities
         ///     The vertical component of this <see cref="RSize" /> structure, typically measured in pixels.
         /// </returns>
         /// <filterpriority>1</filterpriority>
+        [JsonProperty]
         public double Height
         {
             get { return _height; }

@@ -99,7 +99,7 @@ namespace UHtml.WPF
         /// <remarks>
         /// There is no guarantee that the event will be raised on the main thread, it can be raised on thread-pool thread.
         /// </remarks>
-        public event EventHandler<UHtmlrorEventArgs> RenderError
+        public event EventHandler<HtmlRenderErrorEventArgs> RenderError
         {
             add { _htmlContainerInt.RenderError += value; }
             remove { _htmlContainerInt.RenderError -= value; }

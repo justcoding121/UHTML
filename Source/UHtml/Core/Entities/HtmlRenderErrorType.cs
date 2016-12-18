@@ -3,7 +3,7 @@ namespace UHtml.Core.Entities
     /// <summary>
     /// Enum of possible error types that can be reported.
     /// </summary>
-    public enum UHtmlrorType
+    public enum HtmlRenderErrorType
     {
         General = 0,
         CssParsing = 1,

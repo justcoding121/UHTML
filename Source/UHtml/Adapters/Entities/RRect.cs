@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 namespace UHtml.Adapters.Entities
@@ -5,6 +6,7 @@ namespace UHtml.Adapters.Entities
     /// <summary>
     /// Stores a set of four floating-point numbers that represent the location and size of a rectangle. 
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public struct RRect
     {
         #region Fields and Consts
@@ -55,6 +57,7 @@ namespace UHtml.Adapters.Entities
         /// Gets or sets the coordinates of the upper-left corner of this <see cref="RRect" /> structure.
         /// </summary>
         /// <returns>A <see cref="RPoint" /> that represents the upper-left corner of this <see cref="RRect" /> structure.</returns>
+        [JsonProperty]
         public RPoint Location
         {
             get { return new RPoint(X, Y); }
@@ -69,6 +72,7 @@ namespace UHtml.Adapters.Entities
         /// Gets or sets the size of this <see cref="RRect" />.
         /// </summary>
         /// <returns>A <see cref="RSize" /> that represents the width and height of this <see cref="RRect" /> structure.</returns>
+        [JsonProperty]
         public RSize Size
         {
             get { return new RSize(Width, Height); }
@@ -85,6 +89,7 @@ namespace UHtml.Adapters.Entities
         /// <returns>
         ///     The x-coordinate of the upper-left corner of this <see cref="RRect" /> structure.
         /// </returns>
+        [JsonProperty]
         public double X
         {
             get { return _x; }
@@ -97,6 +102,7 @@ namespace UHtml.Adapters.Entities
         /// <returns>
         ///     The y-coordinate of the upper-left corner of this <see cref="RRect" /> structure.
         /// </returns>
+        [JsonProperty]
         public double Y
         {
             get { return _y; }
@@ -109,6 +115,7 @@ namespace UHtml.Adapters.Entities
         /// <returns>
         ///     The width of this <see cref="RRect" /> structure.
         /// </returns>
+        [JsonProperty]
         public double Width
         {
             get { return _width; }
@@ -121,6 +128,7 @@ namespace UHtml.Adapters.Entities
         /// <returns>
         ///     The height of this <see cref="RRect" /> structure.
         /// </returns>
+        [JsonProperty]
         public double Height
         {
             get { return _height; }
@@ -133,6 +141,7 @@ namespace UHtml.Adapters.Entities
         /// <returns>
         ///     The x-coordinate of the left edge of this <see cref="RRect" /> structure.
         /// </returns>
+        [JsonProperty]
         public double X1
         {
             get { return X; }
@@ -144,6 +153,7 @@ namespace UHtml.Adapters.Entities
         /// <returns>
         ///     The y-coordinate of the top edge of this <see cref="RRect" /> structure.
         /// </returns>
+        [JsonProperty]
         public double Y1
         {
             get { return Y; }
@@ -161,6 +171,7 @@ namespace UHtml.Adapters.Entities
         ///         cref="RRect.Width" />
         ///     of this <see cref="RRect" /> structure.
         /// </returns>
+        [JsonProperty]
         public double X2
         {
             get { return X + Width; }
@@ -178,6 +189,7 @@ namespace UHtml.Adapters.Entities
         ///         cref="RRect.Height" />
         ///     of this <see cref="RRect" /> structure.
         /// </returns>
+        [JsonProperty]
         public double Y2
         {
             get { return Y + Height; }
@@ -195,6 +207,7 @@ namespace UHtml.Adapters.Entities
         ///         cref="RRect.Height" />
         ///     property of this <see cref="RRect" /> has a value of zero; otherwise, false.
         /// </returns>
+        [JsonProperty]
         public bool IsEmpty
         {
             get

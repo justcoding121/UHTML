@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 namespace UHtml.Adapters.Entities
@@ -5,6 +6,7 @@ namespace UHtml.Adapters.Entities
     /// <summary>
     ///     Represents an ordered pair of floating-point x- and y-coordinates that defines a point in a two-dimensional plane.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public struct RPoint
     {
         /// <summary>
@@ -58,6 +60,7 @@ namespace UHtml.Adapters.Entities
         ///     The x-coordinate of this <see cref="RPoint" />.
         /// </returns>
         /// <filterpriority>1</filterpriority>
+        [JsonProperty]
         public double X
         {
             get { return _x; }
@@ -71,6 +74,7 @@ namespace UHtml.Adapters.Entities
         ///     The y-coordinate of this <see cref="RPoint" />.
         /// </returns>
         /// <filterpriority>1</filterpriority>
+        [JsonProperty]
         public double Y
         {
             get { return _y; }

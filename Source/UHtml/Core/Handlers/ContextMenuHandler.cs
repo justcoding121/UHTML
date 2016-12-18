@@ -320,7 +320,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.ContextMenu, "Failed to show context menu", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to show context menu", ex);
             }
         }
 
@@ -369,7 +369,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.ContextMenu, "Failed to open link", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to open link", ex);
             }
             finally
             {
@@ -388,7 +388,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.ContextMenu, "Failed to copy link url to clipboard", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy link url to clipboard", ex);
             }
             finally
             {
@@ -408,7 +408,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.ContextMenu, "Failed to save image", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to save image", ex);
             }
             finally
             {
@@ -427,7 +427,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.ContextMenu, "Failed to copy image url to clipboard", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy image url to clipboard", ex);
             }
             finally
             {
@@ -446,7 +446,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.ContextMenu, "Failed to copy image to clipboard", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy image to clipboard", ex);
             }
             finally
             {
@@ -465,7 +465,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.ContextMenu, "Failed to copy text to clipboard", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy text to clipboard", ex);
             }
             finally
             {
@@ -484,7 +484,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(UHtmlrorType.ContextMenu, "Failed to select all text", ex);
+                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to select all text", ex);
             }
             finally
             {

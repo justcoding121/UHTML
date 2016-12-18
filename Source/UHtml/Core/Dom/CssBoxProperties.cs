@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using UHtml.Adapters;
@@ -15,6 +16,7 @@ namespace UHtml.Core.Dom
     /// Has additional fields to control the location and size of the box and 'actual' css values for some properties
     /// that require additional calculations and parsing.<br/>
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     internal abstract class CssBoxProperties
     {
         #region CSS Fields
@@ -145,7 +147,7 @@ namespace UHtml.Core.Dom
 
 
         #region CSS Properties
-
+        [JsonProperty]
         public string BorderBottomWidth
         {
             get { return _borderBottomWidth; }
@@ -156,6 +158,7 @@ namespace UHtml.Core.Dom
             }
         }
 
+        [JsonProperty]
         public string BorderLeftWidth
         {
             get { return _borderLeftWidth; }
@@ -165,7 +168,7 @@ namespace UHtml.Core.Dom
                 _actualBorderLeftWidth = Single.NaN;
             }
         }
-
+        [JsonProperty]
         public string BorderRightWidth
         {
             get { return _borderRightWidth; }
@@ -175,7 +178,7 @@ namespace UHtml.Core.Dom
                 _actualBorderRightWidth = Single.NaN;
             }
         }
-
+        [JsonProperty]
         public string BorderTopWidth
         {
             get { return _borderTopWidth; }
@@ -185,31 +188,31 @@ namespace UHtml.Core.Dom
                 _actualBorderTopWidth = Single.NaN;
             }
         }
-
+        [JsonProperty]
         public string BorderBottomStyle
         {
             get { return _borderBottomStyle; }
             set { _borderBottomStyle = value; }
         }
-
+        [JsonProperty]
         public string BorderLeftStyle
         {
             get { return _borderLeftStyle; }
             set { _borderLeftStyle = value; }
         }
-
+        [JsonProperty]
         public string BorderRightStyle
         {
             get { return _borderRightStyle; }
             set { _borderRightStyle = value; }
         }
-
+        [JsonProperty]
         public string BorderTopStyle
         {
             get { return _borderTopStyle; }
             set { _borderTopStyle = value; }
         }
-
+        [JsonProperty]
         public string BorderBottomColor
         {
             get { return _borderBottomColor; }
@@ -219,7 +222,7 @@ namespace UHtml.Core.Dom
                 _actualBorderBottomColor = RColor.Empty;
             }
         }
-
+        [JsonProperty]
         public string BorderLeftColor
         {
             get { return _borderLeftColor; }
@@ -229,7 +232,7 @@ namespace UHtml.Core.Dom
                 _actualBorderLeftColor = RColor.Empty;
             }
         }
-
+        [JsonProperty]
         public string BorderRightColor
         {
             get { return _borderRightColor; }
@@ -239,7 +242,7 @@ namespace UHtml.Core.Dom
                 _actualBorderRightColor = RColor.Empty;
             }
         }
-
+        [JsonProperty]
         public string BorderTopColor
         {
             get { return _borderTopColor; }
@@ -249,19 +252,19 @@ namespace UHtml.Core.Dom
                 _actualBorderTopColor = RColor.Empty;
             }
         }
-
+        [JsonProperty]
         public string BorderSpacing
         {
             get { return _borderSpacing; }
             set { _borderSpacing = value; }
         }
-
+        [JsonProperty]
         public string BorderCollapse
         {
             get { return _borderCollapse; }
             set { _borderCollapse = value; }
         }
-
+        [JsonProperty]
         public string CornerRadius
         {
             get { return _cornerRadius; }
@@ -299,55 +302,55 @@ namespace UHtml.Core.Dom
                 _cornerRadius = value;
             }
         }
-
+        [JsonProperty]
         public string CornerNwRadius
         {
             get { return _cornerNwRadius; }
             set { _cornerNwRadius = value; }
         }
-
+        [JsonProperty]
         public string CornerNeRadius
         {
             get { return _cornerNeRadius; }
             set { _cornerNeRadius = value; }
         }
-
+        [JsonProperty]
         public string CornerSeRadius
         {
             get { return _cornerSeRadius; }
             set { _cornerSeRadius = value; }
         }
-
+        [JsonProperty]
         public string CornerSwRadius
         {
             get { return _cornerSwRadius; }
             set { _cornerSwRadius = value; }
         }
-
+        [JsonProperty]
         public string MarginBottom
         {
             get { return _marginBottom; }
             set { _marginBottom = value; }
         }
-
+        [JsonProperty]
         public string MarginLeft
         {
             get { return _marginLeft; }
             set { _marginLeft = value; }
         }
-
+        [JsonProperty]
         public string MarginRight
         {
             get { return _marginRight; }
             set { _marginRight = value; }
         }
-
+        [JsonProperty]
         public string MarginTop
         {
             get { return _marginTop; }
             set { _marginTop = value; }
         }
-
+        [JsonProperty]
         public string PaddingBottom
         {
             get { return _paddingBottom; }
@@ -357,7 +360,7 @@ namespace UHtml.Core.Dom
                 _actualPaddingBottom = double.NaN;
             }
         }
-
+        [JsonProperty]
         public string PaddingLeft
         {
             get { return _paddingLeft; }
@@ -367,7 +370,7 @@ namespace UHtml.Core.Dom
                 _actualPaddingLeft = double.NaN;
             }
         }
-
+        [JsonProperty]
         public string PaddingRight
         {
             get { return _paddingRight; }
@@ -377,7 +380,7 @@ namespace UHtml.Core.Dom
                 _actualPaddingRight = double.NaN;
             }
         }
-
+        [JsonProperty]
         public string PaddingTop
         {
             get { return _paddingTop; }
@@ -387,7 +390,7 @@ namespace UHtml.Core.Dom
                 _actualPaddingTop = double.NaN;
             }
         }
-
+        [JsonProperty]
         public string PageBreakInside
         {
             get { return _pageBreakInside; }
@@ -396,7 +399,7 @@ namespace UHtml.Core.Dom
                 _pageBreakInside = value;
             }
         }
-
+        [JsonProperty]
         public string Left
         {
             get { return _left; }
@@ -410,7 +413,7 @@ namespace UHtml.Core.Dom
                 }
             }
         }
-
+        [JsonProperty]
         public string Top
         {
             get { return _top; }
@@ -424,61 +427,61 @@ namespace UHtml.Core.Dom
 
             }
         }
-
+        [JsonProperty]
         public string Width
         {
             get { return _width; }
             set { _width = value; }
         }
-
+        [JsonProperty]
         public string MaxWidth
         {
             get { return _maxWidth; }
             set { _maxWidth = value; }
         }
-
+        [JsonProperty]
         public string Height
         {
             get { return _height; }
             set { _height = value; }
         }
-
+        [JsonProperty]
         public string BackgroundColor
         {
             get { return _backgroundColor; }
             set { _backgroundColor = value; }
         }
-
+        [JsonProperty]
         public string BackgroundImage
         {
             get { return _backgroundImage; }
             set { _backgroundImage = value; }
         }
-
+        [JsonProperty]
         public string BackgroundPosition
         {
             get { return _backgroundPosition; }
             set { _backgroundPosition = value; }
         }
-
+        [JsonProperty]
         public string BackgroundRepeat
         {
             get { return _backgroundRepeat; }
             set { _backgroundRepeat = value; }
         }
-
+        [JsonProperty]
         public string BackgroundGradient
         {
             get { return _backgroundGradient; }
             set { _backgroundGradient = value; }
         }
-
+        [JsonProperty]
         public string BackgroundGradientAngle
         {
             get { return _backgroundGradientAngle; }
             set { _backgroundGradientAngle = value; }
         }
-
+        [JsonProperty]
         public string Color
         {
             get { return _color; }
@@ -488,103 +491,103 @@ namespace UHtml.Core.Dom
                 _actualColor = RColor.Empty;
             }
         }
-
+        [JsonProperty]
         public string Content
         {
             get { return _content; }
             set { _content = value; }
         }
-
+        [JsonProperty]
         public string Display
         {
             get { return _display; }
             set { _display = value; }
         }
-
+        [JsonProperty]
         public string Direction
         {
             get { return _direction; }
             set { _direction = value; }
         }
-
+        [JsonProperty]
         public string EmptyCells
         {
             get { return _emptyCells; }
             set { _emptyCells = value; }
         }
-
+        [JsonProperty]
         public string Float
         {
             get { return _float; }
             set { _float = value; }
         }
-
+        [JsonProperty]
         public string Position
         {
             get { return _position; }
             set { _position = value; }
         }
-
+        [JsonProperty]
         public string LineHeight
         {
             get { return _lineHeight; }
             set { _lineHeight = string.Format(NumberFormatInfo.InvariantInfo, "{0}px", CssValueParser.ParseLength(value, Size.Height, this, CssConstants.Em)); }
         }
-
+        [JsonProperty]
         public string VerticalAlign
         {
             get { return _verticalAlign; }
             set { _verticalAlign = value; }
         }
-
+        [JsonProperty]
         public string TextIndent
         {
             get { return _textIndent; }
             set { _textIndent = NoEms(value); }
         }
-
+        [JsonProperty]
         public string TextAlign
         {
             get { return _textAlign; }
             set { _textAlign = value; }
         }
-
+        [JsonProperty]
         public string TextDecoration
         {
             get { return _textDecoration; }
             set { _textDecoration = value; }
         }
-
+        [JsonProperty]
         public string WhiteSpace
         {
             get { return _whiteSpace; }
             set { _whiteSpace = value; }
         }
-
+        [JsonProperty]
         public string Visibility
         {
             get { return _visibility; }
             set { _visibility = value; }
         }
-
+        [JsonProperty]
         public string WordSpacing
         {
             get { return _wordSpacing; }
             set { _wordSpacing = NoEms(value); }
         }
-
+        [JsonProperty]
         public string WordBreak
         {
             get { return _wordBreak; }
             set { _wordBreak = value; }
         }
-
+        [JsonProperty]
         public string FontFamily
         {
             get { return _fontFamily; }
             set { _fontFamily = value; }
         }
-
+        [JsonProperty]
         public string FontSize
         {
             get { return _fontSize; }
@@ -618,49 +621,49 @@ namespace UHtml.Core.Dom
                 }
             }
         }
-
+        [JsonProperty]
         public string FontStyle
         {
             get { return _fontStyle; }
             set { _fontStyle = value; }
         }
-
+        [JsonProperty]
         public string FontVariant
         {
             get { return _fontVariant; }
             set { _fontVariant = value; }
         }
-
+        [JsonProperty]
         public string FontWeight
         {
             get { return _fontWeight; }
             set { _fontWeight = value; }
         }
-
+        [JsonProperty]
         public string ListStyle
         {
             get { return _listStyle; }
             set { _listStyle = value; }
         }
-
+        [JsonProperty]
         public string Overflow
         {
             get { return _overflow; }
             set { _overflow = value; }
         }
-
+        [JsonProperty]
         public string ListStylePosition
         {
             get { return _listStylePosition; }
             set { _listStylePosition = value; }
         }
-
+        [JsonProperty]
         public string ListStyleImage
         {
             get { return _listStyleImage; }
             set { _listStyleImage = value; }
         }
-
+        [JsonProperty]
         public string ListStyleType
         {
             get { return _listStyleType; }
@@ -668,7 +671,7 @@ namespace UHtml.Core.Dom
         }
 
         #endregion CSS Propertier
-
+        [JsonProperty]
         /// <summary>
         /// Gets or sets the location of the box
         /// </summary>
@@ -692,6 +695,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets or sets the size of the box
         /// </summary>
+        [JsonProperty]
         public RSize Size
         {
             get { return _size; }
@@ -701,6 +705,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the bounds of the box
         /// </summary>
+        [JsonProperty]
         public RRect Bounds
         {
             get { return new RRect(Location, Size); }
@@ -709,6 +714,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the width available on the box, counting padding and margin.
         /// </summary>
+        [JsonProperty]
         public double AvailableWidth
         {
             get { return Size.Width - ActualBorderLeftWidth - ActualPaddingLeft - ActualPaddingRight - ActualBorderRightWidth; }
@@ -717,6 +723,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the right of the box. When setting, it will affect only the width of the box.
         /// </summary>
+        [JsonProperty]
         public double ActualRight
         {
             get { return Location.X + Size.Width; }
@@ -727,6 +734,7 @@ namespace UHtml.Core.Dom
         /// Gets or sets the bottom of the box. 
         /// (When setting, alters only the Size.Height of the box)
         /// </summary>
+        [JsonProperty]
         public double ActualBottom
         {
             get { return Location.Y + Size.Height; }
@@ -736,6 +744,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the left of the client rectangle (Where content starts rendering)
         /// </summary>
+        [JsonProperty]
         public double ClientLeft
         {
             get { return Location.X + ActualBorderLeftWidth + ActualPaddingLeft; }
@@ -744,6 +753,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the top of the client rectangle (Where content starts rendering)
         /// </summary>
+        [JsonProperty]
         public double ClientTop
         {
             get { return Location.Y + ActualBorderTopWidth + ActualPaddingTop; }
@@ -752,6 +762,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the right of the client rectangle
         /// </summary>
+        [JsonProperty]
         public double ClientRight
         {
             get { return ActualRight - ActualPaddingRight - ActualBorderRightWidth; }
@@ -760,6 +771,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the bottom of the client rectangle
         /// </summary>
+        [JsonProperty]
         public double ClientBottom
         {
             get { return ActualBottom - ActualPaddingBottom - ActualBorderBottomWidth; }
@@ -768,6 +780,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the client rectangle
         /// </summary>
+        [JsonProperty]
         public RRect ClientRectangle
         {
             get { return RRect.FromCoordinates(ClientLeft, ClientTop, ClientRight, ClientBottom); }
@@ -791,6 +804,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the actual height
         /// </summary>
+
         public double ActualWidth
         {
             get
@@ -886,6 +900,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// The margin top value if was effected by margin collapse.
         /// </summary>
+        [JsonProperty]
         public double CollapsedMarginTop
         {
             get { return double.IsNaN(_collapsedMarginTop) ? 0 : _collapsedMarginTop; }

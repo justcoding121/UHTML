@@ -82,7 +82,7 @@ namespace UHtml.Core.Utils
         /// </summary>
         /// <param name="ch">the character to check</param>
         /// <returns>true - Asian char, false - otherwise</returns>
-        public static bool IsAsianCharecter(char ch)
+        public static bool IsAsianCharacter(char ch)
         {
             return ch >= 0x4e00 && ch <= 0xFA2D;
         }

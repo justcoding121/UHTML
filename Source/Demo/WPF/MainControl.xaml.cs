@@ -326,7 +326,7 @@ namespace UHtml.Demo.WPF
         /// <summary>
         /// Show error raised from html renderer.
         /// </summary>
-        private void OnRenderError(object sender, RoutedEvenArgs<UHtmlrorEventArgs> args)
+        private void OnRenderError(object sender, RoutedEvenArgs<HtmlRenderErrorEventArgs> args)
         {
             Dispatcher.BeginInvoke(new Action(() => MessageBox.Show(args.Data.Message + (args.Data.Exception != null ? "\r\n" + args.Data.Exception : null), "Error in Html Renderer", MessageBoxButton.OK)));
         }

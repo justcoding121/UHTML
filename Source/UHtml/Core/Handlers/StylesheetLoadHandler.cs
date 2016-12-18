@@ -54,7 +54,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                htmlContainer.ReportError(UHtmlrorType.CssParsing, "Exception in handling stylesheet source", ex);
+                htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Exception in handling stylesheet source", ex);
             }
         }
 
@@ -104,12 +104,12 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    htmlContainer.ReportError(UHtmlrorType.CssParsing, "No stylesheet found by path: " + path);
+                    htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "No stylesheet found by path: " + path);
                 }
             }
             else
             {
-                htmlContainer.ReportError(UHtmlrorType.CssParsing, "Failed load image, invalid source: " + path);
+                htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Failed load image, invalid source: " + path);
             }
             return string.Empty;
         }
@@ -132,7 +132,7 @@ namespace UHtml.Core.Handlers
                 }
                 catch (Exception ex)
                 {
-                    htmlContainer.ReportError(UHtmlrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
+                    htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
                 }
                 return stylesheet;
             }

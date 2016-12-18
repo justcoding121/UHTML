@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using UHtml.Adapters;
@@ -20,6 +21,7 @@ namespace UHtml.Core.Dom
     /// To know more about boxes visit CSS spec:
     /// http://www.w3.org/TR/CSS21/box.html
     /// </remarks>
+    [JsonObject(MemberSerialization.OptIn)]
     internal class CssBox : CssBoxProperties, IDisposable
     {
         #region Fields and Consts
@@ -119,6 +121,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the children boxes of this box
         /// </summary>
+        [JsonProperty]
         public List<CssBox> Boxes
         {
             get { return _boxes; }
@@ -137,6 +140,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// is the box "Display" is "Inline", is this is an inline box and not block.
         /// </summary>
+        [JsonProperty]
         public bool IsInline
         {
             get { return (Display == CssConstants.Inline || Display == CssConstants.InlineBlock) && !IsBrElement; }
@@ -145,6 +149,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// is the box "Display" is "Block", is this is an block box and not inline.
         /// </summary>
+        [JsonProperty]
         public bool IsBlock
         {
             get { return Display == CssConstants.Block; }
@@ -153,6 +158,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Is the css box clickable (by default only "a" element is clickable)
         /// </summary>
+        [JsonProperty]
         public virtual bool IsClickable
         {
             get { return HtmlTag != null && HtmlTag.Name == HtmlConstants.A && !HtmlTag.HasAttribute("id"); }
@@ -164,6 +170,7 @@ namespace UHtml.Core.Dom
         /// <value>
         ///   <c>true</c> if this instance is fixed; otherwise, <c>false</c>.
         /// </value>
+        [JsonProperty]
         public virtual bool IsFixed
         {
             get
@@ -229,6 +236,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets the HTMLTag that hosts this box
         /// </summary>
+        [JsonProperty]
         public HtmlTag HtmlTag
         {
             get { return _htmltag; }
@@ -237,6 +245,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Gets if this box represents an image
         /// </summary>
+        [JsonProperty]
         public bool IsImage
         {
             get { return Words.Count == 1 && Words[0].IsImage; }
@@ -245,6 +254,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Tells if the box is empty or contains just blank spaces
         /// </summary>
+        [JsonProperty]
         public bool IsSpaceOrEmpty
         {
             get
@@ -437,7 +447,7 @@ namespace UHtml.Core.Dom
             }
             catch (Exception ex)
             {
-                HtmlContainer.ReportError(UHtmlrorType.Layout, "Exception in box layout", ex);
+                HtmlContainer.ReportError(HtmlRenderErrorType.Layout, "Exception in box layout", ex);
             }
         }
 
@@ -489,7 +499,7 @@ namespace UHtml.Core.Dom
             }
             catch (Exception ex)
             {
-                HtmlContainer.ReportError(UHtmlrorType.Paint, "Exception in box paint", ex);
+                HtmlContainer.ReportError(HtmlRenderErrorType.Paint, "Exception in box paint", ex);
             }
         }
 
@@ -549,10 +559,10 @@ namespace UHtml.Core.Dom
                     else
                     {
                         endIdx = startIdx;
-                        while (endIdx < _text.Length && !char.IsWhiteSpace(_text[endIdx]) && _text[endIdx] != '-' && WordBreak != CssConstants.BreakAll && !CommonUtils.IsAsianCharecter(_text[endIdx]))
+                        while (endIdx < _text.Length && !char.IsWhiteSpace(_text[endIdx]) && _text[endIdx] != '-' && WordBreak != CssConstants.BreakAll && !CommonUtils.IsAsianCharacter(_text[endIdx]))
                             endIdx++;
 
-                        if (endIdx < _text.Length && (_text[endIdx] == '-' || WordBreak == CssConstants.BreakAll || CommonUtils.IsAsianCharecter(_text[endIdx])))
+                        if (endIdx < _text.Length && (_text[endIdx] == '-' || WordBreak == CssConstants.BreakAll || CommonUtils.IsAsianCharacter(_text[endIdx])))
                             endIdx++;
 
                         if (endIdx > startIdx)

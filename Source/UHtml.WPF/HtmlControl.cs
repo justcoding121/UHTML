@@ -83,7 +83,7 @@ namespace UHtml.WPF
 
         public static readonly RoutedEvent LoadCompleteEvent = EventManager.RegisterRoutedEvent("LoadComplete", RoutingStrategy.Bubble, typeof(RoutedEventHandler<EventArgs>), typeof(HtmlControl));
         public static readonly RoutedEvent LinkClickedEvent = EventManager.RegisterRoutedEvent("LinkClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler<HtmlLinkClickedEventArgs>), typeof(HtmlControl));
-        public static readonly RoutedEvent RenderErrorEvent = EventManager.RegisterRoutedEvent("RenderError", RoutingStrategy.Bubble, typeof(RoutedEventHandler<UHtmlrorEventArgs>), typeof(HtmlControl));
+        public static readonly RoutedEvent RenderErrorEvent = EventManager.RegisterRoutedEvent("RenderError", RoutingStrategy.Bubble, typeof(RoutedEventHandler<HtmlRenderErrorEventArgs>), typeof(HtmlControl));
         public static readonly RoutedEvent RefreshEvent = EventManager.RegisterRoutedEvent("Refresh", RoutingStrategy.Bubble, typeof(RoutedEventHandler<HtmlRefreshEventArgs>), typeof(HtmlControl));
         public static readonly RoutedEvent StylesheetLoadEvent = EventManager.RegisterRoutedEvent("StylesheetLoad", RoutingStrategy.Bubble, typeof(RoutedEventHandler<HtmlStylesheetLoadEventArgs>), typeof(HtmlControl));
         public static readonly RoutedEvent ImageLoadEvent = EventManager.RegisterRoutedEvent("ImageLoad", RoutingStrategy.Bubble, typeof(RoutedEventHandler<HtmlImageLoadEventArgs>), typeof(HtmlControl));
@@ -131,7 +131,7 @@ namespace UHtml.WPF
         /// <summary>
         /// Raised when an error occurred during html rendering.<br/>
         /// </summary>
-        public event RoutedEventHandler<UHtmlrorEventArgs> RenderError
+        public event RoutedEventHandler<HtmlRenderErrorEventArgs> RenderError
         {
             add { AddHandler(RenderErrorEvent, value); }
             remove { RemoveHandler(RenderErrorEvent, value); }
@@ -404,9 +404,9 @@ namespace UHtml.WPF
         /// <summary>
         /// Propagate the Render Error event from root container.
         /// </summary>
-        protected virtual void OnRenderError(UHtmlrorEventArgs e)
+        protected virtual void OnRenderError(HtmlRenderErrorEventArgs e)
         {
-            RoutedEventArgs newEventArgs = new RoutedEvenArgs<UHtmlrorEventArgs>(RenderErrorEvent, this, e);
+            RoutedEventArgs newEventArgs = new RoutedEvenArgs<HtmlRenderErrorEventArgs>(RenderErrorEvent, this, e);
             RaiseEvent(newEventArgs);
         }
 
@@ -519,12 +519,12 @@ namespace UHtml.WPF
                 Dispatcher.Invoke(new Action<HtmlLinkClickedEventArgs>(OnLinkClicked), e);
         }
 
-        private void OnRenderError(object sender, UHtmlrorEventArgs e)
+        private void OnRenderError(object sender, HtmlRenderErrorEventArgs e)
         {
             if (CheckAccess())
                 OnRenderError(e);
             else
-                Dispatcher.Invoke(new Action<UHtmlrorEventArgs>(OnRenderError), e);
+                Dispatcher.Invoke(new Action<HtmlRenderErrorEventArgs>(OnRenderError), e);
         }
 
         private void OnStylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
