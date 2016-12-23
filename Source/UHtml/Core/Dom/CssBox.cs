@@ -132,7 +132,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public bool IsBrElement
         {
-            get {
+            get
+            {
                 return _htmltag != null && _htmltag.Name.Equals("br", StringComparison.OrdinalIgnoreCase);
             }
         }
@@ -603,6 +604,43 @@ namespace UHtml.Core.Dom
 
         #region Private Methods
 
+        private void handleClear(RGraphics g)
+        {
+
+        }
+
+        private void handleFloat(RGraphics g)
+        {
+
+        }
+
+        private void handlePosition(RGraphics g)
+        {
+            switch (Position)
+            {
+                case "initial":
+                case "static":
+                    break;
+
+                case "absolute":
+                    break;
+
+                case "relative":
+                    break;
+
+                case "fixed":
+                    break;
+
+                default:
+                    break;
+            }
+
+            handleFloat(g);
+            handleClear(g);
+
+        }
+
+
         /// <summary>
         /// Measures the bounds of box and children, recursively.<br/>
         /// Performs layout of the DOM structure creating lines by set bounds restrictions.<br/>
@@ -610,89 +648,264 @@ namespace UHtml.Core.Dom
         /// <param name="g">Device context to use</param>
         protected virtual void PerformLayoutImp(RGraphics g)
         {
+            var prevSibling = DomUtils.GetPreviousSibling(this);
+
+            var parentLocation = ContainingBlock.Location;
+            var parentSize = ContainingBlock.Size;
+
             if (Display != CssConstants.None)
             {
                 RectanglesReset();
                 MeasureWordsSize(g);
             }
 
-            if (IsBlock || Display == CssConstants.ListItem || Display == CssConstants.Table || Display == CssConstants.InlineTable || Display == CssConstants.TableCell)
+            //find Location(X,Y) first
+            switch (Display)
             {
-                // Because their width and height are set by CssTable
-                if (Display != CssConstants.TableCell && Display != CssConstants.Table)
-                {
-                    double width = ContainingBlock.Size.Width
-                                   - ContainingBlock.ActualPaddingLeft - ContainingBlock.ActualPaddingRight
-                                   - ContainingBlock.ActualBorderLeftWidth - ContainingBlock.ActualBorderRightWidth;
+                case "none":
+                    break;
 
-                    if (Width != CssConstants.Auto && !string.IsNullOrEmpty(Width))
+                case "initial":
+                case "inline":
+                    break;
+                case "block":
                     {
-                        width = CssValueParser.ParseLength(Width, width, this);
-                    }
 
-                    Size = new RSize(width, Size.Height);
-
-                    // must be separate because the margin can be calculated by percentage of the width
-                    Size = new RSize(width - ActualMarginLeft - ActualMarginRight, Size.Height);
-                }
-
-                if (Display != CssConstants.TableCell)
-                {
-                    var prevSibling = DomUtils.GetPreviousSibling(this);
-                    double left;
-                    double top;
-
-                    if (Position == CssConstants.Fixed)
-                    {
-                        left = 0;
-                        top = 0;
-                    }
-                    else
-                    {
-                        left = ContainingBlock.Location.X + ContainingBlock.ActualPaddingLeft + ActualMarginLeft + ContainingBlock.ActualBorderLeftWidth;
-                        top = (prevSibling == null && ParentBox != null ? ParentBox.ClientTop : ParentBox == null ? Location.Y : 0) + MarginTopCollapse(prevSibling) + (prevSibling != null ? prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth : 0);
-                        Location = new RPoint(left, top);
-                        ActualBottom = top;
-                    }
-                }
-
-                //If we're talking about a table here..
-                if (Display == CssConstants.Table || Display == CssConstants.InlineTable)
-                {
-                    CssLayoutEngineTable.PerformLayout(g, this);
-                }
-                else
-                {
-                    //If there's just inline boxes, create LineBoxes
-                    if (DomUtils.ContainsInlinesOnly(this))
-                    {
-                        ActualBottom = Location.Y;
-                        CssLayoutEngine.CreateLineBoxes(g, this); //This will automatically set the bottom of this block
-                    }
-                    else if (_boxes.Count > 0)
-                    {
-                        foreach (var childBox in Boxes)
+                        if (Height != CssConstants.Auto && !string.IsNullOrEmpty(Height))
                         {
-                            childBox.PerformLayout(g);
+                            double height = CssValueParser.ParseLength(Height, ContainingBlock.Size.Height, this);
+                            Size = new RSize(Size.Width
+                                    , height
+                                    + ActualBorderTopWidth
+                                    + ActualPaddingTop
+                                    + ActualBorderBottomWidth
+                                    + ActualPaddingBottom);
                         }
-                        ActualRight = CalculateActualRight();
-                        ActualBottom = MarginBottomCollapse();
-                    }
-                }
-            }
-            else
-            {
-                var prevSibling = DomUtils.GetPreviousSibling(this);
-                if (prevSibling != null)
-                {
-                    if (Location == RPoint.Empty)
-                        Location = prevSibling.Location;
-                    ActualBottom = prevSibling.ActualBottom;
-                }
-            }
-            ActualBottom = Math.Max(ActualBottom, Location.Y + ActualHeight);
+                        else
+                        {
+                            // must be separate
+                            //because the margin can be calculated by percentage of the width
+                            Size = new RSize(Size.Width                            
+                                , ContainingBlock.Size.Height
+                                - ContainingBlock.ActualBorderTopWidth
+                                - ContainingBlock.ActualPaddingTop
+                                - ContainingBlock.ActualBorderBottomWidth
+                                - ContainingBlock.ActualPaddingBottom
+                                - ActualMarginTop
+                                - ActualMarginBottom);
 
-            CreateListItemBox(g);
+                        }
+                        //overrride with custom width
+                        if (Width != CssConstants.Auto && !string.IsNullOrEmpty(Width))
+                        {
+                            double width = CssValueParser.ParseLength(Width, ContainingBlock.Size.Width, this);
+                            Size = new RSize(width
+                                    + ActualBorderLeftWidth
+                                    + ActualPaddingLeft
+                                    + ActualBorderRightWidth
+                                    + ActualPaddingRight
+                                    , Size.Height);
+
+                        }
+                        else
+                        {
+
+                            // must be separate
+                            //because the margin can be calculated by percentage of the width
+                            Size = new RSize(ContainingBlock.Size.Width
+                                - ContainingBlock.ActualBorderLeftWidth
+                                - ContainingBlock.ActualPaddingLeft
+                                - ContainingBlock.ActualBorderRightWidth
+                                - ContainingBlock.ActualPaddingRight
+                                - ActualMarginLeft
+                                - ActualMarginRight
+                                , Size.Height);
+                        }
+
+
+                        double left;
+                        double top;
+
+
+                        left = ContainingBlock.Location.X + ContainingBlock.ActualBorderLeftWidth
+                             + ContainingBlock.ActualPaddingLeft + ActualMarginLeft;
+
+                        if (prevSibling == null && ParentBox != null)
+                        {
+                            top = ParentBox.ClientTop + MarginTopCollapse(prevSibling);
+                        }
+                        else
+                        {
+                            if (ParentBox == null)
+                            {
+                                if (prevSibling != null)
+                                {
+                                    top = Location.Y + MarginTopCollapse(prevSibling) +
+                                        prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth;
+                                }
+                                else
+                                {
+                                    top = Location.Y + MarginTopCollapse(prevSibling);
+                                }
+                            }
+                            else
+                            {
+                                if (prevSibling != null)
+                                {
+                                    top = MarginTopCollapse(prevSibling)
+                                        + prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth;
+                                }
+                                else
+                                {
+                                    top = MarginTopCollapse(prevSibling);
+                                }
+
+                            }
+                        }
+
+                        Location = new RPoint(left, top);
+
+                    }
+                    break;
+                case "flex":
+                    break;
+                case "inline-block":
+                    break;
+                case "inline-flex":
+                    break;
+                case "inline-table":
+                    break;
+
+                case "list-item":
+                    break;
+                case "run-in":
+                    break;
+
+                case "table":
+                    break;
+
+                case "table-caption":
+                    break;
+                case "table-column-group":
+                    break;
+
+                case "table-header-group":
+                    break;
+
+                case "table-footer-group":
+                    break;
+
+                case "table-row-group":
+                    break;
+
+                case "table-cell":
+                    break;
+
+                case "table-column":
+                    break;
+
+                case "table-row":
+                    break;
+
+                default:
+                    break;
+            }
+
+            handlePosition(g);
+
+            //If there's just inline boxes, create LineBoxes
+            if (DomUtils.ContainsInlinesOnly(this))
+            {
+                CssLayoutEngine.CreateLineBoxes(g, this); //This will automatically set the bottom of this block
+            }
+            else if (_boxes.Count > 0)
+            {
+                foreach (var childBox in Boxes)
+                {
+                    childBox.PerformLayout(g);
+                }
+                ActualRight = CalculateActualRight();
+                ActualBottom = MarginBottomCollapse();
+            }
+
+
+            //if (IsBlock || Display == CssConstants.ListItem || Display == CssConstants.Table || Display == CssConstants.InlineTable || Display == CssConstants.TableCell)
+            //{
+            //    // Because their width and height are set by CssTable
+            //    if (Display != CssConstants.TableCell && Display != CssConstants.Table)
+            //    {
+            //        double width = ContainingBlock.Size.Width
+            //                       - ContainingBlock.ActualPaddingLeft - ContainingBlock.ActualPaddingRight
+            //                       - ContainingBlock.ActualBorderLeftWidth - ContainingBlock.ActualBorderRightWidth;
+
+            //        if (Width != CssConstants.Auto && !string.IsNullOrEmpty(Width))
+            //        {
+            //            width = CssValueParser.ParseLength(Width, width, this);
+            //        }
+
+            //        Size = new RSize(width, Size.Height);
+
+            //        // must be separate because the margin can be calculated by percentage of the width
+            //        Size = new RSize(width + ActualMarginLeft + ActualMarginRight, Size.Height);
+            //    }
+
+            //    if (Display != CssConstants.TableCell)
+            //    {
+            //        var prevSibling = DomUtils.GetPreviousSibling(this);
+            //        double left;
+            //        double top;
+
+            //        if (Position == CssConstants.Fixed)
+            //        {
+            //            left = 0;
+            //            top = 0;
+            //        }
+            //        else
+            //        {
+            //            left = ContainingBlock.Location.X + ContainingBlock.ActualPaddingLeft + ActualMarginLeft + ContainingBlock.ActualBorderLeftWidth;
+            //            top = (prevSibling == null && ParentBox != null ? ParentBox.ClientTop : ParentBox == null ? Location.Y : 0) + MarginTopCollapse(prevSibling) + (prevSibling != null ? prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth : 0);
+            //            Location = new RPoint(left, top);
+            //            ActualBottom = top;
+            //        }
+            //    }
+
+            //    //If we're talking about a table here..
+            //    if (Display == CssConstants.Table || Display == CssConstants.InlineTable)
+            //    {
+            //        CssLayoutEngineTable.PerformLayout(g, this);
+            //    }
+            //    else
+            //    {
+            //        //If there's just inline boxes, create LineBoxes
+            //        if (DomUtils.ContainsInlinesOnly(this))
+            //        {
+            //            ActualBottom = Location.Y;
+            //            CssLayoutEngine.CreateLineBoxes(g, this); //This will automatically set the bottom of this block
+            //        }
+            //        else if (_boxes.Count > 0)
+            //        {
+            //            foreach (var childBox in Boxes)
+            //            {
+            //                childBox.PerformLayout(g);
+            //            }
+            //            ActualRight = CalculateActualRight();
+            //            ActualBottom = MarginBottomCollapse();
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    var prevSibling = DomUtils.GetPreviousSibling(this);
+            //    if (prevSibling != null)
+            //    {
+            //        if (Location == RPoint.Empty)
+            //            Location = prevSibling.Location;
+            //        ActualBottom = prevSibling.ActualBottom;
+            //    }
+            //}
+            //ActualBottom = Math.Max(ActualBottom, Location.Y + ActualHeight);
+
+            //CreateListItemBox(g);
 
             if (!IsFixed)
             {

@@ -11,20 +11,20 @@ namespace UHtml.Tests.WPF.Utility
         {
             var executingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            return Path.Combine(executingDir, "TestFiles", testFileName + ".html");
+            return Path.Combine(executingDir, "CssTestFiles", testFileName + ".html");
         }
 
         internal static string GetTestImagePath(string testFileName)
         {
             var executingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            return Path.Combine(executingDir, "TestFiles",  testFileName + ".png");
+            return Path.Combine(executingDir, "CssTestFiles",  testFileName + ".png");
         }
 
         internal static void WriteResultFile(string resultFileName, Bitmap result)
         {
             var executingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var resultFilePath = Path.Combine(executingDir, "TestFiles", resultFileName + "_result.png");
+            var resultFilePath = Path.Combine(executingDir, "CssTestFiles", resultFileName + "_result.png");
 
             new Bitmap(result).Save(resultFilePath, ImageFormat.Png);
         }

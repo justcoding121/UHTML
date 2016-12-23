@@ -2,6 +2,9 @@
 {
     public static class TestFiles
     {
-        public static string Color_1  = @"Color\Color_1\Color_1";
+        public static string GetTestFile(string fileName, string fileNumber)
+        {
+            return string.Format(@"{0}\{0}_{1}\{0}_{1}", fileName, fileNumber);
+        }
     }
 }

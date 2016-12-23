@@ -5,6 +5,7 @@ using UHtml.Tests.WPF.Utility;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Drawing.Imaging;
+using System;
 
 namespace UHtml.Tests.WPF
 {
@@ -20,23 +21,36 @@ namespace UHtml.Tests.WPF
         [TestMethod]
         public void Color_Test()
         {
-            var htmlTest = File.ReadAllText(TestFileManager.GetHtmlTestFilePath(TestFiles.Color_1));
-            using (Bitmap expectedResultFile = new Bitmap(Image.FromFile(TestFileManager.GetTestImagePath(TestFiles.Color_1))))
-            using (Bitmap expectedResult = expectedResultFile.Clone(new Rectangle(0, 0, expectedResultFile.Width, expectedResultFile.Height), PixelFormat.Format32bppRgb))
+            TestFile(TestFiles.GetTestFile("Color","01"));
+        }
+
+        [TestMethod]
+        public void BoxModel_Test()
+        {
+            TestFile(TestFiles.GetTestFile("BoxModel", "01"));
+        }
+
+
+        private void TestFile(string testFile)
+        {
+            var htmlTest = File.ReadAllText(TestFileManager.GetHtmlTestFilePath(testFile));
+            using (Bitmap expectedResultFile = new Bitmap(Image.FromFile(TestFileManager.GetTestImagePath(testFile))))
+            using (Bitmap expectedResult = expectedResultFile.Clone(
+                new Rectangle(0, 0, expectedResultFile.Width, expectedResultFile.Height),
+                PixelFormat.Format32bppRgb))
             {
 
                 var actualResultBitmapSource = HtmlRender.RenderToImage(htmlTest,
-                    new System.Windows.Size(expectedResult.Size.Width, expectedResult.Size.Height));
+                    new System.Windows.Size(0, 0));
 
                 using (var actualResult = BitmapFromSource(actualResultBitmapSource))
                 {
-                   
-                    TestFileManager.WriteResultFile(TestFiles.Color_1, actualResult);
+
+                    TestFileManager.WriteResultFile(testFile, actualResult);
                 }
 
             }
         }
-
         private static Bitmap BitmapFromSource(BitmapSource bitmapsource)
         {
             System.Drawing.Bitmap bitmap;
