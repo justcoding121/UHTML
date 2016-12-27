@@ -112,53 +112,29 @@ namespace UHtml.Core.Dom
 
             blockBox.LineBoxes.Clear();
 
-            double limitRight = blockBox.ActualRight - blockBox.ActualPaddingRight - blockBox.ActualBorderRightWidth;
-
-            //Get the start x and y of the blockBox
-            double startx = blockBox.Location.X + blockBox.ActualPaddingLeft - 0 + blockBox.ActualBorderLeftWidth;
-            double starty = blockBox.Location.Y + blockBox.ActualPaddingTop - 0 + blockBox.ActualBorderTopWidth;
-            double curx = startx + blockBox.ActualTextIndent;
-            double cury = starty;
-
-            //Reminds the maximum bottom reached
-            double maxRight = startx;
-            double maxBottom = starty;
-
-            //First line box
-            CssLineBox line = new CssLineBox(blockBox);
-
-            //Flow words and boxes
-            FlowBox(g, blockBox, blockBox, limitRight, 0, startx, ref line, ref curx, ref cury, ref maxRight, ref maxBottom);
-
-            // if width is not restricted we need to lower it to the actual width
-            if (blockBox.ActualRight >= 90999)
-            {
-                blockBox.ActualRight = maxRight + blockBox.ActualPaddingRight + blockBox.ActualBorderRightWidth;
-            }
-
-            //Gets the rectangles for each line-box
-            foreach (var linebox in blockBox.LineBoxes)
-            {
-                ApplyHorizontalAlignment(g, linebox);
-                ApplyRightToLeft(blockBox, linebox);
-                BubbleRectangles(blockBox, linebox);
-                ApplyVerticalAlignment(g, linebox);
-                linebox.AssignRectanglesToBoxes();
-            }
-
-            if(blockBox.Height == CssConstants.Auto)
-            {
-                blockBox.ActualBottom = maxBottom + blockBox.ActualPaddingBottom + blockBox.ActualBorderBottomWidth;
-            }
-          
-
             // handle limiting block height when overflow is hidden
-            if (blockBox.Height != null && blockBox.Height != CssConstants.Auto 
-                && blockBox.Overflow == CssConstants.Hidden 
+            if (blockBox.Height != null && blockBox.Height != CssConstants.Auto
+                && blockBox.Overflow == CssConstants.Hidden
                 && blockBox.ActualBottom - blockBox.Location.Y > blockBox.ActualHeight)
             {
                 blockBox.ActualBottom = blockBox.Location.Y + blockBox.ActualHeight;
             }
+
+            //Get the start x and y of the blockBox
+            double startX = blockBox.Location.X
+                + blockBox.ActualPaddingLeft
+                + blockBox.ActualBorderLeftWidth
+                + blockBox.ActualTextIndent;
+
+            double startY = blockBox.Location.Y
+                + blockBox.ActualPaddingTop
+                + blockBox.ActualBorderTopWidth;
+
+
+            //Flow words and boxes
+            FlowInlineBoxes(g, blockBox, startX, startY);
+
+
         }
 
         /// <summary>
@@ -223,8 +199,7 @@ namespace UHtml.Core.Dom
         /// Recursively flows the content of the box using the inline model
         /// </summary>
         /// <param name="g">Device Info</param>
-        /// <param name="blockbox">Blockbox that contains the text flow</param>
-        /// <param name="box">Current box to flow its content</param>
+        /// <param name="parentBox">Blockbox that contains the text flow</param>
         /// <param name="limitRight">Maximum reached right</param>
         /// <param name="linespacing">Space to use between rows of text</param>
         /// <param name="startx">x starting coordinate for when breaking lines of text</param>
@@ -233,126 +208,178 @@ namespace UHtml.Core.Dom
         /// <param name="cury">Current y coordinate that will be the top of the next word</param>
         /// <param name="maxRight">Maximum right reached so far</param>
         /// <param name="maxbottom">Maximum bottom reached so far</param>
-        private static void FlowBox(RGraphics g, CssBox blockbox, CssBox box, double limitRight, double linespacing, double startx, ref CssLineBox line, ref double curx, ref double cury, ref double maxRight, ref double maxbottom)
+        private static void FlowInlineBoxes(RGraphics g, CssBox parentBox, double startX, double startY)
         {
-            var startX = curx;
-            var startY = cury;
-            box.FirstHostingLineBox = line;
-            var localCurx = curx;
-            var localMaxRight = maxRight;
-            var localmaxbottom = maxbottom;
 
-            foreach (CssBox b in box.Boxes)
+            var curX = startX;
+            var curY = startY;
+
+            double limitRight = parentBox.ActualRight
+              - parentBox.ActualPaddingRight
+              - parentBox.ActualBorderRightWidth;
+
+            //loop through each inline box
+            foreach (CssBox box in parentBox.Boxes)
             {
-                double leftspacing = (b.Position != CssConstants.Absolute && b.Position != CssConstants.Fixed) ? b.ActualMarginLeft + b.ActualBorderLeftWidth + b.ActualPaddingLeft : 0;
-                double rightspacing = (b.Position != CssConstants.Absolute && b.Position != CssConstants.Fixed) ? b.ActualMarginRight + b.ActualBorderRightWidth + b.ActualPaddingRight : 0;
+                double leftspacing = (box.Position != CssConstants.Absolute
+                    && box.Position != CssConstants.Fixed) ?
+                    box.ActualMarginLeft + box.ActualBorderLeftWidth + box.ActualPaddingLeft
+                    : 0;
 
-                b.RectanglesReset();
-                b.MeasureWordsSize(g);
+                double rightspacing = (box.Position != CssConstants.Absolute
+                    && box.Position != CssConstants.Fixed) ?
+                    box.ActualMarginRight + box.ActualBorderRightWidth + box.ActualPaddingRight
+                    : 0;
 
-                curx += leftspacing;
+                box.RectanglesReset();
+                box.MeasureWordsSize(g);
 
-                if (b.Words.Count > 0)
+                //init curX after left spacing
+                curX += leftspacing;
+
+
+                LayoutWords(g, parentBox, startX, startY, box, ref curX, ref curY,
+                    limitRight, leftspacing, rightspacing);
+
+
+                foreach (var childBox in box.Boxes)
                 {
-                    bool wrapNoWrapBox = false;
-                    if (b.WhiteSpace == CssConstants.NoWrap && curx > startx)
+                    if (!childBox.IsInline)
                     {
-                        var boxRight = curx;
-                        foreach (var word in b.Words)
-                            boxRight += word.FullWidth;
-                        if (boxRight > limitRight)
-                            wrapNoWrapBox = true;
+                        childBox.PerformLayout(g);
                     }
-
-                    if (DomUtils.IsBoxHasWhitespace(b))
-                        curx += box.ActualWordSpacing;
-
-                    foreach (var word in b.Words)
+                    else
                     {
-                        if (maxbottom - cury < box.ActualLineHeight)
-                            maxbottom += box.ActualLineHeight - (maxbottom - cury);
-
-                        if ((b.WhiteSpace != CssConstants.NoWrap && b.WhiteSpace != CssConstants.Pre && curx + word.Width + rightspacing > limitRight
-                             && (b.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces))
-                            || word.IsLineBreak || wrapNoWrapBox)
+                        if (childBox.Boxes.Count > 0)
                         {
-                            wrapNoWrapBox = false;
-                            curx = startx;
-
-                            // handle if line is wrapped for the first text element where parent has left margin\padding
-                            //if (b == box.Boxes[0] && !word.IsLineBreak && (word == b.Words[0] || (box.ParentBox != null && box.ParentBox.IsBlock)))
-                            //    curx += box.ActualMarginLeft + box.ActualBorderLeftWidth + box.ActualPaddingLeft;
-
-                            cury = maxbottom + linespacing;
-
-                            line = new CssLineBox(blockbox);
-
-                            if (word.IsImage || word.Equals(b.FirstWord))
-                            {
-                                curx += leftspacing;
-                            }
+                            FlowInlineBoxes(g, childBox, curX, curY);
+                        }
+                        else
+                        {
+                            LayoutWords(g, box, startX, startY, childBox,
+                                ref curX, ref curY, limitRight, leftspacing, rightspacing);
                         }
 
-                        line.ReportExistanceOf(word);
-
-                        word.Left = curx;
-                        word.Top = cury;
-
-                        if (!box.IsFixed && box.PageBreakInside == CssConstants.Avoid)
-                        {
-                            word.BreakPage();
-                        }
-
-                        curx = word.Left + word.FullWidth;
-
-                        maxRight = Math.Max(maxRight, word.Right);
-                        maxbottom = Math.Max(maxbottom, word.Bottom);
-
-                        if (b.Position == CssConstants.Absolute)
-                        {
-                            word.Left += box.ActualMarginLeft;
-                            word.Top += box.ActualMarginTop;
-                        }
                     }
                 }
-                else
+
+                //Gets the rectangles for each line-box
+                foreach (var linebox in parentBox.LineBoxes)
                 {
-                    FlowBox(g, blockbox, b, limitRight, linespacing, startx, ref line, ref curx, ref cury, ref maxRight, ref maxbottom);
+                    ApplyHorizontalAlignment(g, linebox);
+                    ApplyRightToLeft(parentBox, linebox);
+                    BubbleRectangles(parentBox, linebox);
+                    ApplyVerticalAlignment(g, linebox);
+                    linebox.AssignRectanglesToBoxes();
                 }
 
-                curx += rightspacing;
+                curX += rightspacing;
             }
 
-            // handle height setting
-            if (maxbottom - startY < box.ActualHeight)
+            if (parentBox.Height == CssConstants.Auto)
             {
-                maxbottom += box.ActualHeight - (maxbottom - startY);
+                parentBox.Size = new RSize(parentBox.Size.Width, (curY - startY)
+                    + parentBox.ActualPaddingBottom
+                    + parentBox.ActualBorderBottomWidth);
             }
 
-            // handle width setting
-            if (box.IsInline && 0 <= curx - startX && curx - startX < box.ActualWidth)
+
+        }
+
+        private static void LayoutWords(RGraphics g, CssBox parentBox,
+            double startX, double startY,
+            CssBox box, ref double curX, ref double curY, double limitRight,
+            double leftSpacing, double rightSpacing)
+        {
+            if(box.GetAttribute("id") == "check1" || box.GetAttribute("id") == "check2")
             {
-                // hack for actual width handling
-                curx += box.ActualWidth - (curx - startX);
-                line.Rectangles.Add(box, new RRect(startX, startY, box.ActualWidth, box.ActualHeight));
+                box.Size = new RSize(150, 40);
             }
 
-            // handle box that is only a whitespace
-            if (box.Text != null && box.Text.IsWhitespace() && !box.IsImage && box.IsInline && box.Boxes.Count == 0 && box.Words.Count == 0)
+            if (box.Words.Count > 0)
             {
-                curx += box.ActualWordSpacing;
-            }
+                var lineBox = new CssLineBox(box);
 
-            // hack to support specific absolute position elements
-            if (box.Position == CssConstants.Absolute)
-            {
-                curx = localCurx;
-                maxRight = localMaxRight;
-                maxbottom = localmaxbottom;
-                AdjustAbsolutePosition(box, 0, 0);
-            }
+                bool wrapNoWrapBox = false;
 
-            box.LastHostingLineBox = line;
+                //no line breaks so draw straight
+                if (box.WhiteSpace == CssConstants.NoWrap && curX > startX)
+                {
+                    var boxRight = curX;
+
+                    foreach (var word in box.Words)
+                    {
+                        boxRight += word.FullWidth;
+                    }
+
+                    //set NoWrap flag to true
+                    if (boxRight > limitRight)
+                    {
+                        wrapNoWrapBox = true;
+                    }
+                }
+
+                //?
+                //if last sibling was inline
+                //and first word of this line has a space then add it
+                if (DomUtils.DoesBoxHasWhitespace(box))
+                {
+                    curX += box.ActualWordSpacing;
+                }
+
+                foreach (var word in box.Words)
+                {
+                    //if (maxbottom - cury < parentBox.ActualLineHeight)
+                    //{
+                    //    maxbottom += parentBox.ActualLineHeight - (maxbottom - cury);
+                    //}
+
+                    if ((box.WhiteSpace != CssConstants.NoWrap
+                        && box.WhiteSpace != CssConstants.Pre
+                        && curX + word.Width + rightSpacing > limitRight
+                         && (box.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces))
+                        || curX + box.ActualWidth > limitRight
+                        || word.IsLineBreak || wrapNoWrapBox)
+                    {
+                        wrapNoWrapBox = false;
+                        curX = startX;
+
+                        // handle if line is wrapped for the first text element where parent has left margin\padding
+                        //if (b == box.Boxes[0] && !word.IsLineBreak && (word == b.Words[0] || (box.ParentBox != null && box.ParentBox.IsBlock)))
+                        //    curx += box.ActualMarginLeft + box.ActualBorderLeftWidth + box.ActualPaddingLeft;
+
+                        curY = startY + parentBox.ActualLineHeight;
+
+                        lineBox = new CssLineBox(box);
+
+                        if (word.IsImage || word.Equals(box.FirstWord))
+                        {
+                            curX += leftSpacing;
+                        }
+                    }
+
+                    lineBox.ReportExistanceOf(word);
+
+                    word.Left = curX;
+                    word.Top = curY;
+
+                    //?
+                    if (!parentBox.IsFixed && parentBox.PageBreakInside == CssConstants.Avoid)
+                    {
+                        word.BreakPage();
+                    }
+
+                    curX = word.Left + word.FullWidth;
+
+                    if (box.Position == CssConstants.Absolute)
+                    {
+                        word.Left += parentBox.ActualMarginLeft;
+                        word.Top += parentBox.ActualMarginTop;
+                    }
+                }
+
+
+            }
         }
 
         /// <summary>

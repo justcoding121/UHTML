@@ -852,6 +852,7 @@ namespace UHtml.Core.Dom
         {
             CssLength tblen = new CssLength(_tableBox.Width);
 
+            //var parentAvailableWidth = _tableBox.ParentBox.AvailableWidth
             if (tblen.Number > 0)
             {
                 _widthSpecified = true;

@@ -133,7 +133,7 @@ namespace UHtml.Core.Utils
         /// fix word space for first word in inline tag.
         /// </summary>
         /// <param name="box">the box to check</param>
-        public static bool IsBoxHasWhitespace(CssBox box)
+        public static bool DoesBoxHasWhitespace(CssBox box)
         {
             if (!box.Words[0].IsImage && box.Words[0].HasSpaceBefore && box.IsInline)
             {
@@ -872,7 +872,7 @@ namespace UHtml.Core.Utils
             }
             else
             {
-                var whitespaceBefore = rect.OwnerBox.Words[0] == rect ? IsBoxHasWhitespace(rect.OwnerBox) : rect.HasSpaceBefore;
+                var whitespaceBefore = rect.OwnerBox.Words[0] == rect ? DoesBoxHasWhitespace(rect.OwnerBox) : rect.HasSpaceBefore;
                 return (whitespaceBefore ? " " : "") + rect.Text + (rect.HasSpaceAfter ? " " : "");
             }
         }
