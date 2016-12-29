@@ -30,28 +30,28 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// the parent css box of this css box in the hierarchy
         /// </summary>
-        private CssBox _parentBox;
+        internal CssBox _parentBox;
 
         /// <summary>
         /// the root container for the hierarchy
         /// </summary>
-        protected HtmlContainerInt _htmlContainer;
+        internal HtmlContainerInt _htmlContainer;
 
         /// <summary>
         /// the html tag that is associated with this css box, null if anonymous box
         /// </summary>
-        private readonly HtmlTag _htmltag;
+        internal readonly HtmlTag _htmltag;
 
-        private readonly List<CssRect> _boxWords = new List<CssRect>();
-        private readonly List<CssBox> _boxes = new List<CssBox>();
-        private readonly List<CssLineBox> _lineBoxes = new List<CssLineBox>();
-        private readonly List<CssLineBox> _parentLineBoxes = new List<CssLineBox>();
-        private readonly Dictionary<CssLineBox, RRect> _rectangles = new Dictionary<CssLineBox, RRect>();
+        internal readonly List<CssRect> _boxWords = new List<CssRect>();
+        internal readonly List<CssBox> _boxes = new List<CssBox>();
+        internal readonly List<CssLineBox> _lineBoxes = new List<CssLineBox>();
+        internal readonly List<CssLineBox> _parentLineBoxes = new List<CssLineBox>();
+        internal readonly Dictionary<CssLineBox, RRect> _rectangles = new Dictionary<CssLineBox, RRect>();
 
         /// <summary>
         /// the inner text of the box
         /// </summary>
-        private SubString _text;
+        internal SubString _text;
 
         /// <summary>
         /// Do not use or alter this flag
@@ -61,15 +61,15 @@ namespace UHtml.Core.Dom
         /// </remarks>
         internal bool _tableFixed;
 
-        protected bool _wordsSizeMeasured;
-        private CssBox _listItemBox;
-        private CssLineBox _firstHostingLineBox;
-        private CssLineBox _lastHostingLineBox;
+        internal bool _wordsSizeMeasured;
+        internal CssBox _listItemBox;
+        internal CssLineBox _firstHostingLineBox;
+        internal CssLineBox _lastHostingLineBox;
 
         /// <summary>
         /// handler for loading background image
         /// </summary>
-        private ImageLoadHandler _imageLoadHandler;
+        internal ImageLoadHandler _imageLoadHandler;
 
         #endregion
 
@@ -441,11 +441,11 @@ namespace UHtml.Core.Dom
         /// Performs layout of the DOM structure creating lines by set bounds restrictions.
         /// </summary>
         /// <param name="g">Device context to use</param>
-        public void PerformLayout(RGraphics g)
+        internal virtual void PerformLayoutImp(RGraphics g)
         {
             try
             {
-                PerformLayoutImp(g);
+                CssLayoutEngine.LayoutBoxes(g,this);
             }
             catch (Exception ex)
             {
@@ -603,178 +603,7 @@ namespace UHtml.Core.Dom
         }
 
 
-        #region Private Methods
-
-        private void handleClear(RGraphics g)
-        {
-
-        }
-
-        private void handleFloat(RGraphics g)
-        {
-
-        }
-
-        /// <summary>
-        /// Measures the bounds of box and children, recursively.<br/>
-        /// Performs layout of the DOM structure creating lines by set bounds restrictions.<br/>
-        /// </summary>
-        /// <param name="g">Device context to use</param>
-        protected virtual void PerformLayoutImp(RGraphics g)
-        {
-
-            var parentLocation = ContainingBlock.Location;
-            var parentSize = ContainingBlock.Size;
-
-            if (Display != CssConstants.None)
-            {
-                RectanglesReset();
-                MeasureWordsSize(g);
-            }
-
-
-            if (Display == CssConstants.Block
-                || Display == CssConstants.ListItem
-                || Display == CssConstants.Table
-                || Display == CssConstants.InlineTable
-                ||Display == CssConstants.InlineBlock
-                || Display == CssConstants.TableCell)
-            {
-                if (Display != CssConstants.TableCell)
-                {
-                    var prevSibling = DomUtils.GetPreviousSibling(this);
-
-                    if (Height != CssConstants.Auto && !string.IsNullOrEmpty(Height))
-                    {
-                        double height = CssValueParser.ParseLength(Height, ContainingBlock.Size.Height, this);
-                        Size = new RSize(Size.Width
-                                , height
-                                + ActualBorderTopWidth
-                                + ActualPaddingTop
-                                + ActualBorderBottomWidth
-                                + ActualPaddingBottom);
-                    }
-                    else
-                    {
-                        // must be separate
-                        //because the margin can be calculated by percentage of the width
-                        Size = new RSize(Size.Width
-                        , ContainingBlock.Size.Height
-                        - ContainingBlock.ActualBorderTopWidth
-                        - ContainingBlock.ActualPaddingTop
-                        - ContainingBlock.ActualBorderBottomWidth
-                        - ContainingBlock.ActualPaddingBottom
-                        - ActualMarginTop
-                        - ActualMarginBottom);
-
-                    }
-                    //overrride with custom width
-                    if (Width != CssConstants.Auto && !string.IsNullOrEmpty(Width))
-                    {
-                        double width = CssValueParser.ParseLength(Width, ContainingBlock.Size.Width, this);
-                        Size = new RSize(width
-                                + ActualBorderLeftWidth
-                                + ActualPaddingLeft
-                                + ActualBorderRightWidth
-                                + ActualPaddingRight
-                                , Size.Height);
-
-                    }
-                    else
-                    {
-
-                        // must be separate
-                        //because the margin can be calculated by percentage of the width
-                        Size = new RSize(ContainingBlock.Size.Width
-                        - ContainingBlock.ActualBorderLeftWidth
-                        - ContainingBlock.ActualPaddingLeft
-                        - ContainingBlock.ActualBorderRightWidth
-                        - ContainingBlock.ActualPaddingRight
-                        - ActualMarginLeft
-                        - ActualMarginRight
-                        , Size.Height);
-                    }
-
-               
-                    double left;
-                    double top;
-
-
-                    left = ContainingBlock.Location.X + ContainingBlock.ActualBorderLeftWidth
-                         + ContainingBlock.ActualPaddingLeft + ActualMarginLeft;
-
-                    if (prevSibling == null && ParentBox != null)
-                    {
-                        top = ParentBox.ClientTop + MarginTopCollapse(prevSibling);
-                    }
-                    else
-                    {
-                        if (prevSibling != null)
-                        {
-                            top = prevSibling.ActualBottom + MarginTopCollapse(prevSibling);
-                        }
-                        else
-                        {
-                            top = MarginTopCollapse(prevSibling);
-                        }
-
-                    }
-                    // top = (prevSibling == null && ParentBox != null ? ParentBox.ClientTop : ParentBox == null ? Location.Y : 0) + MarginTopCollapse(prevSibling) + (prevSibling != null ? prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth : 0);
-                    Location = new RPoint(left, top);
-                }
-
-                //If we're talking about a table here..
-                if (Display == CssConstants.Table || Display == CssConstants.InlineTable)
-                {
-                    CssLayoutEngineTable.PerformLayout(g, this);
-                }
-                else
-                {
-                    //If there's just inline boxes, create LineBoxes
-                    if (DomUtils.ContainsInlinesOnly(this))
-                    {
-                        CssLayoutEngine.CreateLineBoxes(g, this); //This will automatically set the bottom of this block
-                    }
-                    else if (_boxes.Count > 0)
-                    {
-                        foreach (var childBox in Boxes)
-                        {
-                            childBox.PerformLayout(g);
-                        }
-
-                        ActualRight = CalculateActualRight();
-                        ActualBottom = MarginBottomCollapse();
-                    }
-                    else
-                    {
-                        ActualBottom = Math.Max(ActualBottom, Location.Y + ActualHeight);
-                    }
-                }
-            }
-            else
-            {
-                if (Display == CssConstants.Inline)
-                {
-                    var prevSibling = DomUtils.GetPreviousSibling(this);
-                    if (prevSibling != null)
-                    {
-                        if (Location == RPoint.Empty)
-                            Location = prevSibling.Location;
-                        ActualBottom = prevSibling.ActualBottom;
-                    }
-                }
-
-            
-            }
-
-            CreateListItemBox(g);
-
-            if (!IsFixed)
-            {
-                var actualWidth = Math.Max(GetMinimumWidth() + GetWidthMarginDeep(this), Size.Width < 90999 ? ActualRight - HtmlContainer.Root.Location.X : 0);
-                HtmlContainer.ActualSize = CommonUtils.Max(HtmlContainer.ActualSize, new RSize(actualWidth, ActualBottom - HtmlContainer.Root.Location.Y));
-            }
-        }
+        #region internal Methods
 
         /// <summary>
         /// Assigns words its width and height
@@ -818,7 +647,7 @@ namespace UHtml.Core.Dom
         /// Gets the index of the box to be used on a (ordered) list
         /// </summary>
         /// <returns></returns>
-        private int GetIndexForList()
+        internal int GetIndexForList()
         {
             bool reversed = !string.IsNullOrEmpty(ParentBox.GetAttribute("reversed"));
             int index;
@@ -855,7 +684,7 @@ namespace UHtml.Core.Dom
         /// Creates the <see cref="_listItemBox"/>
         /// </summary>
         /// <param name="g"></param>
-        private void CreateListItemBox(RGraphics g)
+        internal void CreateListItemBox(RGraphics g)
         {
             if (Display == CssConstants.ListItem && ListStyleType != CssConstants.None)
             {
@@ -893,7 +722,8 @@ namespace UHtml.Core.Dom
 
                     _listItemBox.ParseToWords();
 
-                    _listItemBox.PerformLayoutImp(g);
+                    CssLayoutEngine.LayoutBoxes(g, this);
+
                     _listItemBox.Size = new RSize(_listItemBox.Words[0].Width, _listItemBox.Words[0].Height);
                 }
                 _listItemBox.Words[0].Left = Location.X - _listItemBox.Size.Width - 5;
@@ -995,7 +825,7 @@ namespace UHtml.Core.Dom
         /// <param name="maxWidth"> </param>
         /// <param name="maxWidthWord"> </param>
         /// <returns></returns>
-        private static void GetMinimumWidth_LongestWord(CssBox box, ref double maxWidth, ref CssRect maxWidthWord)
+        internal static void GetMinimumWidth_LongestWord(CssBox box, ref double maxWidth, ref CssRect maxWidthWord)
         {
             if (box.Words.Count > 0)
             {
@@ -1020,7 +850,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="box">the box to start calculation from.</param>
         /// <returns>the total margin</returns>
-        private static double GetWidthMarginDeep(CssBox box)
+        internal double GetWidthMarginDeep(CssBox box)
         {
             double sum = 0f;
             if (box.Size.Width > 90999 || (box.ParentBox != null && box.ParentBox.Size.Width > 90999))
@@ -1081,7 +911,7 @@ namespace UHtml.Core.Dom
         /// <param name="paddingSum">the total amount of padding the content has </param>
         /// <param name="marginSum"></param>
         /// <returns></returns>
-        private static void GetMinMaxSumWords(CssBox box, ref double min, ref double maxSum, ref double paddingSum, ref double marginSum)
+        internal static void GetMinMaxSumWords(CssBox box, ref double min, ref double maxSum, ref double paddingSum, ref double marginSum)
         {
             double? oldSum = null;
 
@@ -1098,7 +928,7 @@ namespace UHtml.Core.Dom
 
             // for tables the padding also contains the spacing between cells
             if (box.Display == CssConstants.Table)
-                paddingSum += CssLayoutEngineTable.GetTableSpacing(box);
+                paddingSum += CssTableLayoutEngine.GetTableSpacing(box);
 
             if (box.Words.Count > 0)
             {
@@ -1165,7 +995,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="prevSibling">the previous box under the same parent</param>
         /// <returns>Resulting top margin</returns>
-        protected double MarginTopCollapse(CssBoxProperties prevSibling)
+        internal double MarginTopCollapse(CssBoxProperties prevSibling)
         {
             double value;
             if (prevSibling != null)
@@ -1215,7 +1045,7 @@ namespace UHtml.Core.Dom
         /// Calculate the actual right of the box by the actual right of the child boxes if this box actual right is not set.
         /// </summary>
         /// <returns>the calculated actual right value</returns>
-        private double CalculateActualRight()
+        internal double CalculateActualRight()
         {
             if (ActualRight > 90999)
             {
@@ -1236,7 +1066,7 @@ namespace UHtml.Core.Dom
         /// Gets the result of collapsing the vertical margins of the two boxes
         /// </summary>
         /// <returns>Resulting bottom margin</returns>
-        private double MarginBottomCollapse()
+        internal double MarginBottomCollapse()
         {
             double margin = 0;
             if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && _parentBox.ActualMarginBottom < 0.1)
@@ -1283,7 +1113,7 @@ namespace UHtml.Core.Dom
         /// Paints the fragment
         /// </summary>
         /// <param name="g">the device to draw to</param>
-        protected virtual void PaintImp(RGraphics g)
+        internal virtual void PaintImp(RGraphics g)
         {
             if (Display != CssConstants.None && (Display != CssConstants.TableCell || EmptyCells != CssConstants.Hide || !IsSpaceOrEmpty))
             {
@@ -1350,7 +1180,7 @@ namespace UHtml.Core.Dom
             }
         }
 
-        private bool IsRectVisible(RRect rect, RRect clip)
+        internal bool IsRectVisible(RRect rect, RRect clip)
         {
             rect.X -= 2;
             rect.Width += 2;
@@ -1369,7 +1199,7 @@ namespace UHtml.Core.Dom
         /// <param name="rect">the bounding rectangle to draw in</param>
         /// <param name="isFirst">is it the first rectangle of the element</param>
         /// <param name="isLast">is it the last rectangle of the element</param>
-        protected void PaintBackground(RGraphics g, RRect rect, bool isFirst, bool isLast)
+        internal void PaintBackground(RGraphics g, RRect rect, bool isFirst, bool isLast)
         {
             if (rect.Width > 0 && rect.Height > 0)
             {
@@ -1430,7 +1260,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="g">the device to draw into</param>
         /// <param name="offset">the current scroll offset to offset the words</param>
-        private void PaintWords(RGraphics g, RPoint offset)
+        internal void PaintWords(RGraphics g, RPoint offset)
         {
             if (Width.Length > 0)
             {
@@ -1490,7 +1320,7 @@ namespace UHtml.Core.Dom
         /// <param name="rectangle"> </param>
         /// <param name="isFirst"> </param>
         /// <param name="isLast"> </param>
-        protected void PaintDecoration(RGraphics g, RRect rectangle, bool isFirst, bool isLast)
+        internal void PaintDecoration(RGraphics g, RRect rectangle, bool isFirst, bool isLast)
         {
             if (string.IsNullOrEmpty(TextDecoration) || TextDecoration == CssConstants.None)
                 return;
@@ -1553,7 +1383,7 @@ namespace UHtml.Core.Dom
         /// <param name="image">the image loaded or null if failed</param>
         /// <param name="rectangle">the source rectangle to draw in the image (empty - draw everything)</param>
         /// <param name="async">is the callback was called async to load image call</param>
-        private void OnImageLoadComplete(RImage image, RRect rectangle, bool async)
+        internal void OnImageLoadComplete(RImage image, RRect rectangle, bool async)
         {
             if (image != null && async)
                 HtmlContainer.RequestRefresh(false);
@@ -1562,7 +1392,7 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Get brush for the text depending if there is selected text color set.
         /// </summary>
-        protected RColor GetSelectionForeBrush()
+        internal RColor GetSelectionForeBrush()
         {
             return HtmlContainer.SelectionForeColor != RColor.Empty ? HtmlContainer.SelectionForeColor : ActualColor;
         }
@@ -1572,7 +1402,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="g"></param>
         /// <param name="forceAlpha">used for images so they will have alpha effect</param>
-        protected RBrush GetSelectionBackBrush(RGraphics g, bool forceAlpha)
+        internal RBrush GetSelectionBackBrush(RGraphics g, bool forceAlpha)
         {
             var backColor = HtmlContainer.SelectionBackColor;
             if (backColor != RColor.Empty)

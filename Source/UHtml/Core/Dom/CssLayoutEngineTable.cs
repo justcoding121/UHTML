@@ -11,7 +11,7 @@ namespace UHtml.Core.Dom
     /// <summary>
     /// Layout engine for tables executing the complex layout of tables with rows/columns/headers/etc.
     /// </summary>
-    internal sealed class CssLayoutEngineTable
+    internal sealed class CssTableLayoutEngine
     {
         #region Fields and Consts
 
@@ -59,7 +59,7 @@ namespace UHtml.Core.Dom
         /// Init.
         /// </summary>
         /// <param name="tableBox"></param>
-        private CssLayoutEngineTable(CssBox tableBox)
+        private CssTableLayoutEngine(CssBox tableBox)
         {
             _tableBox = tableBox;
         }
@@ -116,7 +116,7 @@ namespace UHtml.Core.Dom
 
             try
             {
-                var table = new CssLayoutEngineTable(tableBox);
+                var table = new CssTableLayoutEngine(tableBox);
                 table.Layout(g);
             }
             catch (Exception ex)
@@ -630,7 +630,7 @@ namespace UHtml.Core.Dom
                     double width = GetCellWidth(columnIndex, cell);
                     cell.Location = new RPoint(curx, cury);
                     cell.Size = new RSize(width, 0f);
-                    cell.PerformLayout(g); //That will automatically set the bottom of the cell
+                    cell.PerformLayoutImp(g); //That will automatically set the bottom of the cell
 
                     //Alter max bottom only if row is cell's row + cell's rowspan - 1
                     CssSpacingBox sb = cell as CssSpacingBox;

@@ -625,14 +625,14 @@ namespace UHtml.Core
                 // if width is not restricted we set it to large value to get the actual later
                 _root.Size = new RSize(_maxSize.Width > 0 ? _maxSize.Width : 99999, 0);
                 _root.Location = _location;
-                _root.PerformLayout(g);
+                _root.PerformLayoutImp(g);
 
                 if (_maxSize.Width <= 0.1)
                 {
                     // in case the width is not restricted we need to double layout, first will find the width so second can layout by it (center alignment)
                     _root.Size = new RSize((int)Math.Ceiling(_actualSize.Width), 0);
                     _actualSize = RSize.Empty;
-                    _root.PerformLayout(g);
+                    _root.PerformLayoutImp(g);
                 }
 
                 if (!_loadComplete)

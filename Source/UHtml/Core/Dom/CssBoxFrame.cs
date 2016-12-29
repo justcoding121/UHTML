@@ -423,7 +423,7 @@ namespace UHtml.Core.Dom
         /// Paints the fragment
         /// </summary>
         /// <param name="g">the device to draw to</param>
-        protected override void PaintImp(RGraphics g)
+        internal override void PaintImp(RGraphics g)
         {
             if (_videoImageUrl != null && _imageLoadHandler == null)
             {
