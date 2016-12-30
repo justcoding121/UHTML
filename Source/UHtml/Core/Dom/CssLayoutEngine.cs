@@ -137,8 +137,7 @@ namespace UHtml.Core.Dom
 
             double startX = parentBox.Location.X
                 + parentBox.ActualPaddingLeft
-                + parentBox.ActualBorderLeftWidth
-                + parentBox.ActualTextIndent;
+                + parentBox.ActualBorderLeftWidth;
 
             double startY = parentBox.Location.Y
                 + parentBox.ActualPaddingTop
@@ -156,21 +155,44 @@ namespace UHtml.Core.Dom
             //loop through each inline box
             foreach (CssBox box in parentBox.Boxes)
             {
+
+                box.Location = new RPoint(curX + box.ActualMarginLeft,
+                                        curY + box.ActualMarginTop);
+
+                curX = curX + box.ActualMarginLeft
+                    + box.ActualPaddingLeft
+                    + box.ActualBorderLeftWidth;
+
+                curY = curY + box.ActualMarginTop
+                    + box.ActualPaddingTop
+                    + box.ActualBorderTopWidth;
+
                 box.RectanglesReset();
                 box.MeasureWordsSize(g);
+                box.LineBoxes.Clear();
 
-                SetBoxSize(box);
+                SetInlineBoxSize(box);
 
-                //init to parent max right
                 var localMaxRight = maxRight;
 
                 //set x,y location
                 if (box.Width != CssConstants.Auto)
                 {
+
                     if (curX + box.ActualWidth > maxRight)
                     {
-                        curX = startX;
-                        curY = maxLineBottom;
+                        box.Location = new RPoint(startX + box.ActualMarginLeft,
+                                  maxLineBottom + box.ActualMarginTop);
+
+                        curX = startX + box.ActualMarginLeft
+                            + box.ActualPaddingLeft
+                            + box.ActualBorderLeftWidth;
+
+                        curY = maxLineBottom + box.ActualMarginTop
+                            + box.ActualPaddingTop
+                            + box.ActualBorderTopWidth;
+
+
                     }
 
                     //if this box have a size, then limit right to its size
@@ -207,34 +229,17 @@ namespace UHtml.Core.Dom
                     curX = box.ActualRight;
                 }
 
-                //Gets the rectangles for each line-box
-                foreach (var linebox in box.LineBoxes)
-                {
-                    ApplyHorizontalAlignment(g, linebox);
-                    ApplyRightToLeft(parentBox, linebox);
-                    BubbleRectangles(parentBox, linebox);
-                    ApplyVerticalAlignment(g, linebox);
-                    linebox.AssignRectanglesToBoxes();
-                }
-
+               
             }
 
             //layout any words in this box
             LayoutWords(g, parentBox, ref curX, ref curY, maxRight);
 
-            //Gets the rectangles for each line-box
-            foreach (var linebox in parentBox.LineBoxes)
-            {
-                ApplyHorizontalAlignment(g, linebox);
-                ApplyRightToLeft(parentBox, linebox);
-                BubbleRectangles(parentBox, linebox);
-                ApplyVerticalAlignment(g, linebox);
-                linebox.AssignRectanglesToBoxes();
-            }
-
             if (parentBox.Height == CssConstants.Auto)
             {
-                parentBox.Size = new RSize(parentBox.Size.Width, (curY - startY)
+                parentBox.Size = new RSize(parentBox.Size.Width, (maxLineBottom - startY)
+                    + parentBox.ActualPaddingTop
+                    + parentBox.ActualBorderTopWidth
                     + parentBox.ActualPaddingBottom
                     + parentBox.ActualBorderBottomWidth);
             }
@@ -255,13 +260,13 @@ namespace UHtml.Core.Dom
             var startX = curX;
             var startY = curY;
 
-            double currentBottom = 0f;
-            double greatestLineBottom = 0f;
+            double greatestLineBottom = startY;
             double rightSpacing = box.ActualBorderRightWidth + box.ActualPaddingRight;
 
             if (box.Words.Count > 0)
             {
                 var lineBox = new CssLineBox(box);
+                box.FirstHostingLineBox = lineBox;
 
                 foreach (var word in box.Words)
                 {
@@ -274,12 +279,9 @@ namespace UHtml.Core.Dom
                     {
 
                         curX = startX;
-                        curY = startY + greatestLineBottom + box.ActualLineHeight;
+                        curY = greatestLineBottom;
 
                         lineBox = new CssLineBox(box);
-
-                        currentBottom = greatestLineBottom;
-                        greatestLineBottom = 0d;
 
                     }
 
@@ -289,16 +291,64 @@ namespace UHtml.Core.Dom
                     word.Top = curY;
 
                     curX = word.Left + word.FullWidth;
-
                     greatestLineBottom = Math.Max(greatestLineBottom, word.Bottom);
 
                 }
 
+                if (box.Height == CssConstants.Auto)
+                {
+                    box.ActualBottom = greatestLineBottom;
+                }
+
+                if (box.Width == CssConstants.Auto)
+                {
+                    box.ActualRight = curX;
+                }
+
+                box.LastHostingLineBox = lineBox;
+
+                //Gets the rectangles for each line-box
+                foreach (var linebox in box.LineBoxes)
+                {
+                    ApplyHorizontalAlignment(g, linebox);
+                    ApplyRightToLeft(box.ParentBox, linebox);
+                    BubbleRectangles(box.ParentBox, linebox);
+                    ApplyVerticalAlignment(g, linebox);
+                    linebox.AssignRectanglesToBoxes();
+                }
+
             }
 
-            if (box.Height == CssConstants.Auto)
+        }
+
+        /// <summary>
+        /// Set Width & Height for Box
+        /// </summary>
+        /// <param name="box"></param>
+        private static void SetInlineBoxSize(CssBox box)
+        {
+            if (box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height))
             {
-                box.ActualBottom = greatestLineBottom;
+                double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
+                box.Size = new RSize(box.Size.Width
+                        , height
+                        + box.ActualBorderTopWidth
+                        + box.ActualPaddingTop
+                        + box.ActualBorderBottomWidth
+                        + box.ActualPaddingBottom);
+            }
+
+            //overrride with custom width
+            if (box.Width != CssConstants.Auto && !string.IsNullOrEmpty(box.Width))
+            {
+                double width = CssValueParser.ParseLength(box.Width, box.ContainingBlock.Size.Width, box);
+                box.Size = new RSize(width
+                        + box.ActualBorderLeftWidth
+                        + box.ActualPaddingLeft
+                        + box.ActualBorderRightWidth
+                        + box.ActualPaddingRight
+                        , box.Size.Height);
+
             }
 
         }
@@ -325,13 +375,14 @@ namespace UHtml.Core.Dom
                 // must be separate
                 //because the margin can be calculated by percentage of the width
                 box.Size = new RSize(box.Size.Width
-                , box.ContainingBlock.Size.Height
+                , box.ContainingBlock.Size.Height > 0 ?
+                  box.ContainingBlock.Size.Height
                 - box.ContainingBlock.ActualBorderTopWidth
                 - box.ContainingBlock.ActualPaddingTop
                 - box.ContainingBlock.ActualBorderBottomWidth
                 - box.ContainingBlock.ActualPaddingBottom
                 - box.ActualMarginTop
-                - box.ActualMarginBottom);
+                - box.ActualMarginBottom : 0);
 
             }
             //overrride with custom width
@@ -351,13 +402,14 @@ namespace UHtml.Core.Dom
 
                 // must be separate
                 //because the margin can be calculated by percentage of the width
-                box.Size = new RSize(box.ContainingBlock.Size.Width
+                box.Size = new RSize(box.ContainingBlock.Size.Width > 0 ?
+                    box.ContainingBlock.Size.Width
                 - box.ContainingBlock.ActualBorderLeftWidth
                 - box.ContainingBlock.ActualPaddingLeft
                 - box.ContainingBlock.ActualBorderRightWidth
                 - box.ContainingBlock.ActualPaddingRight
                 - box.ActualMarginLeft
-                - box.ActualMarginRight
+                - box.ActualMarginRight : 0
                 , box.Size.Height);
             }
         }
