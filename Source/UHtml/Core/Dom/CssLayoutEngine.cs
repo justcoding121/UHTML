@@ -78,8 +78,16 @@ namespace UHtml.Core.Dom
                     //If there's just inline boxes, create LineBoxes
                     if (DomUtils.ContainsInlinesOnly(box))
                     {
+                        double curX = box.Location.X - box.ActualMarginLeft;
+                        double curY = box.Location.Y - box.ActualMarginTop;
                         //This will automatically set the bottom of this block
-                        LayoutInlineBoxes(g, box);
+                        LayoutInlineBoxes(g, box,
+                            ref curX,
+                            ref curY,
+                            box.ActualRight
+                            - box.ActualBorderRightWidth
+                            - box.ActualPaddingRight
+                            );
                     }
                     else if (box.Boxes.Count > 0)
                     {
@@ -128,32 +136,31 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="g"></param>
         /// <param name="blockBox"></param>
-        public static void LayoutInlineBoxes(RGraphics g, CssBox parentBox)
+        public static void LayoutInlineBoxes(RGraphics g, CssBox currentBox,
+            ref double curX, ref double curY, double maxRight)
         {
             ArgChecker.AssertArgNotNull(g, "g");
-            ArgChecker.AssertArgNotNull(parentBox, "blockBox");
+            ArgChecker.AssertArgNotNull(currentBox, "blockBox");
 
-            parentBox.LineBoxes.Clear();
+            currentBox.LineBoxes.Clear();
 
-            double startX = parentBox.Location.X
-                + parentBox.ActualPaddingLeft
-                + parentBox.ActualBorderLeftWidth;
+            double startX = curX
+                + currentBox.ActualMarginLeft
+                + currentBox.ActualPaddingLeft
+                + currentBox.ActualBorderLeftWidth;
 
-            double startY = parentBox.Location.Y
-                + parentBox.ActualPaddingTop
-                + parentBox.ActualBorderTopWidth;
+            double startY = curY
+                + currentBox.ActualMarginTop
+                + currentBox.ActualPaddingTop
+                + currentBox.ActualBorderTopWidth;
 
-            double curX = startX;
-            double curY = startY;
-
-            double maxRight = parentBox.ActualRight
-                - parentBox.ActualPaddingRight
-                - parentBox.ActualBorderRightWidth;
+            curX = startX;
+            curY = startY;
 
             double maxLineBottom = 0d;
 
             //loop through each inline box
-            foreach (CssBox box in parentBox.Boxes)
+            foreach (CssBox box in currentBox.Boxes)
             {
 
                 box.Location = new RPoint(curX + box.ActualMarginLeft,
@@ -169,7 +176,6 @@ namespace UHtml.Core.Dom
 
                 box.RectanglesReset();
                 box.MeasureWordsSize(g);
-                box.LineBoxes.Clear();
 
                 SetInlineBoxSize(box);
 
@@ -178,7 +184,7 @@ namespace UHtml.Core.Dom
                 //set x,y location
                 if (box.Width != CssConstants.Auto)
                 {
-
+                    //break to new line if exceeds maximum width
                     if (curX + box.ActualWidth > maxRight)
                     {
                         box.Location = new RPoint(startX + box.ActualMarginLeft,
@@ -206,13 +212,11 @@ namespace UHtml.Core.Dom
                 //as text wrap to new lines increase bottom
                 LayoutWords(g, box, ref curX, ref curY, localMaxRight);
 
-                maxLineBottom = Math.Max(maxLineBottom, box.ActualBottom);
-
                 if (box.Boxes.Count > 0)
                 {
                     if (DomUtils.ContainsInlinesOnly(box))
                     {
-                        LayoutInlineBoxes(g, box);
+                        LayoutInlineBoxes(g, box, ref curX, ref curY, localMaxRight);
                     }
                     else
                     {
@@ -223,25 +227,46 @@ namespace UHtml.Core.Dom
                     }
                 }
 
+                maxLineBottom = Math.Max(maxLineBottom, box.ActualBottom);
+
                 //set x,y location
-                if (box.Width != CssConstants.Auto)
+                if (box.Height == CssConstants.Auto)
                 {
-                    curX = box.ActualRight;
+                    box.ActualBottom = maxLineBottom
+                        + box.ActualBorderBottomWidth
+                        + box.ActualPaddingBottom;
+
+                   
                 }
 
-               
+                if (box.Width == CssConstants.Auto)
+                {
+                    box.ActualRight = curX
+                        + box.ActualBorderRightWidth
+                        + box.ActualPaddingRight;
+                }
+
+
             }
 
             //layout any words in this box
-            LayoutWords(g, parentBox, ref curX, ref curY, maxRight);
+            LayoutWords(g, currentBox, ref curX, ref curY, maxRight);
 
-            if (parentBox.Height == CssConstants.Auto)
+            maxLineBottom = Math.Max(maxLineBottom, currentBox.ActualBottom);
+            //set x,y location
+            if (currentBox.Height == CssConstants.Auto)
             {
-                parentBox.Size = new RSize(parentBox.Size.Width, (maxLineBottom - startY)
-                    + parentBox.ActualPaddingTop
-                    + parentBox.ActualBorderTopWidth
-                    + parentBox.ActualPaddingBottom
-                    + parentBox.ActualBorderBottomWidth);
+                currentBox.ActualBottom = maxLineBottom
+                    + currentBox.ActualBorderBottomWidth
+                    + currentBox.ActualPaddingBottom;
+
+            }
+
+            if (currentBox.Width == CssConstants.Auto)
+            {
+                currentBox.ActualRight = curX
+                    + currentBox.ActualBorderRightWidth
+                    + currentBox.ActualPaddingRight;
             }
 
         }
@@ -260,8 +285,9 @@ namespace UHtml.Core.Dom
             var startX = curX;
             var startY = curY;
 
-            double greatestLineBottom = startY;
-            double rightSpacing = box.ActualBorderRightWidth + box.ActualPaddingRight;
+            double maxLineBottom = startY;
+
+            box.LineBoxes.Clear();
 
             if (box.Words.Count > 0)
             {
@@ -270,16 +296,16 @@ namespace UHtml.Core.Dom
 
                 foreach (var word in box.Words)
                 {
-
+                   
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
-                        && curX + word.Width + rightSpacing > rightLimit
+                        && curX + word.Width > rightLimit
                          && (box.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces))
                         || word.IsLineBreak)
                     {
 
                         curX = startX;
-                        curY = greatestLineBottom;
+                        curY = maxLineBottom;
 
                         lineBox = new CssLineBox(box);
 
@@ -291,18 +317,25 @@ namespace UHtml.Core.Dom
                     word.Top = curY;
 
                     curX = word.Left + word.FullWidth;
-                    greatestLineBottom = Math.Max(greatestLineBottom, word.Bottom);
+                    maxLineBottom = Math.Max(maxLineBottom, word.Bottom);
 
                 }
 
+                //set x,y location
                 if (box.Height == CssConstants.Auto)
                 {
-                    box.ActualBottom = greatestLineBottom;
+                    box.ActualBottom = maxLineBottom
+                        + box.ActualBorderBottomWidth
+                        + box.ActualPaddingBottom;
+
                 }
+
 
                 if (box.Width == CssConstants.Auto)
                 {
-                    box.ActualRight = curX;
+                    box.ActualRight = curX
+                        + box.ActualBorderRightWidth
+                        + box.ActualPaddingRight;
                 }
 
                 box.LastHostingLineBox = lineBox;
