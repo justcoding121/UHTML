@@ -80,13 +80,31 @@ namespace UHtml.Core.Dom
                     {
                         double curX = box.Location.X - box.ActualMarginLeft;
                         double curY = box.Location.Y - box.ActualMarginTop;
+
+                        double startX = curX
+                            + box.ActualMarginLeft
+                            + box.ActualPaddingLeft
+                            + box.ActualBorderLeftWidth;
+
+                        double startY = curY
+                            + box.ActualMarginTop
+                            + box.ActualPaddingTop
+                            + box.ActualBorderTopWidth;
+
+                        curX = startX;
+                        curY = startY;
+
+                        double currentMaxBottom = curY;
                         //This will automatically set the bottom of this block
-                        LayoutInlineBoxes(g, box,
+                        LayoutInlineBoxes(g, box, box,
+                            startX,
+                            startY,
                             ref curX,
                             ref curY,
                             box.ActualRight
                             - box.ActualBorderRightWidth
-                            - box.ActualPaddingRight
+                            - box.ActualPaddingRight,
+                            ref currentMaxBottom
                             );
                     }
                     else if (box.Boxes.Count > 0)
@@ -133,35 +151,30 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Creates line boxes for the specified blockbox
         /// Assuming all immediate children of this box are inline boxes
+        /// Inline boxes don't create new lines unless explicitly specified or limited by windows/parent width
         /// </summary>
         /// <param name="g"></param>
         /// <param name="blockBox"></param>
-        public static void LayoutInlineBoxes(RGraphics g, CssBox currentBox,
-            ref double curX, ref double curY, double maxRight)
+        public static void LayoutInlineBoxes(RGraphics g, CssBox closestBlockAncestor,
+            CssBox currentBox,
+            double startX, double startY,
+            ref double curX, ref double curY, double maxRight, ref double currentMaxBottom)
         {
             ArgChecker.AssertArgNotNull(g, "g");
             ArgChecker.AssertArgNotNull(currentBox, "blockBox");
 
-            currentBox.LineBoxes.Clear();
-
-            double startX = curX
-                + currentBox.ActualMarginLeft
-                + currentBox.ActualPaddingLeft
-                + currentBox.ActualBorderLeftWidth;
-
-            double startY = curY
-                + currentBox.ActualMarginTop
-                + currentBox.ActualPaddingTop
-                + currentBox.ActualBorderTopWidth;
-
-            curX = startX;
-            curY = startY;
-
-            double maxLineBottom = 0d;
+            if (currentBox.Display != CssConstants.None)
+            {
+                currentBox.RectanglesReset();
+                currentBox.MeasureWordsSize(g);
+            }
 
             //loop through each inline box
             foreach (CssBox box in currentBox.Boxes)
             {
+
+                if (box.Display == CssConstants.None)
+                    continue;
 
                 box.Location = new RPoint(curX + box.ActualMarginLeft,
                                         curY + box.ActualMarginTop);
@@ -174,8 +187,10 @@ namespace UHtml.Core.Dom
                     + box.ActualPaddingTop
                     + box.ActualBorderTopWidth;
 
+
                 box.RectanglesReset();
                 box.MeasureWordsSize(g);
+
 
                 SetInlineBoxSize(box);
 
@@ -188,13 +203,13 @@ namespace UHtml.Core.Dom
                     if (curX + box.ActualWidth > maxRight)
                     {
                         box.Location = new RPoint(startX + box.ActualMarginLeft,
-                                  maxLineBottom + box.ActualMarginTop);
+                                  currentMaxBottom + box.ActualMarginTop);
 
                         curX = startX + box.ActualMarginLeft
                             + box.ActualPaddingLeft
                             + box.ActualBorderLeftWidth;
 
-                        curY = maxLineBottom + box.ActualMarginTop
+                        curY = currentMaxBottom + box.ActualMarginTop
                             + box.ActualPaddingTop
                             + box.ActualBorderTopWidth;
 
@@ -210,53 +225,53 @@ namespace UHtml.Core.Dom
                 //position words within local max right
                 //box bottom should be updated by this method
                 //as text wrap to new lines increase bottom
-                LayoutWords(g, box, ref curX, ref curY, localMaxRight);
+                LayoutWords(g, closestBlockAncestor, box, startX, startY,
+                     ref curX, ref curY, localMaxRight, ref currentMaxBottom);
 
                 if (box.Boxes.Count > 0)
                 {
                     if (DomUtils.ContainsInlinesOnly(box))
                     {
-                        LayoutInlineBoxes(g, box, ref curX, ref curY, localMaxRight);
+                        curX = curX
+                          + box.ActualMarginLeft
+                          + box.ActualPaddingLeft
+                          + box.ActualBorderLeftWidth;
+
+                        curY = curY
+                            + box.ActualMarginTop
+                            + box.ActualPaddingTop
+                            + box.ActualBorderTopWidth;
+
+                        //since parent is an inline box all child inlines will use
+                        //the closest box ancestor as startX, startY
+                        LayoutInlineBoxes(g,
+                            box.IsBlock ? box : closestBlockAncestor,
+                            box, startX, startY,
+                            ref curX, ref curY, localMaxRight, ref currentMaxBottom);
                     }
                     else
                     {
                         foreach (var childBox in box.Boxes)
                         {
                             LayoutBoxes(g, childBox);
+                            currentMaxBottom = Math.Max(currentMaxBottom, childBox.ActualBottom);
                         }
+
                     }
                 }
-
-                maxLineBottom = Math.Max(maxLineBottom, box.ActualBottom);
-
-                //set x,y location
-                if (box.Height == CssConstants.Auto)
-                {
-                    box.ActualBottom = maxLineBottom
-                        + box.ActualBorderBottomWidth
-                        + box.ActualPaddingBottom;
-
-                   
-                }
-
-                if (box.Width == CssConstants.Auto)
-                {
-                    box.ActualRight = curX
-                        + box.ActualBorderRightWidth
-                        + box.ActualPaddingRight;
-                }
-
 
             }
 
             //layout any words in this box
-            LayoutWords(g, currentBox, ref curX, ref curY, maxRight);
+            LayoutWords(g, closestBlockAncestor, currentBox,
+                startX, startY,
+                ref curX, ref curY, maxRight, ref currentMaxBottom);
 
-            maxLineBottom = Math.Max(maxLineBottom, currentBox.ActualBottom);
+            //currentMaxBottom = Math.Max(currentMaxBottom, currentBox.ActualBottom);
             //set x,y location
             if (currentBox.Height == CssConstants.Auto)
             {
-                currentBox.ActualBottom = maxLineBottom
+                currentBox.ActualBottom = currentMaxBottom
                     + currentBox.ActualBorderBottomWidth
                     + currentBox.ActualPaddingBottom;
 
@@ -279,13 +294,14 @@ namespace UHtml.Core.Dom
         /// <param name="curX"></param>
         /// <param name="curY"></param>
         /// <param name="rightLimit"></param>
-        private static void LayoutWords(RGraphics g, CssBox box,
-            ref double curX, ref double curY, double rightLimit)
+        private static void LayoutWords(RGraphics g,
+            CssBox closestBlockAncestor, CssBox box,
+            double startX, double startY,
+            ref double curX, ref double curY,
+            double rightLimit, ref double currentMaxBottom)
         {
-            var startX = curX;
-            var startY = curY;
 
-            double maxLineBottom = startY;
+            double localMaxLineBottom = currentMaxBottom;
 
             box.LineBoxes.Clear();
 
@@ -294,9 +310,15 @@ namespace UHtml.Core.Dom
                 var lineBox = new CssLineBox(box);
                 box.FirstHostingLineBox = lineBox;
 
+                if (DomUtils.DoesBoxHasWhitespace(box))
+                    curX += box.ActualWordSpacing;
+
                 foreach (var word in box.Words)
                 {
-                   
+                    if (word.Text != null && word.Text.Contains("Level"))
+                    {
+
+                    }
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
@@ -305,7 +327,7 @@ namespace UHtml.Core.Dom
                     {
 
                         curX = startX;
-                        curY = maxLineBottom;
+                        curY = localMaxLineBottom;
 
                         lineBox = new CssLineBox(box);
 
@@ -317,19 +339,22 @@ namespace UHtml.Core.Dom
                     word.Top = curY;
 
                     curX = word.Left + word.FullWidth;
-                    maxLineBottom = Math.Max(maxLineBottom, word.Bottom);
+                    localMaxLineBottom = Math.Max(localMaxLineBottom, word.Bottom);
 
                 }
 
                 //set x,y location
                 if (box.Height == CssConstants.Auto)
                 {
-                    box.ActualBottom = maxLineBottom
+
+                    box.ActualBottom = localMaxLineBottom
                         + box.ActualBorderBottomWidth
                         + box.ActualPaddingBottom;
 
+
                 }
 
+                currentMaxBottom = box.ActualBottom;
 
                 if (box.Width == CssConstants.Auto)
                 {
@@ -344,8 +369,8 @@ namespace UHtml.Core.Dom
                 foreach (var linebox in box.LineBoxes)
                 {
                     ApplyHorizontalAlignment(g, linebox);
-                    ApplyRightToLeft(box.ParentBox, linebox);
-                    BubbleRectangles(box.ParentBox, linebox);
+                    ApplyRightToLeft(closestBlockAncestor, linebox);
+                    BubbleRectangles(closestBlockAncestor, linebox);
                     ApplyVerticalAlignment(g, linebox);
                     linebox.AssignRectanglesToBoxes();
                 }
