@@ -23,6 +23,7 @@ namespace UHtml.Core.Dom
 
         #endregion
 
+        public bool AlignApplied { get; set; }
 
         /// <summary>
         /// Creates a new LineBox

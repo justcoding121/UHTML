@@ -4,6 +4,7 @@ using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Parse;
 using UHtml.Core.Utils;
+using System.Linq;
 
 namespace UHtml.Core.Dom
 {
@@ -95,8 +96,13 @@ namespace UHtml.Core.Dom
                         curY = startY;
 
                         double currentMaxBottom = curY;
+
+                        box.LineBoxes.Clear();
+                        var currentLineBox = new CssLineBox(box);
+
                         //This will automatically set the bottom of this block
-                        LayoutInlineBoxes(g, box, box,
+                        LayoutInlineBoxes(g, box, ref currentLineBox,
+                            box,
                             startX,
                             startY,
                             ref curX,
@@ -156,6 +162,7 @@ namespace UHtml.Core.Dom
         /// <param name="g"></param>
         /// <param name="blockBox"></param>
         public static void LayoutInlineBoxes(RGraphics g, CssBox closestBlockAncestor,
+            ref CssLineBox currentLineBox,
             CssBox currentBox,
             double startX, double startY,
             ref double curX, ref double curY, double maxRight, ref double currentMaxBottom)
@@ -168,6 +175,7 @@ namespace UHtml.Core.Dom
                 currentBox.RectanglesReset();
                 currentBox.MeasureWordsSize(g);
             }
+
 
             //loop through each inline box
             foreach (CssBox box in currentBox.Boxes)
@@ -225,7 +233,7 @@ namespace UHtml.Core.Dom
                 //position words within local max right
                 //box bottom should be updated by this method
                 //as text wrap to new lines increase bottom
-                LayoutWords(g, closestBlockAncestor, box, startX, startY,
+                LayoutWords(g, closestBlockAncestor, ref currentLineBox, box, startX, startY,
                      ref curX, ref curY, localMaxRight, ref currentMaxBottom);
 
                 if (box.Boxes.Count > 0)
@@ -242,10 +250,19 @@ namespace UHtml.Core.Dom
                             + box.ActualPaddingTop
                             + box.ActualBorderTopWidth;
 
+                        
+
+                        if(box.IsBlock)
+                        {
+                            box.LineBoxes.Clear();
+                            currentLineBox = new CssLineBox(box);
+                        }
+
                         //since parent is an inline box all child inlines will use
                         //the closest box ancestor as startX, startY
                         LayoutInlineBoxes(g,
                             box.IsBlock ? box : closestBlockAncestor,
+                            ref currentLineBox,
                             box, startX, startY,
                             ref curX, ref curY, localMaxRight, ref currentMaxBottom);
                     }
@@ -263,11 +280,23 @@ namespace UHtml.Core.Dom
             }
 
             //layout any words in this box
-            LayoutWords(g, closestBlockAncestor, currentBox,
+            LayoutWords(g, closestBlockAncestor,  ref currentLineBox, currentBox,
                 startX, startY,
                 ref curX, ref curY, maxRight, ref currentMaxBottom);
 
-            //currentMaxBottom = Math.Max(currentMaxBottom, currentBox.ActualBottom);
+
+            //Gets the rectangles for each line-box
+            foreach (var linebox in closestBlockAncestor.LineBoxes.Where(x=> !x.AlignApplied))
+            {
+                ApplyHorizontalAlignment(g, linebox);
+                ApplyRightToLeft(closestBlockAncestor, linebox);
+                BubbleRectangles(closestBlockAncestor, linebox);
+                ApplyVerticalAlignment(g, linebox);
+                linebox.AssignRectanglesToBoxes();
+
+                linebox.AlignApplied = true;
+            }
+
             //set x,y location
             if (currentBox.Height == CssConstants.Auto)
             {
@@ -295,7 +324,7 @@ namespace UHtml.Core.Dom
         /// <param name="curY"></param>
         /// <param name="rightLimit"></param>
         private static void LayoutWords(RGraphics g,
-            CssBox closestBlockAncestor, CssBox box,
+            CssBox closestBlockAncestor, ref CssLineBox currentLineBox, CssBox box,
             double startX, double startY,
             ref double curX, ref double curY,
             double rightLimit, ref double currentMaxBottom)
@@ -303,19 +332,17 @@ namespace UHtml.Core.Dom
 
             double localMaxLineBottom = currentMaxBottom;
 
-            box.LineBoxes.Clear();
 
             if (box.Words.Count > 0)
             {
-                var lineBox = new CssLineBox(box);
-                box.FirstHostingLineBox = lineBox;
+                box.FirstHostingLineBox = currentLineBox;
 
                 if (DomUtils.DoesBoxHasWhitespace(box))
                     curX += box.ActualWordSpacing;
 
                 foreach (var word in box.Words)
                 {
-                    if (word.Text != null && word.Text.Contains("Level"))
+                    if (word.Text != null && word.Text.Contains("Renderer"))
                     {
 
                     }
@@ -329,11 +356,11 @@ namespace UHtml.Core.Dom
                         curX = startX;
                         curY = localMaxLineBottom;
 
-                        lineBox = new CssLineBox(box);
+                        currentLineBox = new CssLineBox(closestBlockAncestor);
 
                     }
 
-                    lineBox.ReportExistanceOf(word);
+                    currentLineBox.ReportExistanceOf(word);
 
                     word.Left = curX;
                     word.Top = curY;
@@ -363,17 +390,8 @@ namespace UHtml.Core.Dom
                         + box.ActualPaddingRight;
                 }
 
-                box.LastHostingLineBox = lineBox;
+                box.LastHostingLineBox = currentLineBox;
 
-                //Gets the rectangles for each line-box
-                foreach (var linebox in box.LineBoxes)
-                {
-                    ApplyHorizontalAlignment(g, linebox);
-                    ApplyRightToLeft(closestBlockAncestor, linebox);
-                    BubbleRectangles(closestBlockAncestor, linebox);
-                    ApplyVerticalAlignment(g, linebox);
-                    linebox.AssignRectanglesToBoxes();
-                }
 
             }
 
