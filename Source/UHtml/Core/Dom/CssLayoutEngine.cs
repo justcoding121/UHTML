@@ -112,6 +112,25 @@ namespace UHtml.Core.Dom
                             - box.ActualPaddingRight,
                             ref currentMaxBottom
                             );
+
+                        //Gets the rectangles for each line-box
+                        foreach (var linebox in box.LineBoxes)
+                        {
+                            ApplyHorizontalAlignment(g, linebox);
+                            ApplyRightToLeft(box, linebox);
+                            BubbleRectangles(box, linebox);
+                            ApplyVerticalAlignment(g, linebox);
+                            linebox.AssignRectanglesToBoxes();
+                        }
+
+                        if (box.Height == CssConstants.Auto)
+                        {
+                            box.ActualBottom = currentMaxBottom
+                                + box.ActualBorderBottomWidth
+                                + box.ActualPaddingBottom;
+
+                        }
+
                     }
                     else if (box.Boxes.Count > 0)
                     {
@@ -249,19 +268,12 @@ namespace UHtml.Core.Dom
                             + box.ActualMarginTop
                             + box.ActualPaddingTop
                             + box.ActualBorderTopWidth;
-
-                        
-
-                        if(box.IsBlock)
-                        {
-                            box.LineBoxes.Clear();
-                            currentLineBox = new CssLineBox(box);
-                        }
+            
 
                         //since parent is an inline box all child inlines will use
                         //the closest box ancestor as startX, startY
                         LayoutInlineBoxes(g,
-                            box.IsBlock ? box : closestBlockAncestor,
+                            closestBlockAncestor,
                             ref currentLineBox,
                             box, startX, startY,
                             ref curX, ref curY, localMaxRight, ref currentMaxBottom);
@@ -284,34 +296,7 @@ namespace UHtml.Core.Dom
                 startX, startY,
                 ref curX, ref curY, maxRight, ref currentMaxBottom);
 
-
-            //Gets the rectangles for each line-box
-            foreach (var linebox in closestBlockAncestor.LineBoxes.Where(x=> !x.AlignApplied))
-            {
-                ApplyHorizontalAlignment(g, linebox);
-                ApplyRightToLeft(closestBlockAncestor, linebox);
-                BubbleRectangles(closestBlockAncestor, linebox);
-                ApplyVerticalAlignment(g, linebox);
-                linebox.AssignRectanglesToBoxes();
-
-                linebox.AlignApplied = true;
-            }
-
-            //set x,y location
-            if (currentBox.Height == CssConstants.Auto)
-            {
-                currentBox.ActualBottom = currentMaxBottom
-                    + currentBox.ActualBorderBottomWidth
-                    + currentBox.ActualPaddingBottom;
-
-            }
-
-            if (currentBox.Width == CssConstants.Auto)
-            {
-                currentBox.ActualRight = curX
-                    + currentBox.ActualBorderRightWidth
-                    + currentBox.ActualPaddingRight;
-            }
+           
 
         }
 
@@ -342,10 +327,6 @@ namespace UHtml.Core.Dom
 
                 foreach (var word in box.Words)
                 {
-                    if (word.Text != null && word.Text.Contains("Renderer"))
-                    {
-
-                    }
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
