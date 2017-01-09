@@ -722,7 +722,7 @@ namespace UHtml.Core.Dom
 
                     _listItemBox.ParseToWords();
 
-                    CssLayoutEngine.LayoutBoxes(g, this);
+                    _listItemBox.PerformLayoutImp(g);
 
                     _listItemBox.Size = new RSize(_listItemBox.Words[0].Width, _listItemBox.Words[0].Height);
                 }

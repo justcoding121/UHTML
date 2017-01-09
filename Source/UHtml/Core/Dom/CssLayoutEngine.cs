@@ -115,13 +115,13 @@ namespace UHtml.Core.Dom
 
                         //Gets the rectangles for each line-box
                         foreach (var linebox in box.LineBoxes)
-                        {
-                            ApplyHorizontalAlignment(g, linebox);
-                            ApplyRightToLeft(box, linebox);
-                            BubbleRectangles(box, linebox);
-                            ApplyVerticalAlignment(g, linebox);
-                            linebox.AssignRectanglesToBoxes();
-                        }
+                            {
+                                ApplyHorizontalAlignment(g, linebox);
+                                ApplyRightToLeft(box, linebox);
+                                BubbleRectangles(box, linebox);
+                                ApplyVerticalAlignment(g, linebox);
+                                linebox.AssignRectanglesToBoxes();
+                            }
 
                         if (box.Height == CssConstants.Auto)
                         {
@@ -258,18 +258,7 @@ namespace UHtml.Core.Dom
                 if (box.Boxes.Count > 0)
                 {
                     if (DomUtils.ContainsInlinesOnly(box))
-                    {
-                        curX = curX
-                          + box.ActualMarginLeft
-                          + box.ActualPaddingLeft
-                          + box.ActualBorderLeftWidth;
-
-                        curY = curY
-                            + box.ActualMarginTop
-                            + box.ActualPaddingTop
-                            + box.ActualBorderTopWidth;
-            
-
+                    {           
                         //since parent is an inline box all child inlines will use
                         //the closest box ancestor as startX, startY
                         LayoutInlineBoxes(g,
@@ -290,14 +279,6 @@ namespace UHtml.Core.Dom
                 }
 
             }
-
-            //layout any words in this box
-            LayoutWords(g, closestBlockAncestor,  ref currentLineBox, currentBox,
-                startX, startY,
-                ref curX, ref curY, maxRight, ref currentMaxBottom);
-
-           
-
         }
 
         /// <summary>
@@ -327,6 +308,10 @@ namespace UHtml.Core.Dom
 
                 foreach (var word in box.Words)
                 {
+                    if(word.Text=="100%")
+                    {
+
+                    }
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
