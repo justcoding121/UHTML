@@ -44,7 +44,7 @@ namespace UHtml.Core.Dom
                     + box.ActualPaddingLeft
                     + box.ActualBorderLeftWidth;
 
-                curY = curY + box.ActualMarginTop
+                curY = currentMaxBottom + box.ActualMarginTop
                     + box.ActualPaddingTop
                     + box.ActualBorderTopWidth;
 

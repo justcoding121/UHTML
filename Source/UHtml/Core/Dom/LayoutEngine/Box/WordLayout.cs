@@ -22,9 +22,8 @@ namespace UHtml.Core.Dom
             ref double curX, ref double curY,
             double rightLimit, ref double currentMaxBottom)
         {
-
+            bool lineBroke = false;
             double localMaxLineBottom = currentMaxBottom;
-
 
             if (box.Words.Count > 0)
             {
@@ -35,17 +34,20 @@ namespace UHtml.Core.Dom
 
                 foreach (var word in box.Words)
                 {
+
+#if DEBUG
                     if (word.Text == "100%")
                     {
 
                     }
+#endif
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
                          && (box.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces))
                         || word.IsLineBreak)
                     {
-
+                        lineBroke = true;
                         curX = startX;
                         curY = localMaxLineBottom;
 
@@ -74,7 +76,11 @@ namespace UHtml.Core.Dom
 
                 }
 
-                currentMaxBottom = box.ActualBottom;
+                if (lineBroke)
+                {
+                    currentMaxBottom = box.ActualBottom;
+                }
+
 
                 if (box.Width == CssConstants.Auto)
                 {
