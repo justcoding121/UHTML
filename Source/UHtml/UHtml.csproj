@@ -64,8 +64,8 @@
     <Compile Include="Core\Dom\CssBoxHr.cs" />
     <Compile Include="Core\Dom\CssBoxImage.cs" />
     <Compile Include="Core\Dom\CssBoxProperties.cs" />
-    <Compile Include="Core\Dom\CssLayoutEngine.cs" />
-    <Compile Include="Core\Dom\CssLayoutEngineTable.cs" />
+    <Compile Include="Core\Dom\LayoutEngine\Box\CssLayoutEngine.cs" />
+    <Compile Include="Core\Dom\LayoutEngine\Table\CssTableLayoutEngine.cs" />
     <Compile Include="Core\Dom\CssLength.cs" />
     <Compile Include="Core\Dom\CssLineBox.cs" />
     <Compile Include="Core\Dom\CssRect.cs" />
@@ -75,6 +75,9 @@
     <Compile Include="Core\Dom\CssUnit.cs" />
     <Compile Include="Core\Dom\HoverBoxBlock.cs" />
     <Compile Include="Core\Dom\HtmlTag.cs" />
+    <Compile Include="Core\Dom\LayoutEngine\Box\BoxLayout.cs" />
+    <Compile Include="Core\Dom\LayoutEngine\Box\InlineBoxLayout.cs" />
+    <Compile Include="Core\Dom\LayoutEngine\Box\WordLayout.cs" />
     <Compile Include="Core\Entities\CssBlock.cs" />
     <Compile Include="Core\Entities\CssBlockSelectorItem.cs" />
     <Compile Include="Core\Entities\HtmlGenerationStyle.cs" />
