@@ -44,10 +44,6 @@ namespace UHtml.Core.Dom
                     + box.ActualPaddingLeft
                     + box.ActualBorderLeftWidth;
 
-                curY = currentMaxBottom + box.ActualMarginTop
-                    + box.ActualPaddingTop
-                    + box.ActualBorderTopWidth;
-
 
                 box.RectanglesReset();
                 box.MeasureWordsSize(g);
