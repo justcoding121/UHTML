@@ -117,7 +117,7 @@ namespace UHtml.Core.Dom
                             ApplyHorizontalAlignment(g, linebox);
                             ApplyRightToLeft(box, linebox);
                             BubbleRectangles(box, linebox);
-                            //ApplyVerticalAlignment(g, linebox);
+                            ApplyVerticalAlignment(g, linebox);
                             linebox.AssignRectanglesToBoxes();
                         }
 

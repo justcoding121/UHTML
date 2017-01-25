@@ -23,7 +23,7 @@ namespace UHtml.Core.Dom
 
         #endregion
 
-       
+
 
         /// <summary>
         /// Creates a new LineBox
@@ -150,10 +150,8 @@ namespace UHtml.Core.Dom
             double topspacing = box.ActualBorderTopWidth + box.ActualPaddingTop;
             double bottomspacing = box.ActualBorderBottomWidth + box.ActualPaddingTop;
 
-            if ((box.FirstHostingLineBox != null && box.FirstHostingLineBox.Equals(this)) || box.IsImage)
-                x -= leftspacing;
-            if ((box.LastHostingLineBox != null && box.LastHostingLineBox.Equals(this)) || box.IsImage)
-                r += rightspacing;
+            x -= leftspacing;
+            r += rightspacing;
 
             if (!box.IsImage)
             {
