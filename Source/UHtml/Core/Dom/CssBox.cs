@@ -145,8 +145,18 @@ namespace UHtml.Core.Dom
         [JsonProperty]
         public bool IsInline
         {
-            get { return (Display == CssConstants.Inline || Display == CssConstants.InlineBlock) && !IsBrElement; }
+            get { return (Display == CssConstants.Inline) && !IsBrElement; }
         }
+
+        /// <summary>
+        /// is the box "Display" is "Inline-Block", is this is an inline box and not block.
+        /// </summary>
+        [JsonProperty]
+        public bool IsInlineBlock
+        {
+            get { return (Display == CssConstants.InlineBlock) && !IsBrElement; }
+        }
+
 
         /// <summary>
         /// is the box "Display" is "Block", is this is an block box and not inline.

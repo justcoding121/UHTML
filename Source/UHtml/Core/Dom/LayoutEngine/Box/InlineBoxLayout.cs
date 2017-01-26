@@ -37,8 +37,9 @@ namespace UHtml.Core.Dom
                 if (box.Display == CssConstants.None)
                     continue;
 
+                //inline don't respect top & bottom Margins
                 box.Location = new RPoint(curX + box.ActualMarginLeft,
-                                        curY + box.ActualMarginTop);
+                                        box.IsInline ? curY : curY + box.ActualMarginTop);
 
                 curX = curX + box.ActualMarginLeft
                     + box.ActualPaddingLeft
@@ -53,30 +54,34 @@ namespace UHtml.Core.Dom
 
                 var localMaxRight = maxRight;
 
-                //set x,y location
-                if (box.Width != CssConstants.Auto)
+                //inlines don't respect Box Width & Height
+                if (box.IsInlineBlock)
                 {
-                    //break to new line if exceeds maximum width
-                    if (curX + box.ActualWidth > maxRight)
+                    //set x,y location
+                    if (box.Width != CssConstants.Auto)
                     {
-                        box.Location = new RPoint(startX + box.ActualMarginLeft,
-                                  currentMaxBottom + box.ActualMarginTop);
+                        //break to new line if exceeds maximum width
+                        if (curX + box.ActualWidth > maxRight)
+                        {
+                            box.Location = new RPoint(startX + box.ActualMarginLeft,
+                                      currentMaxBottom + box.ActualMarginTop);
 
-                        curX = startX + box.ActualMarginLeft
-                            + box.ActualPaddingLeft
-                            + box.ActualBorderLeftWidth;
+                            curX = startX + box.ActualMarginLeft
+                                + box.ActualPaddingLeft
+                                + box.ActualBorderLeftWidth;
 
-                        curY = currentMaxBottom + box.ActualMarginTop
-                            + box.ActualPaddingTop
-                            + box.ActualBorderTopWidth;
+                            curY = currentMaxBottom + box.ActualMarginTop
+                                + box.ActualPaddingTop
+                                + box.ActualBorderTopWidth;
 
 
+                        }
+
+                        //if this box have a size, then limit right to its size
+                        localMaxRight = box.ActualRight
+                                    - box.ActualPaddingRight
+                                    - box.ActualBorderRightWidth;
                     }
-
-                    //if this box have a size, then limit right to its size
-                    localMaxRight = box.ActualRight
-                                - box.ActualPaddingRight
-                                - box.ActualBorderRightWidth;
                 }
 
                 //position words within local max right

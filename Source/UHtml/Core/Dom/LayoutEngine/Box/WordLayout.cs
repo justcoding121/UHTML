@@ -73,7 +73,6 @@ namespace UHtml.Core.Dom
                         + box.ActualBorderBottomWidth
                         + box.ActualPaddingBottom;
 
-
                 }
 
                 currentMaxBottom = box.ActualBottom;

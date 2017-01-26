@@ -576,10 +576,15 @@ namespace UHtml.Core.Parse
                     keepBox = keepBox || box.Boxes.Count == 1;
 
                     // is it a whitespace between two inline boxes
-                    keepBox = keepBox || (i > 0 && i < box.Boxes.Count - 1 && box.Boxes[i - 1].IsInline && box.Boxes[i + 1].IsInline);
+                    keepBox = keepBox || (i > 0 && i < box.Boxes.Count - 1 && 
+                        (box.Boxes[i - 1].IsInline || box.Boxes[i - 1].IsInlineBlock)
+                        && (box.Boxes[i + 1].IsInline || box.Boxes[i + 1].IsInlineBlock));
 
                     // is first/last box where is in inline box and it's next/previous box is inline
-                    keepBox = keepBox || (i == 0 && box.Boxes.Count > 1 && box.Boxes[1].IsInline && box.IsInline) || (i == box.Boxes.Count - 1 && box.Boxes.Count > 1 && box.Boxes[i - 1].IsInline && box.IsInline);
+                    keepBox = keepBox || (i == 0 && box.Boxes.Count > 1 && (box.Boxes[1].IsInline || box.Boxes[1].IsInlineBlock) 
+                        && (box.IsInline || box.IsInlineBlock)) || (i == box.Boxes.Count - 1 && box.Boxes.Count > 1 
+                        && (box.Boxes[i - 1].IsInline || box.Boxes[i - 1].IsInlineBlock)
+                        && (box.IsInline || box.IsInlineBlock));
 
                     if (keepBox)
                     {
@@ -765,7 +770,7 @@ namespace UHtml.Core.Parse
         private static void CorrectBlockSplitBadBox(CssBox parentBox, CssBox badBox, CssBox leftBlock)
         {
             CssBox leftbox = null;
-            while (badBox.Boxes[0].IsInline && ContainsInlinesOnlyDeep(badBox.Boxes[0]))
+            while ((badBox.Boxes[0].IsInline || badBox.Boxes[0].IsInlineBlock) && ContainsInlinesOnlyDeep(badBox.Boxes[0]))
             {
                 if (leftbox == null)
                 {
@@ -829,10 +834,10 @@ namespace UHtml.Core.Parse
             {
                 for (int i = 0; i < box.Boxes.Count; i++)
                 {
-                    if (box.Boxes[i].IsInline)
+                    if (box.Boxes[i].IsInline || box.Boxes[i].IsInlineBlock)
                     {
                         var newbox = CssBox.CreateBlock(box, null, box.Boxes[i++]);
-                        while (i < box.Boxes.Count && box.Boxes[i].IsInline)
+                        while (i < box.Boxes.Count && (box.Boxes[i].IsInline || box.Boxes[i].IsInlineBlock))
                         {
                             box.Boxes[i].ParentBox = newbox;
                         }
@@ -858,7 +863,7 @@ namespace UHtml.Core.Parse
         {
             foreach (var childBox in box.Boxes)
             {
-                if (!childBox.IsInline || !ContainsInlinesOnlyDeep(childBox))
+                if (!(childBox.IsInline || childBox.IsInlineBlock) || !ContainsInlinesOnlyDeep(childBox))
                 {
                     return false;
                 }
@@ -878,7 +883,7 @@ namespace UHtml.Core.Parse
             bool hasInline = false;
             for (int i = 0; i < box.Boxes.Count && (!hasBlock || !hasInline); i++)
             {
-                var isBlock = !box.Boxes[i].IsInline;
+                var isBlock = !(box.Boxes[i].IsInline || box.Boxes[i].IsInlineBlock);
                 hasBlock = hasBlock || isBlock;
                 hasInline = hasInline || !isBlock;
             }

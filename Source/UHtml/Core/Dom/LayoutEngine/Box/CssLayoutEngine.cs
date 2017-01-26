@@ -20,28 +20,32 @@ namespace UHtml.Core.Dom
         /// <param name="box"></param>
         private static void SetInlineBoxSize(CssBox box)
         {
-            if (box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height))
+            //Inline don't respect Height & Width
+            if (box.IsInlineBlock)
             {
-                double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
-                box.Size = new RSize(box.Size.Width
-                        , height
-                        + box.ActualBorderTopWidth
-                        + box.ActualPaddingTop
-                        + box.ActualBorderBottomWidth
-                        + box.ActualPaddingBottom);
-            }
+                if (box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height))
+                {
+                    double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
+                    box.Size = new RSize(box.Size.Width
+                            , height
+                            + box.ActualBorderTopWidth
+                            + box.ActualPaddingTop
+                            + box.ActualBorderBottomWidth
+                            + box.ActualPaddingBottom);
+                }
 
-            //overrride with custom width
-            if (box.Width != CssConstants.Auto && !string.IsNullOrEmpty(box.Width))
-            {
-                double width = CssValueParser.ParseLength(box.Width, box.ContainingBlock.Size.Width, box);
-                box.Size = new RSize(width
-                        + box.ActualBorderLeftWidth
-                        + box.ActualPaddingLeft
-                        + box.ActualBorderRightWidth
-                        + box.ActualPaddingRight
-                        , box.Size.Height);
+                //overrride with custom width
+                if (box.Width != CssConstants.Auto && !string.IsNullOrEmpty(box.Width))
+                {
+                    double width = CssValueParser.ParseLength(box.Width, box.ContainingBlock.Size.Width, box);
+                    box.Size = new RSize(width
+                            + box.ActualBorderLeftWidth
+                            + box.ActualPaddingLeft
+                            + box.ActualBorderRightWidth
+                            + box.ActualPaddingRight
+                            , box.Size.Height);
 
+                }
             }
 
         }

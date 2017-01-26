@@ -44,7 +44,7 @@ namespace UHtml.Core.Utils
         {
             foreach (CssBox b in box.Boxes)
             {
-                if (!b.IsInline)
+                if (!(b.IsInline || b.IsInlineBlock))
                 {
                     return false;
                 }
@@ -135,10 +135,10 @@ namespace UHtml.Core.Utils
         /// <param name="box">the box to check</param>
         public static bool DoesBoxHasWhitespace(CssBox box)
         {
-            if (!box.Words[0].IsImage && box.Words[0].HasSpaceBefore && box.IsInline)
+            if (!box.Words[0].IsImage && box.Words[0].HasSpaceBefore && (box.IsInline || box.IsInlineBlock))
             {
                 var sib = GetPreviousContainingBlockSibling(box);
-                if (sib != null && sib.IsInline)
+                if (sib != null && (sib.IsInline||sib.IsInlineBlock))
                     return true;
             }
             return false;
