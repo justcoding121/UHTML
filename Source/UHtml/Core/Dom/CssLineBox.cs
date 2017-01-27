@@ -172,7 +172,7 @@ namespace UHtml.Core.Dom
                     Math.Max(f.X2, r), Math.Max(f.Y2, b));
             }
 
-            if (box.ParentBox != null && (box.ParentBox.IsInline || box.ParentBox.IsInlineBlock))
+            if (!box.IsInlineBlock && box.ParentBox != null && (box.ParentBox.IsInline || box.ParentBox.IsInlineBlock))
             {
                 UpdateRectangle(box.ParentBox, x, y, r, b);
             }

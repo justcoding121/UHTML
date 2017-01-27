@@ -33,6 +33,7 @@ namespace UHtml.Core.Dom
             //loop through each inline box
             foreach (CssBox box in currentBox.Boxes)
             {
+                box.FirstHostingLineBox = currentLineBox;
 
                 if (box.Display == CssConstants.None)
                     continue;
@@ -74,7 +75,7 @@ namespace UHtml.Core.Dom
                                 + box.ActualPaddingTop
                                 + box.ActualBorderTopWidth;
 
-
+                            currentLineBox = new CssLineBox(closestBlockAncestor);
                         }
 
                         //if this box have a size, then limit right to its size
@@ -108,13 +109,33 @@ namespace UHtml.Core.Dom
                         }
                         else
                         {
+                            box.LineBoxes.Clear();
+
+                            var lineBox = new CssLineBox(box);
+
+                            box.FirstHostingLineBox = lineBox;
+                            
                             //since parent is an inline box all child inlines will use
                             //the closest box ancestor as startX, startY
                             LayoutInlineBoxes(g,
                                 closestBlockAncestor,
-                                ref currentLineBox,
+                                ref lineBox,
                                 box, curX, curY,
                                 ref curX, ref curY, localMaxRight, ref currentMaxBottom);
+
+                            curX = box.ActualRight;
+
+                            box.LastHostingLineBox = lineBox;
+
+                            //Gets the rectangles for each line-box
+                            foreach (var linebox in box.LineBoxes)
+                            {
+                                ApplyHorizontalAlignment(g, linebox);
+                                ApplyRightToLeft(box, linebox);
+                                BubbleRectangles(box, linebox);
+                                //ApplyVerticalAlignment(g, linebox);
+                                linebox.AssignRectanglesToBoxes();
+                            }
                         }
                       
                     }
@@ -129,6 +150,7 @@ namespace UHtml.Core.Dom
                     }
                 }
 
+                box.LastHostingLineBox = currentLineBox;
             }
         }
     }

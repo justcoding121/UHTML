@@ -26,8 +26,7 @@ namespace UHtml.Core.Dom
 
             if (box.Words.Count > 0)
             {
-                box.FirstHostingLineBox = currentLineBox;
-
+               
                 if (DomUtils.DoesBoxHasWhitespace(box))
                     curX += box.ActualWordSpacing;
 
@@ -83,8 +82,6 @@ namespace UHtml.Core.Dom
                         + box.ActualBorderRightWidth
                         + box.ActualPaddingRight;
                 }
-
-                box.LastHostingLineBox = currentLineBox;
 
 
             }
