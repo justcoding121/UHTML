@@ -53,7 +53,7 @@ namespace UHtml.Core.Dom
                 SetInlineBoxSize(box);
 
                 var localMaxRight = maxRight;
-
+                var localMinLeft = startX;
                 //inlines don't respect Box Width & Height
                 if (box.IsInlineBlock)
                 {
@@ -81,26 +81,42 @@ namespace UHtml.Core.Dom
                         localMaxRight = box.ActualRight
                                     - box.ActualPaddingRight
                                     - box.ActualBorderRightWidth;
+
+                        localMinLeft = curX;
                     }
                 }
 
                 //position words within local max right
                 //box bottom should be updated by this method
                 //as text wrap to new lines increase bottom
-                LayoutWords(g, closestBlockAncestor, ref currentLineBox, box, startX, startY,
-                     ref curX, ref curY, localMaxRight, ref currentMaxBottom);
+                LayoutWords(g, closestBlockAncestor, ref currentLineBox, box,
+                     ref curX, ref curY, localMinLeft, localMaxRight, ref currentMaxBottom);
 
                 if (box.Boxes.Count > 0)
                 {
                     if (DomUtils.ContainsInlinesOnly(box))
                     {
-                        //since parent is an inline box all child inlines will use
-                        //the closest box ancestor as startX, startY
-                        LayoutInlineBoxes(g,
-                            closestBlockAncestor,
-                            ref currentLineBox,
-                            box, startX, startY,
-                            ref curX, ref curY, localMaxRight, ref currentMaxBottom);
+                        if(box.IsInline)
+                        {
+                            //since parent is an inline box all child inlines will use
+                            //the closest box ancestor as startX, startY
+                            LayoutInlineBoxes(g,
+                                closestBlockAncestor,
+                                ref currentLineBox,
+                                box, startX, startY,
+                                ref curX, ref curY, localMaxRight, ref currentMaxBottom);
+                        }
+                        else
+                        {
+                            //since parent is an inline box all child inlines will use
+                            //the closest box ancestor as startX, startY
+                            LayoutInlineBoxes(g,
+                                closestBlockAncestor,
+                                ref currentLineBox,
+                                box, curX, curY,
+                                ref curX, ref curY, localMaxRight, ref currentMaxBottom);
+                        }
+                      
                     }
                     else
                     {

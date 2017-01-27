@@ -18,9 +18,8 @@ namespace UHtml.Core.Dom
         /// <param name="rightLimit"></param>
         private static void LayoutWords(RGraphics g,
             CssBox closestBlockAncestor, ref CssLineBox currentLineBox, CssBox box,
-            double startX, double startY,
             ref double curX, ref double curY,
-            double rightLimit, ref double currentMaxBottom)
+            double leftLimit, double rightLimit, ref double currentMaxBottom)
         {
 
             double localMaxLineBottom = currentMaxBottom;
@@ -48,7 +47,7 @@ namespace UHtml.Core.Dom
                         || word.IsLineBreak)
                     {
 
-                        curX = startX;
+                        curX = leftLimit;
                         curY = localMaxLineBottom;
 
                         currentLineBox = new CssLineBox(closestBlockAncestor);
