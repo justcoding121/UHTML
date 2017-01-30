@@ -455,7 +455,21 @@ namespace UHtml.Core.Dom
         {
             try
             {
-                CssLayoutEngine.LayoutBoxes(g,this);
+                var x = ContainingBlock.Location.X
+                    + ContainingBlock.ActualMarginLeft
+                    + ContainingBlock.ActualBorderLeftWidth
+                    + ContainingBlock.ActualPaddingLeft;
+
+                var y = ContainingBlock.Location.Y
+                    + ContainingBlock.ActualMarginTop
+                    + ContainingBlock.ActualBorderTopWidth
+                    + ContainingBlock.ActualPaddingTop;
+
+                CssLayoutEngine.LayoutRecursively(g, this, 
+                                                x, y,
+                                                null, 
+                                                x, ContainingBlock.Location.X + ContainingBlock.ActualWidth, 
+                                                Location.Y);
             }
             catch (Exception ex)
             {

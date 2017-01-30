@@ -37,7 +37,7 @@ namespace UHtml.Core.Dom
                 {
                     var prevSibling = DomUtils.GetPreviousSibling(box);
 
-                    SetBoxSize(box);
+                    //SetBlockBoxSize(box);
 
 
                     double left;

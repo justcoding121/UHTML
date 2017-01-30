@@ -1,0 +1,65 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UHtml.Adapters;
+
+
+namespace UHtml.Core.Dom
+{
+    internal static partial class CssLayoutEngine
+    {
+        public static void LayoutRecursively(RGraphics g,
+          CssBox currentBox,
+          double curX, double curY,
+          CssLineBox currentLine,
+          double leftLimit, double rightLimit,
+          double currentBottom)
+        {
+            switch (currentBox.Position)
+            {
+                case "absolute":
+                    break;
+                case "fixed":
+                    break;
+                case "relative":
+                    break;
+
+                case "initial":
+                case "static":
+                default:
+                    {
+                        switch (currentBox.Float)
+                        {
+                            case "left":
+                                break;
+                            case "right":
+                                break;
+
+                            case "none":
+                            default:
+                                switch (currentBox.Display)
+                                {
+                                    case "block":
+                                        //CssLayoutEngine.LayoutStaticNoneBlock(g, currentBox, ContainingBlock.Location.X, ContainingBlock.Location.Y,
+                                        //    null, ContainingBlock.Location.X + ActualMarginLeft + currentBox.ActualBorderLeftWidth + this.ActualPaddingLeft,
+                                        //    ContainingBlock.Location.X + Size.Width, Location.Y);
+                                        break;
+
+                                    case "inline-block":
+                                        break;
+                                    case "inline":
+                                    default:
+                                        break;
+                                }
+                                break;
+                        }
+                    }
+                    break;
+
+            }
+        }
+    }
+}
+
