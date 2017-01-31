@@ -47,11 +47,13 @@ namespace UHtml.Core.Dom
 
             currentBox.Location = new RPoint(left, top);
 
-            foreach(var box in currentBox.Boxes)
-            {
-
-            }
             //child boxes here
+            foreach (var box in currentBox.Boxes)
+            {
+                LayoutRecursively(g, box, currentBox.Location.X, currentBox.Location.Y,
+                     null, currentBox.Location.X, currentBox.ActualRight, currentBox.Location.Y);
+            }
+          
 
             SetBlockBoxSize(currentBox, leftLimit, rightLimit, currentBottom - top);
 

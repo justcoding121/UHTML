@@ -468,7 +468,7 @@ namespace UHtml.Core.Dom
                 CssLayoutEngine.LayoutRecursively(g, this, 
                                                 x, y,
                                                 null, 
-                                                x, ContainingBlock.Location.X + ContainingBlock.ActualWidth, 
+                                                x, ContainingBlock.ActualRight, 
                                                 Location.Y);
             }
             catch (Exception ex)

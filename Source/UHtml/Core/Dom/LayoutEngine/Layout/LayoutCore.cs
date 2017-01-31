@@ -42,9 +42,9 @@ namespace UHtml.Core.Dom
                                 switch (currentBox.Display)
                                 {
                                     case "block":
-                                        //CssLayoutEngine.LayoutStaticNoneBlock(g, currentBox, ContainingBlock.Location.X, ContainingBlock.Location.Y,
-                                        //    null, ContainingBlock.Location.X + ActualMarginLeft + currentBox.ActualBorderLeftWidth + this.ActualPaddingLeft,
-                                        //    ContainingBlock.Location.X + Size.Width, Location.Y);
+                                        LayoutStaticNoneBlock(g, currentBox, curX, curY,
+                                            null, leftLimit,
+                                            rightLimit, currentBottom);
                                         break;
 
                                     case "inline-block":
