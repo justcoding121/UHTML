@@ -17,9 +17,9 @@ namespace UHtml.Core.Dom
         /// <param name="curY"></param>
         /// <param name="rightLimit"></param>
         private static void LayoutWords(RGraphics g,
-            CssBox closestBlockAncestor, ref CssLineBox currentLineBox, CssBox box,
-            ref double curX, ref double curY,
-            double leftLimit, double rightLimit, ref double currentMaxBottom)
+            CssBox closestBlockAncestor, CssLineBox currentLineBox, CssBox box,
+            double curX, double curY,
+            double leftLimit, double rightLimit, double currentMaxBottom)
         {
 
             double localMaxLineBottom = currentMaxBottom;

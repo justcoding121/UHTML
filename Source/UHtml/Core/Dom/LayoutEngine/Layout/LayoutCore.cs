@@ -51,6 +51,14 @@ namespace UHtml.Core.Dom
                                         break;
                                     case "inline":
                                     default:
+                                        {
+                                            LayoutStaticNoneInline(g,
+                                                          currentBox,
+                                                          curX, curY,
+                                                          currentLine,
+                                                          leftLimit, rightLimit,
+                                                          currentBottom);
+                                        }
                                         break;
                                 }
                                 break;
