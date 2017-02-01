@@ -65,7 +65,6 @@
     <Compile Include="Core\Dom\CssBoxImage.cs" />
     <Compile Include="Core\Dom\CssBoxProperties.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Box\CssLayoutEngine.cs" />
-    <Compile Include="Core\Dom\LayoutEngine\Layout\CurrentProgress.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Layout\LayoutCore.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Layout\StaticNoneBlock.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Layout\StaticNoneInline.cs" />

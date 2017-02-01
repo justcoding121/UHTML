@@ -9,9 +9,18 @@ using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
 {
+    internal class StaticNoneInlineStatus
+    {
+        public double CurX { get; set; }
+        public double CurY { get; set; }
+
+        public CssLineBox CurrentLineBox { get; set; }
+        public double CurrentMaxBottom { get; internal set; }
+    }
+
     internal static partial class CssLayoutEngine
     {
-        public static void LayoutStaticNoneInline(RGraphics g,
+        public static StaticNoneInlineStatus LayoutStaticNoneInline(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
           CssLineBox currentLine,
@@ -30,16 +39,36 @@ namespace UHtml.Core.Dom
             //position words within local max right
             //box bottom should be updated by this method
             //as text wrap to new lines increase bottom
-            LayoutWords(g, null, currentLine, currentBox,
+            var status = LayoutWords(g, currentBox, currentLine,
                  curX, curY, leftLimit, rightLimit, currentBottom);
 
 
+            var layoutCoreStatus = new LayoutCoreStatus()
+            {
+                CurrentLineBox = status.CurrentLineBox,
+                CurX = status.CurX,
+                CurY = status.CurY,
+                CurrentMaxBottom = status.CurrentMaxBottom
+            };
+
             foreach (var box in currentBox.Boxes)
             {
-                LayoutRecursively(g, box, currentBox.Location.X, currentBox.Location.Y,
-                     currentLine, currentBox.Location.X, currentBox.ActualRight, currentBottom);
+                var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                      layoutCoreStatus.CurrentLineBox, leftLimit, rightLimit, layoutCoreStatus.CurrentMaxBottom);
+
+                if (result != null)
+                {
+                    layoutCoreStatus = result;
+                }
             }
 
+            return new StaticNoneInlineStatus()
+            {
+                CurrentLineBox = layoutCoreStatus.CurrentLineBox,
+                CurX = layoutCoreStatus.CurX,
+                CurY = layoutCoreStatus.CurY,
+                CurrentMaxBottom = layoutCoreStatus.CurrentMaxBottom
+            };
         }
     }
 }

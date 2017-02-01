@@ -16,8 +16,9 @@ namespace UHtml.Core.Dom
         /// <param name="curX"></param>
         /// <param name="curY"></param>
         /// <param name="rightLimit"></param>
-        private static void LayoutWords(RGraphics g,
-            CssBox closestBlockAncestor, CssLineBox currentLineBox, CssBox box,
+        private static WordLayoutStatus LayoutWords(RGraphics g,
+            CssBox box,
+            CssLineBox currentLineBox,
             double curX, double curY,
             double leftLimit, double rightLimit, double currentMaxBottom)
         {
@@ -32,13 +33,6 @@ namespace UHtml.Core.Dom
 
                 foreach (var word in box.Words)
                 {
-
-#if DEBUG
-                    if (word.Text == "100%")
-                    {
-
-                    }
-#endif
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
@@ -49,7 +43,7 @@ namespace UHtml.Core.Dom
                         curX = leftLimit;
                         curY = localMaxLineBottom;
 
-                        currentLineBox = new CssLineBox(closestBlockAncestor);
+                        currentLineBox = new CssLineBox(box);
 
                     }
 
@@ -86,6 +80,22 @@ namespace UHtml.Core.Dom
 
             }
 
+            return new WordLayoutStatus()
+            {
+                 CurrentLineBox = currentLineBox,
+                 CurX = curX,
+                 CurY = curY,
+                 CurrentMaxBottom = currentMaxBottom
+            };
         }
+    }
+
+    internal class WordLayoutStatus
+    {
+        public double CurX { get; set; }
+        public double CurY { get; set; }
+
+        public CssLineBox CurrentLineBox { get; set; }
+        public double CurrentMaxBottom { get; internal set; }
     }
 }

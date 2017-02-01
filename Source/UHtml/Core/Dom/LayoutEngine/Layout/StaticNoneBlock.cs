@@ -10,9 +10,20 @@ using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
 {
+    internal class StaticNoneBlockStatus
+    {
+        public double CurX { get; set; }
+        public double CurY { get; set; }
+
+        public CssLineBox CurrentLineBox { get; set; }
+        public double CurrentMaxBottom { get; internal set; }
+
+        public double CurrentMaxRight { get; set; }
+    }
+
     internal static partial class CssLayoutEngine
     {
-        public static void LayoutStaticNoneBlock(RGraphics g,
+        public static StaticNoneBlockStatus LayoutStaticNoneBlock(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
           CssLineBox currentLine,
@@ -47,17 +58,51 @@ namespace UHtml.Core.Dom
 
             currentBox.Location = new RPoint(left, top);
 
+            double width = CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox);
+
+            var layoutCoreStatus = new LayoutCoreStatus()
+            {
+                CurrentLineBox = currentLine,
+                CurX = currentBox.Location.X,
+                CurY = currentBox.Location.Y,
+                CurrentMaxRight = currentBox.Width != CssConstants.Auto &&
+                                  !string.IsNullOrEmpty(currentBox.Width) ?
+                                currentBox.Location.X 
+                                + currentBox.ActualBorderLeftWidth
+                                + currentBox.ActualPaddingLeft
+                                + width
+                                + currentBox.ActualBorderRightWidth
+                                + currentBox.ActualPaddingRight
+                                : rightLimit,
+                CurrentMaxBottom = currentBottom
+            };
+
             //child boxes here
             foreach (var box in currentBox.Boxes)
             {
-                LayoutRecursively(g, box, currentBox.Location.X, currentBox.Location.Y,
-                     null, currentBox.Location.X, currentBox.ActualRight, currentBox.Location.Y);
-            }
-          
+                var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                     layoutCoreStatus.CurrentLineBox, currentBox.Location.X, layoutCoreStatus.CurrentMaxRight, layoutCoreStatus.CurrentMaxBottom);
 
-            SetBlockBoxSize(currentBox, leftLimit, rightLimit, currentBottom - top);
+                if(result!=null)
+                {
+                    layoutCoreStatus = result;
+                }
+            }
+
+
+            SetBlockBoxSize(currentBox, leftLimit, rightLimit, layoutCoreStatus.CurrentMaxBottom - top);
+
+            return new StaticNoneBlockStatus()
+            {
+                CurrentLineBox = layoutCoreStatus.CurrentLineBox,
+                CurX = layoutCoreStatus.CurX,
+                CurY = layoutCoreStatus.CurY,
+                CurrentMaxBottom = layoutCoreStatus.CurrentMaxBottom, 
+                CurrentMaxRight = layoutCoreStatus.CurrentMaxRight
+            };
 
         }
+
 
         /// <summary>
         /// Set Width & Height for Box
@@ -80,7 +125,7 @@ namespace UHtml.Core.Dom
                                 : (rightLimit - leftLimit)
                                 - box.ActualMarginLeft
                                 - box.ActualMarginRight
-                                , 
+                                ,
                                 box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height) ? height
                                 + box.ActualBorderTopWidth
                                 + box.ActualPaddingTop

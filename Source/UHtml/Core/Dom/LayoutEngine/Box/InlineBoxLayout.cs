@@ -90,8 +90,8 @@ namespace UHtml.Core.Dom
                 //position words within local max right
                 //box bottom should be updated by this method
                 //as text wrap to new lines increase bottom
-                LayoutWords(g, closestBlockAncestor, currentLineBox, box,
-                     curX, curY, localMinLeft, localMaxRight, currentMaxBottom);
+                //var status = LayoutWords(g, closestBlockAncestor, currentLineBox, box,
+                    // curX, curY, localMinLeft, localMaxRight, currentMaxBottom);
 
                 if (box.Boxes.Count > 0)
                 {
