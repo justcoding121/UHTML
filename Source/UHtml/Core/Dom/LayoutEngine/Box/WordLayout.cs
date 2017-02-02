@@ -27,7 +27,11 @@ namespace UHtml.Core.Dom
 
             if (box.Words.Count > 0)
             {
-               
+                if (currentLineBox == null)
+                {
+                    currentLineBox = new CssLineBox(box);
+                }
+
                 if (DomUtils.DoesBoxHasWhitespace(box))
                     curX += box.ActualWordSpacing;
 
@@ -82,10 +86,10 @@ namespace UHtml.Core.Dom
 
             return new WordLayoutStatus()
             {
-                 CurrentLineBox = currentLineBox,
-                 CurX = curX,
-                 CurY = curY,
-                 CurrentMaxBottom = currentMaxBottom
+                CurrentLineBox = currentLineBox,
+                CurX = curX,
+                CurY = curY,
+                CurrentMaxBottom = currentMaxBottom
             };
         }
     }
