@@ -37,7 +37,7 @@ namespace UHtml.Core.Dom
             double top;
 
 
-            left = curX + currentBox.ActualMarginLeft;
+            left = leftLimit + currentBox.ActualMarginLeft;
 
             if (prevSibling == null && currentBox.ParentBox != null)
             {
@@ -63,17 +63,23 @@ namespace UHtml.Core.Dom
             var layoutCoreStatus = new LayoutCoreStatus()
             {
                 CurrentLineBox = currentLine,
-                CurX = currentBox.Location.X,
-                CurY = currentBox.Location.Y,
+                CurX = currentBox.Location.X 
+                            + currentBox.ActualBorderLeftWidth
+                            + currentBox.ActualPaddingLeft,
+                CurY = currentBox.Location.Y
+                            + currentBox.ActualBorderTopWidth
+                            + currentBox.ActualPaddingTop,
+                CurrentMaxLeft = currentBox.Location.X
+                            + currentBox.ActualBorderLeftWidth
+                            + currentBox.ActualPaddingLeft,
                 CurrentMaxRight = currentBox.Width != CssConstants.Auto &&
                                   !string.IsNullOrEmpty(currentBox.Width) ?
                                 currentBox.Location.X 
                                 + currentBox.ActualBorderLeftWidth
                                 + currentBox.ActualPaddingLeft
                                 + width
-                                + currentBox.ActualBorderRightWidth
-                                + currentBox.ActualPaddingRight
                                 : rightLimit,
+
                 CurrentMaxBottom = currentBottom
             };
 
@@ -81,7 +87,7 @@ namespace UHtml.Core.Dom
             foreach (var box in currentBox.Boxes)
             {
                 var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                     layoutCoreStatus.CurrentLineBox, currentBox.Location.X, layoutCoreStatus.CurrentMaxRight, layoutCoreStatus.CurrentMaxBottom);
+                     layoutCoreStatus.CurrentLineBox, layoutCoreStatus.CurrentMaxLeft, layoutCoreStatus.CurrentMaxRight, layoutCoreStatus.CurrentMaxBottom);
 
                 if(result!=null)
                 {
