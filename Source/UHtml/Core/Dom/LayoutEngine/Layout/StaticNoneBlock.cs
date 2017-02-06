@@ -78,7 +78,10 @@ namespace UHtml.Core.Dom
                                 + currentBox.ActualBorderLeftWidth
                                 + currentBox.ActualPaddingLeft
                                 + width
-                                : rightLimit,
+                                : rightLimit 
+                                - currentBox.ActualMarginRight 
+                                - currentBox.ActualPaddingRight
+                                - currentBox.ActualBorderRightWidth,
 
                 CurrentMaxBottom = currentBottom
             };
@@ -98,12 +101,26 @@ namespace UHtml.Core.Dom
 
             SetBlockBoxSize(currentBox, leftLimit, rightLimit, layoutCoreStatus.CurrentMaxBottom - top);
 
+            if (!currentBox.IsFixed)
+            {
+                var actualWidth = Math.Max(currentBox.GetMinimumWidth() 
+                        + currentBox.GetWidthMarginDeep(currentBox), 
+                        currentBox.Size.Width < 90999 ? 
+                        currentBox.ActualRight - currentBox.HtmlContainer.Root.Location.X 
+                        : 0);
+
+                currentBox.HtmlContainer.ActualSize = 
+                    CommonUtils.Max(currentBox.HtmlContainer.ActualSize,
+                    new RSize(actualWidth, currentBox.ActualBottom 
+                    - currentBox.HtmlContainer.Root.Location.Y));
+            }
+
             return new StaticNoneBlockStatus()
             {
                 CurrentLineBox = layoutCoreStatus.CurrentLineBox,
                 CurX = layoutCoreStatus.CurX,
                 CurY = layoutCoreStatus.CurY,
-                CurrentMaxBottom = layoutCoreStatus.CurrentMaxBottom, 
+                CurrentMaxBottom = layoutCoreStatus.CurrentMaxBottom + currentBox.ActualMarginBottom, 
                 CurrentMaxRight = layoutCoreStatus.CurrentMaxRight
             };
 
@@ -139,8 +156,7 @@ namespace UHtml.Core.Dom
                                 + box.ActualPaddingBottom
                                 : currentBottom
                                 + box.ActualPaddingBottom
-                                + box.ActualBorderBottomWidth
-                                + box.ActualMarginBottom);
+                                + box.ActualBorderBottomWidth);
 
         }
     }
