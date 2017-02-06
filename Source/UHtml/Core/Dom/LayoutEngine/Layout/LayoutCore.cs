@@ -16,6 +16,7 @@ namespace UHtml.Core.Dom
         public CssLineBox CurrentLineBox { get; set; }
         public double CurrentMaxBottom { get; internal set; }
         public double CurrentMaxRight { get; internal set; }
+        public double CurrentMaxLeft { get; internal set; }
     }
 
     internal static partial class CssLayoutEngine
@@ -65,6 +66,7 @@ namespace UHtml.Core.Dom
                                             return new LayoutCoreStatus()
                                             {
                                                 CurrentLineBox = staticNoneBlockStatus.CurrentLineBox,
+                                                CurrentMaxLeft = leftLimit,
                                                 CurrentMaxBottom = staticNoneBlockStatus.CurrentMaxBottom,
                                                 CurX = staticNoneBlockStatus.CurX,
                                                 CurY = staticNoneBlockStatus.CurY,
@@ -88,6 +90,7 @@ namespace UHtml.Core.Dom
                                             return new LayoutCoreStatus()
                                             {
                                                 CurrentLineBox = staticNoneInlineStatus.CurrentLineBox,
+                                                CurrentMaxLeft = leftLimit,
                                                 CurrentMaxBottom = staticNoneInlineStatus.CurrentMaxBottom,
                                                 CurX = staticNoneInlineStatus.CurX,
                                                 CurY = staticNoneInlineStatus.CurY,
