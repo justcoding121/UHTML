@@ -37,6 +37,11 @@ namespace UHtml.Core.Dom
             _ownerBox.LineBoxes.Add(this);
         }
 
+        internal void AdjustMaxBottom()
+        {
+         
+        }
+
         /// <summary>
         /// Gets a list of boxes related with the linebox. 
         /// To know the words of the box inside this linebox, use the <see cref="WordsOf"/> method.
@@ -133,6 +138,11 @@ namespace UHtml.Core.Dom
                     r.Add(word);
 
             return r;
+        }
+
+        internal void ReportExistanceOf(CssBox box)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

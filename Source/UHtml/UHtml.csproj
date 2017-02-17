@@ -67,6 +67,7 @@
     <Compile Include="Core\Dom\LayoutEngine\Box\CssLayoutEngine.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Layout\LayoutCore.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Layout\StaticNoneBlock.cs" />
+    <Compile Include="Core\Dom\LayoutEngine\Layout\StaticNoneInlineBlock.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Layout\StaticNoneInline.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Table\CssTableLayoutEngine.cs" />
     <Compile Include="Core\Dom\CssLength.cs" />

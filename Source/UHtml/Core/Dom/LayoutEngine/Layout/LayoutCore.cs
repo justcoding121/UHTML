@@ -76,7 +76,24 @@ namespace UHtml.Core.Dom
 
 
                                     case "inline-block":
-                                        break;
+                                        {
+                                            var staticNoneInlineBlockStatus = LayoutStaticNoneInlineBlock(g,
+                                                currentBox,
+                                                curX, curY,
+                                                currentLine,
+                                                leftLimit, rightLimit,
+                                                currentBottom);
+
+                                            return new LayoutCoreStatus()
+                                            {
+                                                CurrentLineBox = staticNoneInlineBlockStatus.CurrentLineBox,
+                                                CurrentMaxLeft = leftLimit,
+                                                CurrentMaxBottom = staticNoneInlineBlockStatus.CurrentMaxBottom,
+                                                CurX = staticNoneInlineBlockStatus.CurX,
+                                                CurY = staticNoneInlineBlockStatus.CurY,
+                                                CurrentMaxRight = rightLimit
+                                            };
+                                        }
                                     case "inline":
                                     default:
                                         {

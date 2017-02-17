@@ -27,11 +27,8 @@ namespace UHtml.Core.Dom
 
             if (box.Words.Count > 0)
             {
-                if (currentLineBox == null)
-                {
-                    currentLineBox = new CssLineBox(box);
-                }
-
+               currentLineBox = currentLineBox ?? new CssLineBox(box);
+               
                 if (DomUtils.DoesBoxHasWhitespace(box))
                     curX += box.ActualWordSpacing;
 
