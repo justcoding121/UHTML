@@ -143,23 +143,23 @@ namespace UHtml.Demo.WPF
         /// </summary>
         private void LoadSamples()
         {
-            var showcaseRoot = new TreeViewItem();
-            showcaseRoot.Header = "HTML Renderer";
-            _samplesTreeView.Items.Add(showcaseRoot);
+            //var showcaseRoot = new TreeViewItem();
+            //showcaseRoot.Header = "HTML Renderer";
+            //_samplesTreeView.Items.Add(showcaseRoot);
 
-            foreach (var sample in SamplesLoader.ShowcaseSamples)
-            {
-                AddTreeItem(showcaseRoot, sample);
-            }
+            //foreach (var sample in SamplesLoader.ShowcaseSamples)
+            //{
+            //    AddTreeItem(showcaseRoot, sample);
+            //}
 
-            var testSamplesRoot = new TreeViewItem();
-            testSamplesRoot.Header = "Test Samples";
-            _samplesTreeView.Items.Add(testSamplesRoot);
+            //var testSamplesRoot = new TreeViewItem();
+            //testSamplesRoot.Header = "Test Samples";
+            //_samplesTreeView.Items.Add(testSamplesRoot);
 
-            foreach (var sample in SamplesLoader.TestSamples)
-            {
-                AddTreeItem(testSamplesRoot, sample);
-            }
+            //foreach (var sample in SamplesLoader.TestSamples)
+            //{
+            //    AddTreeItem(testSamplesRoot, sample);
+            //}
 
             var cssTestSamplesRoot = new TreeViewItem();
             cssTestSamplesRoot.Header = "Css Test Samples";
@@ -171,22 +171,22 @@ namespace UHtml.Demo.WPF
             }
 
 
-            if (SamplesLoader.PerformanceSamples.Count > 0)
-            {
-                var perfTestSamplesRoot = new TreeViewItem();
-                perfTestSamplesRoot.Header = PerformanceSamplesTreeNodeName;
-                _samplesTreeView.Items.Add(perfTestSamplesRoot);
+            //if (SamplesLoader.PerformanceSamples.Count > 0)
+            //{
+            //    var perfTestSamplesRoot = new TreeViewItem();
+            //    perfTestSamplesRoot.Header = PerformanceSamplesTreeNodeName;
+            //    _samplesTreeView.Items.Add(perfTestSamplesRoot);
 
-                foreach (var sample in SamplesLoader.PerformanceSamples)
-                {
-                    AddTreeItem(perfTestSamplesRoot, sample);
-                }
-            }
+            //    foreach (var sample in SamplesLoader.PerformanceSamples)
+            //    {
+            //        AddTreeItem(perfTestSamplesRoot, sample);
+            //    }
+            //}
 
-            showcaseRoot.IsExpanded = true;
+            cssTestSamplesRoot.IsExpanded = true;
 
-            if (showcaseRoot.Items.Count > 0)
-                ((TreeViewItem)showcaseRoot.Items[0]).IsSelected = true;
+            if (cssTestSamplesRoot.Items.Count > 0)
+                ((TreeViewItem)cssTestSamplesRoot.Items[0]).IsSelected = true;
         }
 
         /// <summary>

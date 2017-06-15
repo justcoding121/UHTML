@@ -85,6 +85,9 @@ namespace UHtml.Demo.WPF
         /// </summary>
         private void OnOpenInExternalView_Click(object sender, EventArgs e)
         {
+            _mainControl.UseGeneratedHtml = true;
+            _mainControl.UpdateWebBrowserHtml();
+
             var tmpFile = Path.ChangeExtension(Path.GetTempFileName(), ".htm");
             File.WriteAllText(tmpFile, _mainControl.GetHtml());
             Process.Start(tmpFile);
