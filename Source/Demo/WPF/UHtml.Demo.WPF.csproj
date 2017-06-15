@@ -117,6 +117,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Tests\UHtml.Tests.WPF\UHtml.Tests.WPF.csproj">
+      <Project>{b69f56ec-a0fb-49ff-9688-4c68c3a41c16}</Project>
+      <Name>UHtml.Tests.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UHtml.WPF\UHtml.WPF.csproj">
       <Project>{7e4e8db5-85ad-4388-bdcb-38c6f423b8b0}</Project>
       <Name>UHtml.WPF</Name>

@@ -161,6 +161,16 @@ namespace UHtml.Demo.WPF
                 AddTreeItem(testSamplesRoot, sample);
             }
 
+            var cssTestSamplesRoot = new TreeViewItem();
+            cssTestSamplesRoot.Header = "Css Test Samples";
+            _samplesTreeView.Items.Add(cssTestSamplesRoot);
+
+            foreach (var sample in SamplesLoader.CssTestSamples)
+            {
+                AddTreeItem(cssTestSamplesRoot, sample);
+            }
+
+
             if (SamplesLoader.PerformanceSamples.Count > 0)
             {
                 var perfTestSamplesRoot = new TreeViewItem();
