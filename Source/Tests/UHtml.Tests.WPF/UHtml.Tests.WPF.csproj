@@ -69,7 +69,7 @@
     <Compile Include="CSSTests.cs" />
     <Compile Include="IocModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility\TestFiles.cs" />
+    <Compile Include="Utility\ImageHelper.cs" />
     <Compile Include="Utility\TestFileManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,10 +89,10 @@
     <Content Include="CssTestFiles\BoxModel\BoxModel_01\BoxModel_01.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CssTestFiles\Color\Color_01\Color_01.png">
+    <Content Include="CssTestFiles\Color\Color_01\Color_01.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CssTestFiles\Color\Color_01\Color_01.html">
+    <Content Include="CssTestFiles\Color\Color_01\Color_01.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CssTestFiles\Color\Color_02\Color_02.html" />

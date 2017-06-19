@@ -21,78 +21,30 @@ namespace UHtml.Tests.WPF
         [TestMethod]
         public void Color_Test()
         {
-            TestFile(TestFiles.GetTestFile("Color","01"));
+            var testFilesDir = TestFileManager.GetTestFile("Color", "01");
+
+            var expectedFile = TestFileManager.GetExpectedImagePath(testFilesDir);
+            var resultFile = ImageHelper.GenerateResultImage(testFilesDir, 1600, 1200);
+
+            var expectedImg = Image.FromFile(expectedFile);
+            var actualImg = Image.FromFile(resultFile);
+
+            Assert.IsTrue(ImageHelper.AreEqual(expectedImg, actualImg));
         }
 
         [TestMethod]
         public void BoxModel_Test()
         {
-            TestFile(TestFiles.GetTestFile("BoxModel", "01"));
+            var testFilesDir = TestFileManager.GetTestFile("BoxModel", "01");
+
+            var expectedFile = TestFileManager.GetExpectedImagePath(testFilesDir);
+            var resultFile = ImageHelper.GenerateResultImage(testFilesDir, 1600, 1200);
+
+            var expectedImg = Image.FromFile(expectedFile);
+            var actualImg = Image.FromFile(resultFile);
+
+            Assert.IsTrue(ImageHelper.AreEqual(expectedImg, actualImg));
         }
 
-
-        private void TestFile(string testFile)
-        {
-            var htmlTest = File.ReadAllText(TestFileManager.GetHtmlTestFilePath(testFile));
-            using (Bitmap expectedResultFile = new Bitmap(Image.FromFile(TestFileManager.GetTestImagePath(testFile))))
-            using (Bitmap expectedResult = expectedResultFile.Clone(
-                new Rectangle(0, 0, expectedResultFile.Width, expectedResultFile.Height),
-                PixelFormat.Format32bppRgb))
-            {
-
-                var actualResultBitmapSource = HtmlRender.RenderToImage(htmlTest,
-                    new System.Windows.Size(0, 0));
-
-                using (var actualResult = BitmapFromSource(actualResultBitmapSource))
-                {
-
-                    TestFileManager.WriteResultFile(testFile, actualResult);
-                }
-
-            }
-        }
-        private static Bitmap BitmapFromSource(BitmapSource bitmapsource)
-        {
-            System.Drawing.Bitmap bitmap;
-            using (MemoryStream outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-
-                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
-                enc.Save(outStream);
-                bitmap = new System.Drawing.Bitmap(outStream);
-            }
-            return bitmap;
-        }
-
-        private bool CompareBitmaps(Image left, Image right)
-        {
-            if (object.Equals(left, right))
-                return true;
-            if (left == null || right == null)
-                return false;
-            if (!left.Size.Equals(right.Size) || !left.PixelFormat.Equals(right.PixelFormat))
-                return false;
-
-            Bitmap leftBitmap = left as Bitmap;
-            Bitmap rightBitmap = right as Bitmap;
-            if (leftBitmap == null || rightBitmap == null)
-                return true;
-
-            #region Code taking more time for comparison
-
-            for (int col = 0; col < left.Width; col++)
-            {
-                for (int row = 0; row < left.Height; row++)
-                {
-                    if (!leftBitmap.GetPixel(col, row).Equals(rightBitmap.GetPixel(col, row)))
-                        return false;
-                }
-            }
-
-            #endregion
-
-            return true;
-        }
     }
 }
