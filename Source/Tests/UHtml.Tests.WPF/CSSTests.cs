@@ -1,11 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UHtml.WPF;
-using System.IO;
 using UHtml.Tests.WPF.Utility;
 using System.Drawing;
-using System.Windows.Media.Imaging;
-using System.Drawing.Imaging;
-using System;
 
 namespace UHtml.Tests.WPF
 {
