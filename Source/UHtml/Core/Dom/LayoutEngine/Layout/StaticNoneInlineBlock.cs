@@ -51,7 +51,7 @@ namespace UHtml.Core.Dom
 
                 if (result != null)
                 {
-                    layoutCoreStatus = result;
+                    layoutCoreStatus.CurrentMaxBottom = result.CurrentMaxBottom;
                 }
             }
 

@@ -34,6 +34,7 @@ namespace UHtml.Core.Dom
 
                 foreach (var word in box.Words)
                 {
+
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
