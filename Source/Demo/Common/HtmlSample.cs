@@ -24,11 +24,12 @@ namespace UHtml.Demo.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public HtmlSample(string name, string fullName, string html)
+        public HtmlSample(string name, string category, string fullName, string html)
         {
             _name = name;
             _fullName = fullName;
             _html = html;
+            Category = category;
         }
 
         public string Name
@@ -45,5 +46,7 @@ namespace UHtml.Demo.Common
         {
             get { return _html; }
         }
+
+        public string Category { get; set; }
     }
 }

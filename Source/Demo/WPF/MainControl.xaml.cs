@@ -1,16 +1,5 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System;
+﻿using System;
+using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -165,11 +154,26 @@ namespace UHtml.Demo.WPF
             cssTestSamplesRoot.Header = "Css Test Samples";
             _samplesTreeView.Items.Add(cssTestSamplesRoot);
 
-            foreach (var sample in SamplesLoader.CssTestSamples)
+            bool varFirstCategory = true;
+            foreach (var group in SamplesLoader.CssTestSamples.GroupBy(x=>x.Category))
             {
-                AddTreeItem(cssTestSamplesRoot, sample);
-            }
+                var groupTreeItem = new TreeViewItem();
+                groupTreeItem.Header = group.Key;
+                cssTestSamplesRoot.Items.Add(groupTreeItem);
 
+
+                foreach (var sample in group.ToList())
+                {
+                    AddTreeItem(groupTreeItem, sample);
+                }
+
+                if (varFirstCategory)
+                {
+                    groupTreeItem.IsExpanded = true;
+                    ((TreeViewItem)groupTreeItem.Items[0]).IsSelected = true;
+                    varFirstCategory = false;
+                }
+            }
 
             //if (SamplesLoader.PerformanceSamples.Count > 0)
             //{
@@ -185,8 +189,7 @@ namespace UHtml.Demo.WPF
 
             cssTestSamplesRoot.IsExpanded = true;
 
-            if (cssTestSamplesRoot.Items.Count > 0)
-                ((TreeViewItem)cssTestSamplesRoot.Items[0]).IsSelected = true;
+           
         }
 
         /// <summary>
@@ -198,7 +201,7 @@ namespace UHtml.Demo.WPF
 
             var node = new TreeViewItem();
             node.Header = sample.Name;
-            node.Tag = new HtmlSample(sample.Name, sample.FullName, html);
+            node.Tag = new HtmlSample(sample.Name, sample.Category, sample.FullName, html);
             root.Items.Add(node);
         }
 

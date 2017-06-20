@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using UHtml.WPF;
 
@@ -70,28 +66,38 @@ namespace UHtml.Tests.WPF.Utility
         public static bool AreEqual(Image left, Image right)
         {
             if (Equals(left, right))
-                return true;
+            {
+                throw new Exception("Both images are same pointing to same object.");
+            }
 
             if (left == null || right == null)
-                return false;
+            {
+                throw new ArgumentNullException();
+            }
 
-            if (!left.Size.Equals(right.Size) || !left.PixelFormat.Equals(right.PixelFormat))
-                return false;
+            if (!left.Size.Equals(right.Size)
+                || !left.PixelFormat.Equals(right.PixelFormat))
+            {
+                throw new Exception("Test compare image sizes do not match.");
+            }
 
             var leftBitmap = left as Bitmap;
             var rightBitmap = right as Bitmap;
 
 
             if (leftBitmap == null || rightBitmap == null)
-                return true;
-
+            {
+                throw new Exception("Failed to convert compare images to Bitmap.");
+            }
 
             for (int col = 0; col < left.Width; col++)
             {
                 for (int row = 0; row < left.Height; row++)
                 {
                     if (!leftBitmap.GetPixel(col, row).Equals(rightBitmap.GetPixel(col, row)))
+                    {
                         return false;
+                    }
                 }
             }
 
