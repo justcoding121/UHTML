@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-// 
-
-
-
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -112,28 +100,6 @@ namespace UHtml.Demo.WPF
             w.Width = Width * 0.8;
             w.Height = Height * 0.8;
             w.ShowDialog();
-        }
-
-        /// <summary>
-        /// Execute performance test by setting all sample HTMLs in a loop.
-        /// </summary>
-        private void OnRunPerformance_Click(object sender, EventArgs e)
-        {
-            _mainControl.UpdateLock = true;
-            _toolBar.IsEnabled = false;
-            ApplicationDoEvents();
-
-            var msg = DemoUtils.RunSamplesPerformanceTest(html =>
-            {
-                _mainControl.SetHtml(html);
-                ApplicationDoEvents(); // so paint will be called
-            });
-
-            Clipboard.SetDataObject(msg);
-            MessageBox.Show(msg, "Test run results");
-
-            _mainControl.UpdateLock = false;
-            _toolBar.IsEnabled = true;
         }
 
         private static void ApplicationDoEvents()
