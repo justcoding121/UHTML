@@ -1,19 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using UHtml.Tests.WPF.Utility;
 using System.Drawing;
+using NUnit.Framework;
 
 namespace UHtml.Tests.WPF.CssTests
 {
-    [TestClass]
+    [TestFixture]
     public class BoxModel_Tests
     {
-        [TestInitialize]
+        [SetUp]
         public void CSSTestsInit()
         {
             IocModule.Register(new SimpleInjector.Container());
         }
 
-        [TestMethod]
+        [Test]
         public void BoxModel_Test_01()
         {
             var testFilesDir = TestFileManager.GetTestFile("BoxModel", "01");
