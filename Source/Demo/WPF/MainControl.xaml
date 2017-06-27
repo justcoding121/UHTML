@@ -34,7 +34,6 @@
                     </wpf1:HtmlPanel.ToolTip>
                 </wpf1:HtmlPanel>
                 <GridSplitter x:Name="_splitter" Grid.Column="1" Width="4" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext" Background="#BFDBFF" Visibility="Collapsed" />
-                <WebBrowser x:Name="_webBrowser" Grid.Column="2" Visibility="Collapsed"/>
             </Grid>
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="4" Background="#BFDBFF" />
             <xctk:RichTextBox x:Name="_htmlEditor" Grid.Row="2" VerticalScrollBarVisibility="Visible" BorderThickness="0" 
@@ -44,9 +43,5 @@
                MouseLeftButtonUp="OnRefreshLink_MouseLeftButtonUp">
             <Underline>Refresh</Underline>
         </Label>
-        <CheckBox x:Name="_coloredCheckBox" HorizontalAlignment="Right" Margin="0,0,22,2" VerticalAlignment="Bottom" Grid.Column="1" FontSize="11" Foreground="Blue" Cursor="Hand"
-               Click="OnColoredCheckbox_click">
-            <Underline>Colored</Underline>
-        </CheckBox>
     </Grid>
 </UserControl>

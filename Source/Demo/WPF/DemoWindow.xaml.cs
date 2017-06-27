@@ -48,25 +48,6 @@ namespace UHtml.Demo.WPF
             }
         }
 
-        /// <summary>
-        /// Open sample window.
-        /// </summary>
-        private void OnOpenSampleWindow_click(object sender, RoutedEventArgs e)
-        {
-            var w = new SampleWindow();
-            w.Owner = this;
-            w.Width = Width * 0.8;
-            w.Height = Height * 0.8;
-            w.ShowDialog();
-        }
-
-        /// <summary>
-        /// Toggle if to show split view of HtmlPanel and WinForms WebBrowser control.
-        /// </summary>
-        private void OnShowIEView_ButtonClick(object sender, EventArgs e)
-        {
-            _mainControl.ShowWebBrowserView(_showIEView.IsChecked.GetValueOrDefault(false));
-        }
 
         /// <summary>
         /// Open the current html is external process - the default user browser.
@@ -74,20 +55,10 @@ namespace UHtml.Demo.WPF
         private void OnOpenInExternalView_Click(object sender, EventArgs e)
         {
             _mainControl.UseGeneratedHtml = true;
-            _mainControl.UpdateWebBrowserHtml();
 
             var tmpFile = Path.ChangeExtension(Path.GetTempFileName(), ".htm");
             File.WriteAllText(tmpFile, _mainControl.GetHtml());
             Process.Start(tmpFile);
-        }
-
-        /// <summary>
-        /// Toggle the use generated html button state.
-        /// </summary>
-        private void OnUseGeneratedHtml_Click(object sender, EventArgs e)
-        {
-            _mainControl.UseGeneratedHtml = _useGeneratedHtml.IsChecked.GetValueOrDefault(false);
-            _mainControl.UpdateWebBrowserHtml();
         }
 
         /// <summary>
@@ -100,11 +71,6 @@ namespace UHtml.Demo.WPF
             w.Width = Width * 0.8;
             w.Height = Height * 0.8;
             w.ShowDialog();
-        }
-
-        private static void ApplicationDoEvents()
-        {
-            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action<bool>(delegate { }), false);
         }
     }
 }

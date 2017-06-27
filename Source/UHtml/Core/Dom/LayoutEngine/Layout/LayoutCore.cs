@@ -56,7 +56,7 @@ namespace UHtml.Core.Dom
                                         break;
                                     case "block":
                                         {
-                                            var staticNoneBlockStatus = LayoutStaticNoneBlock(g,
+                                            var staticNoneBlockResult = LayoutStaticNoneBlock(g,
                                                currentBox,
                                                curX, curY,
                                                currentLine,
@@ -65,19 +65,19 @@ namespace UHtml.Core.Dom
 
                                             return new LayoutCoreStatus()
                                             {
-                                                CurrentLineBox = staticNoneBlockStatus.CurrentLineBox,
+                                                CurrentLineBox = staticNoneBlockResult.CurrentLineBox,
                                                 CurrentMaxLeft = leftLimit,
-                                                CurrentMaxBottom = staticNoneBlockStatus.CurrentMaxBottom,
-                                                CurX = staticNoneBlockStatus.CurX,
-                                                CurY = staticNoneBlockStatus.CurY,
-                                                CurrentMaxRight = staticNoneBlockStatus.CurrentMaxRight
+                                                CurrentMaxBottom = staticNoneBlockResult.CurrentMaxBottom,
+                                                CurX = staticNoneBlockResult.CurX,
+                                                CurY = staticNoneBlockResult.CurY,
+                                                CurrentMaxRight = staticNoneBlockResult.CurrentMaxRight
                                             };
                                         }
 
 
                                     case "inline-block":
                                         {
-                                            var staticNoneInlineBlockStatus = LayoutStaticNoneInlineBlock(g,
+                                            var staticNoneInlineBlockResult = LayoutStaticNoneInlineBlock(g,
                                                 currentBox,
                                                 curX, curY,
                                                 currentLine,
@@ -86,18 +86,18 @@ namespace UHtml.Core.Dom
 
                                             return new LayoutCoreStatus()
                                             {
-                                                CurrentLineBox = staticNoneInlineBlockStatus.CurrentLineBox,
+                                                CurrentLineBox = staticNoneInlineBlockResult.CurrentLineBox,
                                                 CurrentMaxLeft = leftLimit,
-                                                CurrentMaxBottom = staticNoneInlineBlockStatus.CurrentMaxBottom,
-                                                CurX = staticNoneInlineBlockStatus.CurX,
-                                                CurY = staticNoneInlineBlockStatus.CurY,
+                                                CurrentMaxBottom = staticNoneInlineBlockResult.CurrentMaxBottom,
+                                                CurX = staticNoneInlineBlockResult.CurX,
+                                                CurY = staticNoneInlineBlockResult.CurY,
                                                 CurrentMaxRight = rightLimit
                                             };
                                         }
                                     case "inline":
                                     default:
                                         {
-                                            var staticNoneInlineStatus = LayoutStaticNoneInline(g,
+                                            var staticNoneInlineResult = LayoutStaticNoneInline(g,
                                                 currentBox,
                                                 curX, curY,
                                                 currentLine,
@@ -106,11 +106,11 @@ namespace UHtml.Core.Dom
 
                                             return new LayoutCoreStatus()
                                             {
-                                                CurrentLineBox = staticNoneInlineStatus.CurrentLineBox,
+                                                CurrentLineBox = staticNoneInlineResult.CurrentLineBox,
                                                 CurrentMaxLeft = leftLimit,
-                                                CurrentMaxBottom = staticNoneInlineStatus.CurrentMaxBottom,
-                                                CurX = staticNoneInlineStatus.CurX,
-                                                CurY = staticNoneInlineStatus.CurY,
+                                                CurrentMaxBottom = staticNoneInlineResult.CurrentMaxBottom,
+                                                CurX = staticNoneInlineResult.CurX,
+                                                CurY = staticNoneInlineResult.CurY,
                                                 CurrentMaxRight = rightLimit
                                             };
                                         }

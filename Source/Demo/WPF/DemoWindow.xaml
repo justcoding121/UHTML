@@ -13,28 +13,13 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <ToolBar Grid.Column="0">
-                <Button ToolBar.OverflowMode="Never" Click="OnOpenSampleWindow_click" >
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding ConverterParameter=form, Converter={StaticResource Converter}}" Tag="form" MaxHeight="18" Margin="0 0 5 0"/>
-                        <TextBlock Text="Open Sample Window" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
                 <Separator/>
-                <ToggleButton x:Name="_showIEView" Click="OnShowIEView_ButtonClick">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding ConverterParameter=browser, Converter={StaticResource Converter}}" MaxHeight="18" Margin="0 0 5 0"/>
-                        <TextBlock Text="Show Browser" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </ToggleButton>
                 <Button Click="OnOpenInExternalView_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding ConverterParameter=chrome, Converter={StaticResource Converter}}" MaxHeight="18" Margin="0 0 5 0"/>
                         <TextBlock Text="Open External" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <ToggleButton x:Name="_useGeneratedHtml" Click="OnUseGeneratedHtml_Click">
-                    <Image Source="{Binding ConverterParameter=code, Converter={StaticResource Converter}}" MaxHeight="16"/>
-                </ToggleButton>
                 <Separator/>
                 <Separator/>
                 <Button Click="OnGenerateImage_Click">

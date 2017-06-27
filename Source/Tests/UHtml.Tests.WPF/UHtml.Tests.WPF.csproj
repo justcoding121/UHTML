@@ -90,6 +90,12 @@
     <Content Include="CssTestFiles\BoxModel\BoxModel_01\BoxModel_01.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="CssTestFiles\BoxModel\BoxModel_02\BoxModel_02.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CssTestFiles\BoxModel\BoxModel_02\klematis4_big.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="CssTestFiles\Color\Color_01\Color_01.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

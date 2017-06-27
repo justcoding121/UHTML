@@ -22,11 +22,6 @@ namespace UHtml.Demo.WPF
         #region Fields and Consts
 
         /// <summary>
-        /// the name of the tree node root for all performance samples
-        /// </summary>
-        private const string PerformanceSamplesTreeNodeName = "Performance Samples";
-
-        /// <summary>
         /// timer to update the rendered html when html in editor changes with delay
         /// </summary>
         private readonly Timer _updateHtmlTimer;
@@ -67,15 +62,6 @@ namespace UHtml.Demo.WPF
 
 
         /// <summary>
-        /// used ignore html editor updates when updating separately
-        /// </summary>
-        public bool UpdateLock
-        {
-            get { return _updateLock; }
-            set { _updateLock = value; }
-        }
-
-        /// <summary>
         /// In IE view if to show original html or the html generated from the html control
         /// </summary>
         public bool UseGeneratedHtml
@@ -84,44 +70,9 @@ namespace UHtml.Demo.WPF
             set { _useGeneratedHtml = value; }
         }
 
-        /// <summary>
-        /// Show\Hide the web browser viewer.
-        /// </summary>
-        public void ShowWebBrowserView(bool show)
-        {
-            _webBrowser.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
-            _splitter.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
-
-            _grid2.ColumnDefinitions[2].Width = show ? new GridLength(_grid2.ActualWidth / 2, GridUnitType.Pixel) : GridLength.Auto;
-
-            if (show)
-                UpdateWebBrowserHtml();
-        }
-
-        /// <summary>
-        /// Update the html shown in the web browser
-        /// </summary>
-        public void UpdateWebBrowserHtml()
-        {
-            if (_webBrowser.IsVisible)
-            {
-                _webBrowser.NavigateToString(_useGeneratedHtml ? _htmlPanel.GetHtml() : GetFixedHtml());
-            }
-        }
-
         public string GetHtml()
         {
             return _useGeneratedHtml ? _htmlPanel.GetHtml() : GetHtmlEditorText();
-        }
-
-        public void SetHtml(string html)
-        {
-            _htmlPanel.Text = html;
-            if (string.IsNullOrWhiteSpace(html))
-            {
-                _htmlPanel.InvalidateMeasure();
-                _htmlPanel.InvalidateVisual();
-            }
         }
 
 
@@ -132,30 +83,12 @@ namespace UHtml.Demo.WPF
         /// </summary>
         private void LoadSamples()
         {
-            //var showcaseRoot = new TreeViewItem();
-            //showcaseRoot.Header = "HTML Renderer";
-            //_samplesTreeView.Items.Add(showcaseRoot);
-
-            //foreach (var sample in SamplesLoader.ShowcaseSamples)
-            //{
-            //    AddTreeItem(showcaseRoot, sample);
-            //}
-
-            //var testSamplesRoot = new TreeViewItem();
-            //testSamplesRoot.Header = "Test Samples";
-            //_samplesTreeView.Items.Add(testSamplesRoot);
-
-            //foreach (var sample in SamplesLoader.TestSamples)
-            //{
-            //    AddTreeItem(testSamplesRoot, sample);
-            //}
-
             var cssTestSamplesRoot = new TreeViewItem();
             cssTestSamplesRoot.Header = "Css Test Samples";
             _samplesTreeView.Items.Add(cssTestSamplesRoot);
 
             bool varFirstCategory = true;
-            foreach (var group in SamplesLoader.CssTestSamples.GroupBy(x=>x.Category))
+            foreach (var group in SamplesLoader.CssTestSamples.GroupBy(x => x.Category))
             {
                 var groupTreeItem = new TreeViewItem();
                 groupTreeItem.Header = group.Key;
@@ -175,21 +108,8 @@ namespace UHtml.Demo.WPF
                 }
             }
 
-            //if (SamplesLoader.PerformanceSamples.Count > 0)
-            //{
-            //    var perfTestSamplesRoot = new TreeViewItem();
-            //    perfTestSamplesRoot.Header = PerformanceSamplesTreeNodeName;
-            //    _samplesTreeView.Items.Add(perfTestSamplesRoot);
-
-            //    foreach (var sample in SamplesLoader.PerformanceSamples)
-            //    {
-            //        AddTreeItem(perfTestSamplesRoot, sample);
-            //    }
-            //}
-
             cssTestSamplesRoot.IsExpanded = true;
 
-           
         }
 
         /// <summary>
@@ -215,17 +135,6 @@ namespace UHtml.Demo.WPF
             if (sample != null)
             {
                 _updateLock = true;
-
-                if (!Equals(((TreeViewItem)item.Parent).Header, PerformanceSamplesTreeNodeName))
-                {
-                    SetColoredText(sample.Html, _coloredCheckBox.IsChecked.GetValueOrDefault(false));
-                }
-                else
-                {
-                    _htmlEditor.Document.Blocks.Clear();
-                    _htmlEditor.Document.Blocks.Add(new Paragraph(new Run(sample.Html)));
-                }
-
                 Cursor = Cursors.Wait;
 
                 try
@@ -241,7 +150,6 @@ namespace UHtml.Demo.WPF
                 Cursor = Cursors.Arrow;
                 _updateLock = false;
 
-                UpdateWebBrowserHtml();
             }
         }
 
@@ -274,50 +182,8 @@ namespace UHtml.Demo.WPF
                     MessageBox.Show(ex.ToString(), "Failed to render HTML");
                 }
 
-                //SyntaxHilight.AddColoredText(_htmlEditor.Text, _htmlEditor);
-
-                UpdateWebBrowserHtml();
-
                 _updateLock = false;
             }), state);
-        }
-
-        /// <summary>
-        /// Fix the raw html by replacing bridge object properties calls with path to file with the data returned from the property.
-        /// </summary>
-        /// <returns>fixed html</returns>
-        private string GetFixedHtml()
-        {
-            var html = GetHtmlEditorText();
-
-            html = Regex.Replace(html, @"src=\""(\w.*?)\""", match =>
-            {
-                var img = HtmlRenderingHelper.TryLoadResourceImage(match.Groups[1].Value);
-                if (img != null)
-                {
-                    var tmpFile = Path.GetTempFileName();
-                    var encoder = new PngBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(img));
-                    using (FileStream stream = new FileStream(tmpFile, FileMode.Create))
-                        encoder.Save(stream);
-                    return string.Format("src=\"{0}\"", tmpFile);
-                }
-                return match.Value;
-            }, RegexOptions.IgnoreCase);
-
-            html = Regex.Replace(html, @"href=\""(\w.*?)\""", match =>
-            {
-                var stylesheet = DemoUtils.GetStylesheet(match.Groups[1].Value);
-                if (stylesheet != null)
-                {
-                    var tmpFile = Path.GetTempFileName();
-                    File.WriteAllText(tmpFile, stylesheet);
-                    return string.Format("href=\"{0}\"", tmpFile);
-                }
-                return match.Value;
-            }, RegexOptions.IgnoreCase);
-
-            return html;
         }
 
         /// <summary>
@@ -329,16 +195,8 @@ namespace UHtml.Demo.WPF
         }
 
         /// <summary>
-        /// Toggle if the html syntax is colored.
-        /// </summary>
-        private void OnColoredCheckbox_click(object sender, RoutedEventArgs e)
-        {
-            SetColoredText(GetHtmlEditorText(), _coloredCheckBox.IsChecked.GetValueOrDefault(false));
-        }
-
-        /// <summary>
         /// Show error raised from html renderer.
-        /// </summary>
+        /// </summary> 
         private void OnRenderError(object sender, RoutedEvenArgs<HtmlRenderErrorEventArgs> args)
         {
             Dispatcher.BeginInvoke(new Action(() => MessageBox.Show(args.Data.Message + (args.Data.Exception != null ? "\r\n" + args.Data.Exception : null), "Error in Html Renderer", MessageBoxButton.OK)));
