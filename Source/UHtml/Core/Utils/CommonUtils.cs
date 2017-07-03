@@ -122,13 +122,13 @@ namespace UHtml.Core.Utils
         /// <summary>
         /// Get size that is max of <paramref name="size"/> and <paramref name="other"/> for width and height separately.
         /// </summary>
-        //public static RSize Max(RSize size, RSize other)
+        public static RSize Max(RSize size, RSize other)
         {
             return new RSize(Math.Max(size.Width, other.Width), Math.Max(size.Height, other.Height));
         }
 
         /// <summary>
-        /// Get Uri object for the given path if it is valid uri path
+        /// Get Uri object for the given path if it is valid uri path.
         /// </summary>
         /// <param name="path">the path to get uri for</param>
         /// <returns>uri or null if not valid</returns>
