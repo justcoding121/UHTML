@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 
@@ -24,30 +12,30 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// The actual WPF brush instance.
         /// </summary>
-        private readonly Brush _brush;
+        private readonly Brush brush;
 
         /// <summary>
         /// the width of the pen
         /// </summary>
-        private double _width;
+        private double width;
 
         /// <summary>
         /// the dash style of the pen
         /// </summary>
-        private DashStyle _dashStyle = DashStyles.Solid;
+        private DashStyle dashStyle = DashStyles.Solid;
 
         /// <summary>
         /// Init.
         /// </summary>
         public PenAdapter(Brush brush)
         {
-            _brush = brush;
+            this.brush = brush;
         }
 
         public override double Width
         {
-            get { return _width; }
-            set { _width = value; }
+            get { return width; }
+            set { width = value; }
         }
 
         public override RDashStyle DashStyle
@@ -57,22 +45,22 @@ namespace UHtml.WPF.Adapters
                 switch (value)
                 {
                     case RDashStyle.Solid:
-                        _dashStyle = DashStyles.Solid;
+                        dashStyle = DashStyles.Solid;
                         break;
                     case RDashStyle.Dash:
-                        _dashStyle = DashStyles.Dash;
+                        dashStyle = DashStyles.Dash;
                         break;
                     case RDashStyle.Dot:
-                        _dashStyle = DashStyles.Dot;
+                        dashStyle = DashStyles.Dot;
                         break;
                     case RDashStyle.DashDot:
-                        _dashStyle = DashStyles.DashDot;
+                        dashStyle = DashStyles.DashDot;
                         break;
                     case RDashStyle.DashDotDot:
-                        _dashStyle = DashStyles.DashDotDot;
+                        dashStyle = DashStyles.DashDotDot;
                         break;
                     default:
-                        _dashStyle = DashStyles.Solid;
+                        dashStyle = DashStyles.Solid;
                         break;
                 }
             }
@@ -83,8 +71,8 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public Pen CreatePen()
         {
-            var pen = new Pen(_brush, _width);
-            pen.DashStyle = _dashStyle;
+            var pen = new Pen(brush, width);
+            pen.DashStyle = dashStyle;
             return pen;
         }
     }

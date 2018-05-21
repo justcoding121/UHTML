@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using UHtml.Core.Entities;
 using UHtml.Demo.Common;
 using UHtml.WPF;
@@ -48,12 +45,6 @@ namespace UHtml.Demo.WPF
             _htmlPanel.StylesheetLoad += HtmlRenderingHelper.OnStylesheetLoad;
             _htmlPanel.ImageLoad += HtmlRenderingHelper.OnImageLoad;
             _htmlPanel.LoadComplete += (sender, args) => _htmlPanel.ScrollToElement("C4");
-
-            _htmlTooltipLabel.AvoidImagesLateLoading = true;
-            _htmlTooltipLabel.StylesheetLoad += HtmlRenderingHelper.OnStylesheetLoad;
-            _htmlTooltipLabel.ImageLoad += HtmlRenderingHelper.OnImageLoad;
-            _htmlTooltipLabel.Text = "<div class='htmltooltip'>" + Common.Resources.Tooltip + "</div>";
-
 
             LoadSamples();
 

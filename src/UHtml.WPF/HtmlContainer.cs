@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,7 +25,7 @@ namespace UHtml.WPF
         /// <summary>
         /// The internal core html container
         /// </summary>
-        private readonly HtmlContainerInt _htmlContainerInt;
+        private readonly HtmlContainerInt htmlContainerInt;
 
         #endregion
 
@@ -47,8 +35,10 @@ namespace UHtml.WPF
         /// </summary>
         public HtmlContainer()
         {
-            _htmlContainerInt = new HtmlContainerInt(WpfAdapter.Instance);
-            _htmlContainerInt.PageSize = new RSize(99999, 99999);
+            htmlContainerInt = new HtmlContainerInt(WpfAdapter.Instance)
+            {
+                PageSize = new RSize(99999, 99999)
+            };
         }
 
         /// <summary>
@@ -57,8 +47,8 @@ namespace UHtml.WPF
         /// </summary>
         public event EventHandler LoadComplete
         {
-            add { _htmlContainerInt.LoadComplete += value; }
-            remove { _htmlContainerInt.LoadComplete -= value; }
+            add { htmlContainerInt.LoadComplete += value; }
+            remove { htmlContainerInt.LoadComplete -= value; }
         }
 
         /// <summary>
@@ -67,8 +57,8 @@ namespace UHtml.WPF
         /// </summary>
         public event EventHandler<HtmlLinkClickedEventArgs> LinkClicked
         {
-            add { _htmlContainerInt.LinkClicked += value; }
-            remove { _htmlContainerInt.LinkClicked -= value; }
+            add { htmlContainerInt.LinkClicked += value; }
+            remove { htmlContainerInt.LinkClicked -= value; }
         }
 
         /// <summary>
@@ -79,8 +69,8 @@ namespace UHtml.WPF
         /// </remarks>
         public event EventHandler<HtmlRefreshEventArgs> Refresh
         {
-            add { _htmlContainerInt.Refresh += value; }
-            remove { _htmlContainerInt.Refresh -= value; }
+            add { htmlContainerInt.Refresh += value; }
+            remove { htmlContainerInt.Refresh -= value; }
         }
 
         /// <summary>
@@ -89,8 +79,8 @@ namespace UHtml.WPF
         /// </summary>
         public event EventHandler<HtmlScrollEventArgs> ScrollChange
         {
-            add { _htmlContainerInt.ScrollChange += value; }
-            remove { _htmlContainerInt.ScrollChange -= value; }
+            add { htmlContainerInt.ScrollChange += value; }
+            remove { htmlContainerInt.ScrollChange -= value; }
         }
 
         /// <summary>
@@ -101,8 +91,8 @@ namespace UHtml.WPF
         /// </remarks>
         public event EventHandler<HtmlRenderErrorEventArgs> RenderError
         {
-            add { _htmlContainerInt.RenderError += value; }
-            remove { _htmlContainerInt.RenderError -= value; }
+            add { htmlContainerInt.RenderError += value; }
+            remove { htmlContainerInt.RenderError -= value; }
         }
 
         /// <summary>
@@ -112,8 +102,8 @@ namespace UHtml.WPF
         /// </summary>
         public event EventHandler<HtmlStylesheetLoadEventArgs> StylesheetLoad
         {
-            add { _htmlContainerInt.StylesheetLoad += value; }
-            remove { _htmlContainerInt.StylesheetLoad -= value; }
+            add { htmlContainerInt.StylesheetLoad += value; }
+            remove { htmlContainerInt.StylesheetLoad -= value; }
         }
 
         /// <summary>
@@ -122,8 +112,8 @@ namespace UHtml.WPF
         /// </summary>
         public event EventHandler<HtmlImageLoadEventArgs> ImageLoad
         {
-            add { _htmlContainerInt.ImageLoad += value; }
-            remove { _htmlContainerInt.ImageLoad -= value; }
+            add { htmlContainerInt.ImageLoad += value; }
+            remove { htmlContainerInt.ImageLoad -= value; }
         }
 
         /// <summary>
@@ -131,7 +121,7 @@ namespace UHtml.WPF
         /// </summary>
         internal HtmlContainerInt HtmlContainerInt
         {
-            get { return _htmlContainerInt; }
+            get { return htmlContainerInt; }
         }
 
         /// <summary>
@@ -139,7 +129,7 @@ namespace UHtml.WPF
         /// </summary>
         public CssData CssData
         {
-            get { return _htmlContainerInt.CssData; }
+            get { return htmlContainerInt.CssData; }
         }
 
         /// <summary>
@@ -154,8 +144,8 @@ namespace UHtml.WPF
         /// </remarks>
         public bool AvoidAsyncImagesLoading
         {
-            get { return _htmlContainerInt.AvoidAsyncImagesLoading; }
-            set { _htmlContainerInt.AvoidAsyncImagesLoading = value; }
+            get { return htmlContainerInt.AvoidAsyncImagesLoading; }
+            set { htmlContainerInt.AvoidAsyncImagesLoading = value; }
         }
 
         /// <summary>
@@ -173,8 +163,8 @@ namespace UHtml.WPF
         /// </remarks>
         public bool AvoidImagesLateLoading
         {
-            get { return _htmlContainerInt.AvoidImagesLateLoading; }
-            set { _htmlContainerInt.AvoidImagesLateLoading = value; }
+            get { return htmlContainerInt.AvoidImagesLateLoading; }
+            set { htmlContainerInt.AvoidImagesLateLoading = value; }
         }
 
         /// <summary>
@@ -183,8 +173,8 @@ namespace UHtml.WPF
         /// </summary>
         public bool IsSelectionEnabled
         {
-            get { return _htmlContainerInt.IsSelectionEnabled; }
-            set { _htmlContainerInt.IsSelectionEnabled = value; }
+            get { return htmlContainerInt.IsSelectionEnabled; }
+            set { htmlContainerInt.IsSelectionEnabled = value; }
         }
 
         /// <summary>
@@ -192,8 +182,8 @@ namespace UHtml.WPF
         /// </summary>
         public bool IsContextMenuEnabled
         {
-            get { return _htmlContainerInt.IsContextMenuEnabled; }
-            set { _htmlContainerInt.IsContextMenuEnabled = value; }
+            get { return htmlContainerInt.IsContextMenuEnabled; }
+            set { htmlContainerInt.IsContextMenuEnabled = value; }
         }
 
         /// <summary>
@@ -206,8 +196,8 @@ namespace UHtml.WPF
         /// </example>
         public Point ScrollOffset
         {
-            get { return Utils.Convert(_htmlContainerInt.ScrollOffset); }
-            set { _htmlContainerInt.ScrollOffset = Utils.Convert(value); }
+            get { return Utils.Convert(htmlContainerInt.ScrollOffset); }
+            set { htmlContainerInt.ScrollOffset = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -216,8 +206,8 @@ namespace UHtml.WPF
         /// </summary>
         public Point Location
         {
-            get { return Utils.Convert(_htmlContainerInt.Location); }
-            set { _htmlContainerInt.Location = Utils.Convert(value); }
+            get { return Utils.Convert(htmlContainerInt.Location); }
+            set { htmlContainerInt.Location = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -229,8 +219,8 @@ namespace UHtml.WPF
         /// </summary>
         public Size MaxSize
         {
-            get { return Utils.Convert(_htmlContainerInt.MaxSize); }
-            set { _htmlContainerInt.MaxSize = Utils.Convert(value); }
+            get { return Utils.Convert(htmlContainerInt.MaxSize); }
+            set { htmlContainerInt.MaxSize = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -238,8 +228,8 @@ namespace UHtml.WPF
         /// </summary>
         public Size ActualSize
         {
-            get { return Utils.Convert(_htmlContainerInt.ActualSize); }
-            internal set { _htmlContainerInt.ActualSize = Utils.Convert(value); }
+            get { return Utils.Convert(htmlContainerInt.ActualSize); }
+            internal set { htmlContainerInt.ActualSize = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -247,7 +237,7 @@ namespace UHtml.WPF
         /// </summary>
         public string SelectedText
         {
-            get { return _htmlContainerInt.SelectedText; }
+            get { return htmlContainerInt.SelectedText; }
         }
 
         /// <summary>
@@ -255,7 +245,7 @@ namespace UHtml.WPF
         /// </summary>
         public string SelectedHtml
         {
-            get { return _htmlContainerInt.SelectedHtml; }
+            get { return htmlContainerInt.SelectedHtml; }
         }
 
         /// <summary>
@@ -273,7 +263,7 @@ namespace UHtml.WPF
         /// <param name="baseCssData">optional: the stylesheet to init with, init default if not given</param>
         public void SetHtml(string htmlSource, CssData baseCssData = null)
         {
-            _htmlContainerInt.SetHtml(htmlSource, baseCssData);
+            htmlContainerInt.SetHtml(htmlSource, baseCssData);
         }
 
         /// <summary>
@@ -281,7 +271,7 @@ namespace UHtml.WPF
         /// </summary>
         public void Clear()
         {
-            _htmlContainerInt.Clear();
+            htmlContainerInt.Clear();
         }
 
         /// <summary>
@@ -291,7 +281,7 @@ namespace UHtml.WPF
         /// <returns>generated html</returns>
         public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline)
         {
-            return _htmlContainerInt.GetHtml(styleGen);
+            return htmlContainerInt.GetHtml(styleGen);
         }
 
         /// <summary>
@@ -303,7 +293,7 @@ namespace UHtml.WPF
         /// <returns>found attribute value or null if not found</returns>
         public string GetAttributeAt(Point location, string attribute)
         {
-            return _htmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
+            return htmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
         }
 
         /// <summary>
@@ -327,7 +317,7 @@ namespace UHtml.WPF
         /// <returns>css link href if exists or null</returns>
         public string GetLinkAt(Point location)
         {
-            return _htmlContainerInt.GetLinkAt(Utils.Convert(location));
+            return htmlContainerInt.GetLinkAt(Utils.Convert(location));
         }
 
         /// <summary>
@@ -339,7 +329,7 @@ namespace UHtml.WPF
         /// <returns>the Rect of the element or null if not found</returns>
         public Rect? GetElementRectangle(string elementId)
         {
-            var r = _htmlContainerInt.GetElementRectangle(elementId);
+            var r = htmlContainerInt.GetElementRectangle(elementId);
             return r.HasValue ? Utils.Convert(r.Value) : (Rect?)null;
         }
 
@@ -350,7 +340,7 @@ namespace UHtml.WPF
         {
             using (var ig = new GraphicsAdapter())
             {
-                _htmlContainerInt.PerformLayout(ig);
+                htmlContainerInt.PerformLayout(ig);
             }
         }
 
@@ -365,7 +355,7 @@ namespace UHtml.WPF
 
             using (var ig = new GraphicsAdapter(g, Utils.Convert(clip)))
             {
-                _htmlContainerInt.PerformPaint(ig);
+                htmlContainerInt.PerformPaint(ig);
             }
         }
 
@@ -379,7 +369,7 @@ namespace UHtml.WPF
             ArgChecker.AssertArgNotNull(parent, "parent");
             ArgChecker.AssertArgNotNull(e, "e");
 
-            _htmlContainerInt.HandleMouseDown(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)));
+            htmlContainerInt.HandleMouseDown(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)));
         }
 
         /// <summary>
@@ -393,7 +383,7 @@ namespace UHtml.WPF
             ArgChecker.AssertArgNotNull(e, "e");
 
             var mouseEvent = new RMouseEvent(e.ChangedButton == MouseButton.Left);
-            _htmlContainerInt.HandleMouseUp(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)), mouseEvent);
+            htmlContainerInt.HandleMouseUp(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)), mouseEvent);
         }
 
         /// <summary>
@@ -406,7 +396,7 @@ namespace UHtml.WPF
             ArgChecker.AssertArgNotNull(parent, "parent");
             ArgChecker.AssertArgNotNull(e, "e");
 
-            _htmlContainerInt.HandleMouseDoubleClick(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)));
+            htmlContainerInt.HandleMouseDoubleClick(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)));
         }
 
         /// <summary>
@@ -418,7 +408,7 @@ namespace UHtml.WPF
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
 
-            _htmlContainerInt.HandleMouseMove(new ControlAdapter(parent), Utils.Convert(mousePos));
+            htmlContainerInt.HandleMouseMove(new ControlAdapter(parent), Utils.Convert(mousePos));
         }
 
         /// <summary>
@@ -429,7 +419,7 @@ namespace UHtml.WPF
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
 
-            _htmlContainerInt.HandleMouseLeave(new ControlAdapter(parent));
+            htmlContainerInt.HandleMouseLeave(new ControlAdapter(parent));
         }
 
         /// <summary>
@@ -442,7 +432,7 @@ namespace UHtml.WPF
             ArgChecker.AssertArgNotNull(parent, "parent");
             ArgChecker.AssertArgNotNull(e, "e");
 
-            _htmlContainerInt.HandleKeyDown(new ControlAdapter(parent), CreateKeyEevent(e));
+            htmlContainerInt.HandleKeyDown(new ControlAdapter(parent), CreateKeyEevent(e));
         }
 
         /// <summary>
@@ -450,7 +440,7 @@ namespace UHtml.WPF
         /// </summary>
         public void Dispose()
         {
-            _htmlContainerInt.Dispose();
+            htmlContainerInt.Dispose();
         }
 
 

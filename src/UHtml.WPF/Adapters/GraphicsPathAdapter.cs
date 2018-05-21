@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using UHtml.Adapters;
 
@@ -24,31 +12,31 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// The actual WPF graphics geometry instance.
         /// </summary>
-        private readonly StreamGeometry _geometry = new StreamGeometry();
+        private readonly StreamGeometry geometry = new StreamGeometry();
 
         /// <summary>
         /// The context used in WPF geometry to render path
         /// </summary>
-        private readonly StreamGeometryContext _geometryContext;
+        private readonly StreamGeometryContext geometryContext;
 
         public GraphicsPathAdapter()
         {
-            _geometryContext = _geometry.Open();
+            geometryContext = geometry.Open();
         }
 
         public override void Start(double x, double y)
         {
-            _geometryContext.BeginFigure(new Point(x, y), true, false);
+            geometryContext.BeginFigure(new Point(x, y), true, false);
         }
 
         public override void LineTo(double x, double y)
         {
-            _geometryContext.LineTo(new Point(x, y), true, true);
+            geometryContext.LineTo(new Point(x, y), true, true);
         }
 
         public override void ArcTo(double x, double y, double size, Corner corner)
         {
-            _geometryContext.ArcTo(new Point(x, y), new Size(size, size), 0, false, SweepDirection.Clockwise, true, true);
+            geometryContext.ArcTo(new Point(x, y), new Size(size, size), 0, false, SweepDirection.Clockwise, true, true);
         }
 
         /// <summary>
@@ -56,9 +44,9 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public StreamGeometry GetClosedGeometry()
         {
-            _geometryContext.Close();
-            _geometry.Freeze();
-            return _geometry;
+            geometryContext.Close();
+            geometry.Freeze();
+            return geometry;
         }
 
         public override void Dispose()

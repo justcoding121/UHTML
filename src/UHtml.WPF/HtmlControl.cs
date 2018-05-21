@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,17 +46,17 @@ namespace UHtml.WPF
         /// <summary>
         /// Underline html container instance.
         /// </summary>
-        protected readonly HtmlContainer _htmlContainer;
+        protected readonly HtmlContainer htmlContainer;
 
         /// <summary>
         /// the base stylesheet data used in the control
         /// </summary>
-        protected CssData _baseCssData;
+        protected CssData baseCssData;
 
         /// <summary>
         /// The last position of the scrollbars to know if it has changed to update mouse
         /// </summary>
-        protected Point _lastScrollOffset;
+        protected Point lastScrollOffset;
 
         #endregion
 
@@ -99,13 +87,13 @@ namespace UHtml.WPF
             // shitty WPF rendering, have no idea why this actually makes everything sharper =/
             SnapsToDevicePixels = false;
 
-            _htmlContainer = new HtmlContainer();
-            _htmlContainer.LoadComplete += OnLoadComplete;
-            _htmlContainer.LinkClicked += OnLinkClicked;
-            _htmlContainer.RenderError += OnRenderError;
-            _htmlContainer.Refresh += OnRefresh;
-            _htmlContainer.StylesheetLoad += OnStylesheetLoad;
-            _htmlContainer.ImageLoad += OnImageLoad;
+            htmlContainer = new HtmlContainer();
+            htmlContainer.LoadComplete += OnLoadComplete;
+            htmlContainer.LinkClicked += OnLinkClicked;
+            htmlContainer.RenderError += OnRenderError;
+            htmlContainer.Refresh += OnRefresh;
+            htmlContainer.StylesheetLoad += OnStylesheetLoad;
+            htmlContainer.ImageLoad += OnImageLoad;
         }
 
         /// <summary>
@@ -229,7 +217,7 @@ namespace UHtml.WPF
         [Browsable(false)]
         public virtual string SelectedText
         {
-            get { return _htmlContainer.SelectedText; }
+            get { return htmlContainer.SelectedText; }
         }
 
         /// <summary>
@@ -238,7 +226,7 @@ namespace UHtml.WPF
         [Browsable(false)]
         public virtual string SelectedHtml
         {
-            get { return _htmlContainer.SelectedHtml; }
+            get { return htmlContainer.SelectedHtml; }
         }
 
         /// <summary>
@@ -247,7 +235,7 @@ namespace UHtml.WPF
         /// <returns>generated html</returns>
         public virtual string GetHtml()
         {
-            return _htmlContainer != null ? _htmlContainer.GetHtml() : null;
+            return htmlContainer != null ? htmlContainer.GetHtml() : null;
         }
 
         /// <summary>
@@ -259,7 +247,7 @@ namespace UHtml.WPF
         /// <returns>the rectangle of the element or null if not found</returns>
         public virtual Rect? GetElementRectangle(string elementId)
         {
-            return _htmlContainer != null ? _htmlContainer.GetElementRectangle(elementId) : null;
+            return htmlContainer != null ? htmlContainer.GetElementRectangle(elementId) : null;
         }
 
         /// <summary>
@@ -267,8 +255,8 @@ namespace UHtml.WPF
         /// </summary>
         public void ClearSelection()
         {
-            if (_htmlContainer != null)
-                _htmlContainer.ClearSelection();
+            if (htmlContainer != null)
+                htmlContainer.ClearSelection();
         }
 
 
@@ -297,7 +285,7 @@ namespace UHtml.WPF
 
             var htmlWidth = HtmlWidth(RenderSize);
             var htmlHeight = HtmlHeight(RenderSize);
-            if (_htmlContainer != null && htmlWidth > 0 && htmlHeight > 0)
+            if (htmlContainer != null && htmlWidth > 0 && htmlHeight > 0)
             {
                 var windows = Window.GetWindow(this);
                 if (windows != null)
@@ -311,13 +299,13 @@ namespace UHtml.WPF
                 }
 
                 context.PushClip(new RectangleGeometry(new Rect(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top, htmlWidth, (int)htmlHeight)));
-                _htmlContainer.Location = new Point(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top);
-                _htmlContainer.PerformPaint(context, new Rect(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top, htmlWidth, htmlHeight));
+                htmlContainer.Location = new Point(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top);
+                htmlContainer.PerformPaint(context, new Rect(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top, htmlWidth, htmlHeight));
                 context.Pop();
 
-                if (!_lastScrollOffset.Equals(_htmlContainer.ScrollOffset))
+                if (!lastScrollOffset.Equals(htmlContainer.ScrollOffset))
                 {
-                    _lastScrollOffset = _htmlContainer.ScrollOffset;
+                    lastScrollOffset = htmlContainer.ScrollOffset;
                     InvokeMouseMove();
                 }
             }
@@ -329,8 +317,8 @@ namespace UHtml.WPF
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseMove(this, e.GetPosition(this));
+            if (htmlContainer != null)
+                htmlContainer.HandleMouseMove(this, e.GetPosition(this));
         }
 
         /// <summary>
@@ -339,8 +327,8 @@ namespace UHtml.WPF
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             base.OnMouseLeave(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseLeave(this);
+            if (htmlContainer != null)
+                htmlContainer.HandleMouseLeave(this);
         }
 
         /// <summary>
@@ -349,8 +337,8 @@ namespace UHtml.WPF
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseDown(this, e);
+            if (htmlContainer != null)
+                htmlContainer.HandleMouseDown(this, e);
         }
 
         /// <summary>
@@ -359,8 +347,8 @@ namespace UHtml.WPF
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             base.OnMouseUp(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseUp(this, e);
+            if (htmlContainer != null)
+                htmlContainer.HandleMouseUp(this, e);
         }
 
         /// <summary>
@@ -369,8 +357,8 @@ namespace UHtml.WPF
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {
             base.OnMouseDoubleClick(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseDoubleClick(this, e);
+            if (htmlContainer != null)
+                htmlContainer.HandleMouseDoubleClick(this, e);
         }
 
         /// <summary>
@@ -379,8 +367,8 @@ namespace UHtml.WPF
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleKeyDown(this, e);
+            if (htmlContainer != null)
+                htmlContainer.HandleKeyDown(this, e);
         }
 
         /// <summary>
@@ -459,7 +447,7 @@ namespace UHtml.WPF
         /// </summary>
         protected virtual void InvokeMouseMove()
         {
-            _htmlContainer.HandleMouseMove(this, Mouse.GetPosition(this));
+            htmlContainer.HandleMouseMove(this, Mouse.GetPosition(this));
         }
 
         /// <summary>
@@ -470,7 +458,7 @@ namespace UHtml.WPF
             var control = dependencyObject as HtmlControl;
             if (control != null)
             {
-                var htmlContainer = control._htmlContainer;
+                var htmlContainer = control.htmlContainer;
                 if (e.Property == AvoidImagesLateLoadingProperty)
                 {
                     htmlContainer.AvoidImagesLateLoading = (bool)e.NewValue;
@@ -486,13 +474,13 @@ namespace UHtml.WPF
                 else if (e.Property == BaseStylesheetProperty)
                 {
                     var baseCssData = HtmlRender.ParseStyleSheet((string)e.NewValue);
-                    control._baseCssData = baseCssData;
+                    control.baseCssData = baseCssData;
                     htmlContainer.SetHtml(control.Text, baseCssData);
                 }
                 else if (e.Property == TextProperty)
                 {
                     htmlContainer.ScrollOffset = new Point(0, 0);
-                    htmlContainer.SetHtml((string)e.NewValue, control._baseCssData);
+                    htmlContainer.SetHtml((string)e.NewValue, control.baseCssData);
                     control.InvalidateMeasure();
                     control.InvalidateVisual();
                     control.InvokeMouseMove();

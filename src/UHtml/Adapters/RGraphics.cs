@@ -17,17 +17,17 @@ namespace UHtml.Adapters
         /// <summary>
         /// the global adapter
         /// </summary>
-        protected readonly RAdapter _adapter;
+        protected readonly RAdapter adapter;
 
         /// <summary>
         /// The clipping bound stack as clips are pushed/poped to/from the graphics
         /// </summary>
-        protected readonly Stack<RRect> _clipStack = new Stack<RRect>();
+        protected readonly Stack<RRect> clipStack = new Stack<RRect>();
 
         /// <summary>
         /// The suspended clips
         /// </summary>
-        private Stack<RRect> _suspendedClips = new Stack<RRect>();
+        private Stack<RRect> suspendedClips = new Stack<RRect>();
 
         #endregion
 
@@ -39,8 +39,8 @@ namespace UHtml.Adapters
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _adapter = adapter;
-            _clipStack.Push(initialClip);
+            this.adapter = adapter;
+            clipStack.Push(initialClip);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace UHtml.Adapters
         /// <returns>pen instance</returns>
         public RPen GetPen(RColor color)
         {
-            return _adapter.GetPen(color);
+            return adapter.GetPen(color);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace UHtml.Adapters
         /// <returns>solid color brush instance</returns>
         public RBrush GetSolidBrush(RColor color)
         {
-            return _adapter.GetSolidBrush(color);
+            return adapter.GetSolidBrush(color);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace UHtml.Adapters
         /// <returns>linear gradient color brush instance</returns>
         public RBrush GetLinearGradientBrush(RRect rect, RColor color1, RColor color2, double angle)
         {
-            return _adapter.GetLinearGradientBrush(rect, color1, color2, angle);
+            return adapter.GetLinearGradientBrush(rect, color1, color2, angle);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace UHtml.Adapters
         /// <returns>A rectangle structure that represents a bounding rectangle for the clipping region of this Graphics.</returns>
         public RRect GetClip()
         {
-            return _clipStack.Peek();
+            return clipStack.Peek();
         }
 
         /// <summary>
@@ -108,10 +108,10 @@ namespace UHtml.Adapters
         /// </summary>
         public void SuspendClipping()
         {
-            while (_clipStack.Count > 1)
+            while (clipStack.Count > 1)
             {
                 var clip = GetClip();
-                _suspendedClips.Push(clip);
+                suspendedClips.Push(clip);
                 PopClip();
             }
         }
@@ -121,9 +121,9 @@ namespace UHtml.Adapters
         /// </summary>
         public void ResumeClipping()
         {
-            while (_suspendedClips.Count > 0)
+            while (suspendedClips.Count > 0)
             {
-                var clip = _suspendedClips.Pop();
+                var clip = suspendedClips.Pop();
                 PushClip(clip);
             }
         }

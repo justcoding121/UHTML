@@ -102,15 +102,6 @@ namespace UHtml.Core
         meta, area,
         base, param     { display:none }
         hr              { border-top-color: #9A9A9A; border-left-color: #9A9A9A; border-bottom-color: #EEEEEE; border-right-color: #EEEEEE; }
-        pre             { font-size: 10pt; margin-top: 15px; }
-        
-        /*This is the background of the HtmlToolTip*/
-        .htmltooltip {
-            border:solid 1px #767676;
-            background-color:white;
-            background-gradient:#E4E5F0;
-            padding: 8px; 
-            Font: 9pt Tahoma;
-        }";
+        pre             { font-size: 10pt; margin-top: 15px; }";
     }
 }

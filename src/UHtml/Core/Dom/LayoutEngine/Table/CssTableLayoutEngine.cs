@@ -18,39 +18,39 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// the main box of the table
         /// </summary>
-        private readonly CssBox _tableBox;
+        private readonly CssBox tableBox;
 
         /// <summary>
         /// 
         /// </summary>
-        private CssBox _caption;
+        private CssBox caption;
 
-        private CssBox _headerBox;
+        private CssBox headerBox;
 
-        private CssBox _footerBox;
+        private CssBox footerBox;
 
         /// <summary>
         /// collection of all rows boxes
         /// </summary>
-        private readonly List<CssBox> _bodyrows = new List<CssBox>();
+        private readonly List<CssBox> bodyrows = new List<CssBox>();
 
         /// <summary>
         /// collection of all columns boxes
         /// </summary>
-        private readonly List<CssBox> _columns = new List<CssBox>();
+        private readonly List<CssBox> columns = new List<CssBox>();
 
         /// <summary>
         /// 
         /// </summary>
-        private readonly List<CssBox> _allRows = new List<CssBox>();
+        private readonly List<CssBox> allRows = new List<CssBox>();
 
-        private int _columnCount;
+        private int columnCount;
 
-        private bool _widthSpecified;
+        private bool widthSpecified;
 
-        private double[] _columnWidths;
+        private double[] columnWidths;
 
-        private double[] _columnMinWidths;
+        private double[] columnMinWidths;
 
         #endregion
 
@@ -61,7 +61,7 @@ namespace UHtml.Core.Dom
         /// <param name="tableBox"></param>
         private CssTableLayoutEngine(CssBox tableBox)
         {
-            _tableBox = tableBox;
+            this.tableBox = tableBox;
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         private void Layout(RGraphics g)
         {
-            MeasureWords(_tableBox, g);
+            MeasureWords(tableBox, g);
 
             // get the table boxes into the proper fields
             AssignBoxKinds();
@@ -154,7 +154,7 @@ namespace UHtml.Core.Dom
             EnforceMaximumSize();
 
             // Ensure there's no padding
-            _tableBox.PaddingLeft = _tableBox.PaddingTop = _tableBox.PaddingRight = _tableBox.PaddingBottom = "0";
+            tableBox.PaddingLeft = tableBox.PaddingTop = tableBox.PaddingRight = tableBox.PaddingBottom = "0";
 
             //Actually layout cells!
             LayoutCells(g);
@@ -165,36 +165,36 @@ namespace UHtml.Core.Dom
         /// </summary>
         private void AssignBoxKinds()
         {
-            foreach (var box in _tableBox.Boxes)
+            foreach (var box in tableBox.Boxes)
             {
                 switch (box.Display)
                 {
                     case CssConstants.TableCaption:
-                        _caption = box;
+                        caption = box;
                         break;
                     case CssConstants.TableRow:
-                        _bodyrows.Add(box);
+                        bodyrows.Add(box);
                         break;
                     case CssConstants.TableRowGroup:
                         foreach (CssBox childBox in box.Boxes)
                             if (childBox.Display == CssConstants.TableRow)
-                                _bodyrows.Add(childBox);
+                                bodyrows.Add(childBox);
                         break;
                     case CssConstants.TableHeaderGroup:
-                        if (_headerBox != null)
-                            _bodyrows.Add(box);
+                        if (headerBox != null)
+                            bodyrows.Add(box);
                         else
-                            _headerBox = box;
+                            headerBox = box;
                         break;
                     case CssConstants.TableFooterGroup:
-                        if (_footerBox != null)
-                            _bodyrows.Add(box);
+                        if (footerBox != null)
+                            bodyrows.Add(box);
                         else
-                            _footerBox = box;
+                            footerBox = box;
                         break;
                     case CssConstants.TableColumn:
                         for (int i = 0; i < GetSpan(box); i++)
-                            _columns.Add(box);
+                            columns.Add(box);
                         break;
                     case CssConstants.TableColumnGroup:
                         if (box.Boxes.Count == 0)
@@ -202,7 +202,7 @@ namespace UHtml.Core.Dom
                             int gspan = GetSpan(box);
                             for (int i = 0; i < gspan; i++)
                             {
-                                _columns.Add(box);
+                                columns.Add(box);
                             }
                         }
                         else
@@ -212,7 +212,7 @@ namespace UHtml.Core.Dom
                                 int bbspan = GetSpan(bb);
                                 for (int i = 0; i < bbspan; i++)
                                 {
-                                    _columns.Add(bb);
+                                    columns.Add(bb);
                                 }
                             }
                         }
@@ -220,13 +220,13 @@ namespace UHtml.Core.Dom
                 }
             }
 
-            if (_headerBox != null)
-                _allRows.AddRange(_headerBox.Boxes);
+            if (headerBox != null)
+                allRows.AddRange(headerBox.Boxes);
 
-            _allRows.AddRange(_bodyrows);
+            allRows.AddRange(bodyrows);
 
-            if (_footerBox != null)
-                _allRows.AddRange(_footerBox.Boxes);
+            if (footerBox != null)
+                allRows.AddRange(footerBox.Boxes);
         }
 
         /// <summary>
@@ -234,10 +234,10 @@ namespace UHtml.Core.Dom
         /// </summary>
         private void InsertEmptyBoxes()
         {
-            if (!_tableBox._tableFixed)
+            if (!tableBox._tableFixed)
             {
                 int currow = 0;
-                List<CssBox> rows = _bodyrows;
+                List<CssBox> rows = bodyrows;
 
                 foreach (CssBox row in rows)
                 {
@@ -256,7 +256,7 @@ namespace UHtml.Core.Dom
                                 {
                                     if (colcount == realcol)
                                     {
-                                        rows[i].Boxes.Insert(colcount, new CssSpacingBox(_tableBox, ref cell, currow));
+                                        rows[i].Boxes.Insert(colcount, new CssSpacingBox(tableBox, ref cell, currow));
                                         break;
                                     }
                                     colcount++;
@@ -268,7 +268,7 @@ namespace UHtml.Core.Dom
                     currow++;
                 }
 
-                _tableBox._tableFixed = true;
+                tableBox._tableFixed = true;
             }
         }
 
@@ -279,39 +279,39 @@ namespace UHtml.Core.Dom
         private double CalculateCountAndWidth()
         {
             //Columns
-            if (_columns.Count > 0)
+            if (columns.Count > 0)
             {
-                _columnCount = _columns.Count;
+                columnCount = columns.Count;
             }
             else
             {
-                foreach (CssBox b in _allRows)
-                    _columnCount = Math.Max(_columnCount, b.Boxes.Count);
+                foreach (CssBox b in allRows)
+                    columnCount = Math.Max(columnCount, b.Boxes.Count);
             }
 
             //Initialize column widths array with NaNs
-            _columnWidths = new double[_columnCount];
-            for (int i = 0; i < _columnWidths.Length; i++)
-                _columnWidths[i] = double.NaN;
+            columnWidths = new double[columnCount];
+            for (int i = 0; i < columnWidths.Length; i++)
+                columnWidths[i] = double.NaN;
 
             double availCellSpace = GetAvailableCellWidth();
 
-            if (_columns.Count > 0)
+            if (columns.Count > 0)
             {
                 // Fill ColumnWidths array by scanning column widths
-                for (int i = 0; i < _columns.Count; i++)
+                for (int i = 0; i < columns.Count; i++)
                 {
-                    CssLength len = new CssLength(_columns[i].Width); //Get specified width
+                    CssLength len = new CssLength(columns[i].Width); //Get specified width
 
                     if (len.Number > 0) //If some width specified
                     {
                         if (len.IsPercentage) //Get width as a percentage
                         {
-                            _columnWidths[i] = CssValueParser.ParseNumber(_columns[i].Width, availCellSpace);
+                            columnWidths[i] = CssValueParser.ParseNumber(columns[i].Width, availCellSpace);
                         }
                         else if (len.Unit == CssUnit.Pixels || len.Unit == CssUnit.None)
                         {
-                            _columnWidths[i] = len.Number; //Get width as an absolute-pixel value
+                            columnWidths[i] = len.Number; //Get width as an absolute-pixel value
                         }
                     }
                 }
@@ -319,12 +319,12 @@ namespace UHtml.Core.Dom
             else
             {
                 // Fill ColumnWidths array by scanning width in table-cell definitions
-                foreach (CssBox row in _allRows)
+                foreach (CssBox row in allRows)
                 {
                     //Check for column width in table-cell definitions
-                    for (int i = 0; i < _columnCount; i++)
+                    for (int i = 0; i < columnCount; i++)
                     {
-                        if (i < 20 || double.IsNaN(_columnWidths[i])) // limit column width check
+                        if (i < 20 || double.IsNaN(columnWidths[i])) // limit column width check
                         {
                             if (i < row.Boxes.Count && row.Boxes[i].Display == CssConstants.TableCell)
                             {
@@ -335,7 +335,7 @@ namespace UHtml.Core.Dom
                                     len /= Convert.ToSingle(colspan);
                                     for (int j = i; j < i + colspan; j++)
                                     {
-                                        _columnWidths[j] = double.IsNaN(_columnWidths[j]) ? len : Math.Max(_columnWidths[j], len);
+                                        columnWidths[j] = double.IsNaN(columnWidths[j]) ? len : Math.Max(columnWidths[j], len);
                                     }
                                 }
                             }
@@ -353,13 +353,13 @@ namespace UHtml.Core.Dom
         private void DetermineMissingColumnWidths(double availCellSpace)
         {
             double occupedSpace = 0f;
-            if (_widthSpecified) //If a width was specified,
+            if (widthSpecified) //If a width was specified,
             {
                 //Assign NaNs equally with space left after gathering not-NaNs
                 int numOfNans = 0;
 
                 //Calculate number of NaNs and occupied space
-                foreach (double colWidth in _columnWidths)
+                foreach (double colWidth in columnWidths)
                 {
                     if (double.IsNaN(colWidth))
                         numOfNans++;
@@ -369,11 +369,11 @@ namespace UHtml.Core.Dom
                 var orgNumOfNans = numOfNans;
 
                 double[] orgColWidths = null;
-                if (numOfNans < _columnWidths.Length)
+                if (numOfNans < columnWidths.Length)
                 {
-                    orgColWidths = new double[_columnWidths.Length];
-                    for (int i = 0; i < _columnWidths.Length; i++)
-                        orgColWidths[i] = _columnWidths[i];
+                    orgColWidths = new double[columnWidths.Length];
+                    for (int i = 0; i < columnWidths.Length; i++)
+                        orgColWidths[i] = columnWidths[i];
                 }
 
                 if (numOfNans > 0)
@@ -388,12 +388,12 @@ namespace UHtml.Core.Dom
                     {
                         oldNumOfNans = numOfNans;
 
-                        for (int i = 0; i < _columnWidths.Length; i++)
+                        for (int i = 0; i < columnWidths.Length; i++)
                         {
                             var nanWidth = (availCellSpace - occupedSpace) / numOfNans;
-                            if (double.IsNaN(_columnWidths[i]) && nanWidth > maxFullWidths[i])
+                            if (double.IsNaN(columnWidths[i]) && nanWidth > maxFullWidths[i])
                             {
-                                _columnWidths[i] = maxFullWidths[i];
+                                columnWidths[i] = maxFullWidths[i];
                                 numOfNans--;
                                 occupedSpace += maxFullWidths[i];
                             }
@@ -405,10 +405,10 @@ namespace UHtml.Core.Dom
                         // Determine width that will be assigned to un assigned widths
                         double nanWidth = (availCellSpace - occupedSpace) / numOfNans;
 
-                        for (int i = 0; i < _columnWidths.Length; i++)
+                        for (int i = 0; i < columnWidths.Length; i++)
                         {
-                            if (double.IsNaN(_columnWidths[i]))
-                                _columnWidths[i] = nanWidth;
+                            if (double.IsNaN(columnWidths[i]))
+                                columnWidths[i] = nanWidth;
                         }
                     }
                 }
@@ -419,15 +419,15 @@ namespace UHtml.Core.Dom
                     {
                         // spread extra width between all non width specified columns
                         double extWidth = (availCellSpace - occupedSpace) / orgNumOfNans;
-                        for (int i = 0; i < _columnWidths.Length; i++)
+                        for (int i = 0; i < columnWidths.Length; i++)
                             if (orgColWidths == null || double.IsNaN(orgColWidths[i]))
-                                _columnWidths[i] += extWidth;
+                                columnWidths[i] += extWidth;
                     }
                     else
                     {
                         // spread extra width between all columns with respect to relative sizes
-                        for (int i = 0; i < _columnWidths.Length; i++)
-                            _columnWidths[i] += (availCellSpace - occupedSpace) * (_columnWidths[i] / occupedSpace);
+                        for (int i = 0; i < columnWidths.Length; i++)
+                            columnWidths[i] += (availCellSpace - occupedSpace) * (columnWidths[i] / occupedSpace);
                     }
                 }
             }
@@ -437,21 +437,21 @@ namespace UHtml.Core.Dom
                 double[] minFullWidths, maxFullWidths;
                 GetColumnsMinMaxWidthByContent(true, out minFullWidths, out maxFullWidths);
 
-                for (int i = 0; i < _columnWidths.Length; i++)
+                for (int i = 0; i < columnWidths.Length; i++)
                 {
-                    if (double.IsNaN(_columnWidths[i]))
-                        _columnWidths[i] = minFullWidths[i];
-                    occupedSpace += _columnWidths[i];
+                    if (double.IsNaN(columnWidths[i]))
+                        columnWidths[i] = minFullWidths[i];
+                    occupedSpace += columnWidths[i];
                 }
 
                 // spread extra width between all columns
-                for (int i = 0; i < _columnWidths.Length; i++)
+                for (int i = 0; i < columnWidths.Length; i++)
                 {
-                    if (maxFullWidths[i] > _columnWidths[i])
+                    if (maxFullWidths[i] > columnWidths[i])
                     {
-                        var temp = _columnWidths[i];
-                        _columnWidths[i] = Math.Min(_columnWidths[i] + (availCellSpace - occupedSpace) / Convert.ToSingle(_columnWidths.Length - i), maxFullWidths[i]);
-                        occupedSpace = occupedSpace + _columnWidths[i] - temp;
+                        var temp = columnWidths[i];
+                        columnWidths[i] = Math.Min(columnWidths[i] + (availCellSpace - occupedSpace) / Convert.ToSingle(columnWidths.Length - i), maxFullWidths[i]);
+                        occupedSpace = occupedSpace + columnWidths[i] - temp;
                     }
                 }
             }
@@ -470,11 +470,11 @@ namespace UHtml.Core.Dom
                 while (!CanReduceWidth(curCol))
                     curCol++;
 
-                _columnWidths[curCol] -= 1f;
+                columnWidths[curCol] -= 1f;
 
                 curCol++;
 
-                if (curCol >= _columnWidths.Length)
+                if (curCol >= columnWidths.Length)
                     curCol = 0;
             }
 
@@ -490,8 +490,8 @@ namespace UHtml.Core.Dom
                     GetColumnsMinMaxWidthByContent(false, out minFullWidths, out maxFullWidths);
 
                     // lower all the columns to the minimum
-                    for (int i = 0; i < _columnWidths.Length; i++)
-                        _columnWidths[i] = minFullWidths[i];
+                    for (int i = 0; i < columnWidths.Length; i++)
+                        columnWidths[i] = minFullWidths[i];
 
                     // either min for all column is not enought and we need to lower it more resulting in clipping
                     // or we now have extra space so we can give it to columns than need it
@@ -503,26 +503,26 @@ namespace UHtml.Core.Dom
                         {
                             int nonMaxedColumns = 0;
                             double largeWidth = 0f, secLargeWidth = 0f;
-                            for (int i = 0; i < _columnWidths.Length; i++)
+                            for (int i = 0; i < columnWidths.Length; i++)
                             {
-                                if (_columnWidths[i] > largeWidth + 0.1)
+                                if (columnWidths[i] > largeWidth + 0.1)
                                 {
                                     secLargeWidth = largeWidth;
-                                    largeWidth = _columnWidths[i];
+                                    largeWidth = columnWidths[i];
                                     nonMaxedColumns = 1;
                                 }
-                                else if (_columnWidths[i] > largeWidth - 0.1)
+                                else if (columnWidths[i] > largeWidth - 0.1)
                                 {
                                     nonMaxedColumns++;
                                 }
                             }
 
-                            double decrease = secLargeWidth > 0 ? largeWidth - secLargeWidth : (widthSum - maxWidth) / _columnWidths.Length;
+                            double decrease = secLargeWidth > 0 ? largeWidth - secLargeWidth : (widthSum - maxWidth) / columnWidths.Length;
                             if (decrease * nonMaxedColumns > widthSum - maxWidth)
                                 decrease = (widthSum - maxWidth) / nonMaxedColumns;
-                            for (int i = 0; i < _columnWidths.Length; i++)
-                                if (_columnWidths[i] > largeWidth - 0.1)
-                                    _columnWidths[i] -= decrease;
+                            for (int i = 0; i < columnWidths.Length; i++)
+                                if (columnWidths[i] > largeWidth - 0.1)
+                                    columnWidths[i] -= decrease;
 
                             widthSum = GetWidthSum();
                         }
@@ -533,26 +533,26 @@ namespace UHtml.Core.Dom
                         for (int a = 0; a < 15 && maxWidth > widthSum + 0.1; a++) // limit iteration so bug won't create infinite loop
                         {
                             int nonMaxedColumns = 0;
-                            for (int i = 0; i < _columnWidths.Length; i++)
-                                if (_columnWidths[i] + 1 < maxFullWidths[i])
+                            for (int i = 0; i < columnWidths.Length; i++)
+                                if (columnWidths[i] + 1 < maxFullWidths[i])
                                     nonMaxedColumns++;
                             if (nonMaxedColumns == 0)
-                                nonMaxedColumns = _columnWidths.Length;
+                                nonMaxedColumns = columnWidths.Length;
 
                             bool hit = false;
                             double minIncrement = (maxWidth - widthSum) / nonMaxedColumns;
-                            for (int i = 0; i < _columnWidths.Length; i++)
+                            for (int i = 0; i < columnWidths.Length; i++)
                             {
-                                if (_columnWidths[i] + 0.1 < maxFullWidths[i])
+                                if (columnWidths[i] + 0.1 < maxFullWidths[i])
                                 {
-                                    minIncrement = Math.Min(minIncrement, maxFullWidths[i] - _columnWidths[i]);
+                                    minIncrement = Math.Min(minIncrement, maxFullWidths[i] - columnWidths[i]);
                                     hit = true;
                                 }
                             }
 
-                            for (int i = 0; i < _columnWidths.Length; i++)
-                                if (!hit || _columnWidths[i] + 1 < maxFullWidths[i])
-                                    _columnWidths[i] += minIncrement;
+                            for (int i = 0; i < columnWidths.Length; i++)
+                                if (!hit || columnWidths[i] + 1 < maxFullWidths[i])
+                                    columnWidths[i] += minIncrement;
 
                             widthSum = GetWidthSum();
                         }
@@ -566,7 +566,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         private void EnforceMinimumSize()
         {
-            foreach (CssBox row in _allRows)
+            foreach (CssBox row in allRows)
             {
                 foreach (CssBox cell in row.Boxes)
                 {
@@ -574,14 +574,14 @@ namespace UHtml.Core.Dom
                     int col = GetCellRealColumnIndex(row, cell);
                     int affectcol = col + colspan - 1;
 
-                    if (_columnWidths.Length > col && _columnWidths[col] < GetColumnMinWidths()[col])
+                    if (columnWidths.Length > col && columnWidths[col] < GetColumnMinWidths()[col])
                     {
-                        double diff = GetColumnMinWidths()[col] - _columnWidths[col];
-                        _columnWidths[affectcol] = GetColumnMinWidths()[affectcol];
+                        double diff = GetColumnMinWidths()[col] - columnWidths[col];
+                        columnWidths[affectcol] = GetColumnMinWidths()[affectcol];
 
-                        if (col < _columnWidths.Length - 1)
+                        if (col < columnWidths.Length - 1)
                         {
-                            _columnWidths[col + 1] -= diff;
+                            columnWidths[col + 1] -= diff;
                         }
                     }
                 }
@@ -594,27 +594,27 @@ namespace UHtml.Core.Dom
         /// <param name="g"></param>
         private void LayoutCells(RGraphics g)
         {
-            double startx = Math.Max(_tableBox.ClientLeft + GetHorizontalSpacing(), 0);
-            double starty = Math.Max(_tableBox.ClientTop + GetVerticalSpacing(), 0);
+            double startx = Math.Max(tableBox.ClientLeft + GetHorizontalSpacing(), 0);
+            double starty = Math.Max(tableBox.ClientTop + GetVerticalSpacing(), 0);
             double cury = starty;
             double maxRight = startx;
             double maxBottom = 0f;
             int currentrow = 0;
 
             // change start X by if the table should align to center or right
-            if (_tableBox.TextAlign == CssConstants.Center || _tableBox.TextAlign == CssConstants.Right)
+            if (tableBox.TextAlign == CssConstants.Center || tableBox.TextAlign == CssConstants.Right)
             {
                 double maxRightCalc = GetWidthSum();
-                startx = _tableBox.TextAlign == CssConstants.Right
+                startx = tableBox.TextAlign == CssConstants.Right
                     ? GetAvailableTableWidth() - maxRightCalc
                     : startx + (GetAvailableTableWidth() - maxRightCalc) / 2;
 
-                _tableBox.Location = new RPoint(startx - _tableBox.ActualBorderLeftWidth - _tableBox.ActualPaddingLeft - GetHorizontalSpacing(), _tableBox.Location.Y);
+                tableBox.Location = new RPoint(startx - tableBox.ActualBorderLeftWidth - tableBox.ActualPaddingLeft - GetHorizontalSpacing(), tableBox.Location.Y);
             }
 
-            for (int i = 0; i < _allRows.Count; i++)
+            for (int i = 0; i < allRows.Count; i++)
             {
-                var row = _allRows[i];
+                var row = allRows[i];
                 double curx = startx;
                 int curCol = 0;
                 bool breakPage = false;
@@ -622,7 +622,7 @@ namespace UHtml.Core.Dom
                 for (int j = 0; j < row.Boxes.Count; j++)
                 {
                     CssBox cell = row.Boxes[j];
-                    if (curCol >= _columnWidths.Length)
+                    if (curCol >= columnWidths.Length)
                         break;
 
                     int rowspan = GetRowSpan(cell);
@@ -666,7 +666,7 @@ namespace UHtml.Core.Dom
                     }
 
                     // If one cell crosses page borders then don't need to check other cells in the row
-                    if (_tableBox.PageBreakInside == CssConstants.Avoid)
+                    if (tableBox.PageBreakInside == CssConstants.Avoid)
                     {
                         breakPage = cell.BreakPage();
                         if (breakPage)
@@ -693,9 +693,9 @@ namespace UHtml.Core.Dom
                 currentrow++;
             }
 
-            maxRight = Math.Max(maxRight, _tableBox.Location.X + _tableBox.ActualWidth);
-            _tableBox.ActualRight = maxRight + GetHorizontalSpacing() + _tableBox.ActualBorderRightWidth;
-            _tableBox.ActualBottom = Math.Max(maxBottom, starty) + GetVerticalSpacing() + _tableBox.ActualBorderBottomWidth;
+            maxRight = Math.Max(maxRight, tableBox.Location.X + tableBox.ActualWidth);
+            tableBox.ActualRight = maxRight + GetHorizontalSpacing() + tableBox.ActualBorderRightWidth;
+            tableBox.ActualBottom = Math.Max(maxBottom, starty) + GetVerticalSpacing() + tableBox.ActualBorderBottomWidth;
         }
 
         /// <summary>
@@ -745,11 +745,11 @@ namespace UHtml.Core.Dom
 
             for (int i = column; i < column + colspan; i++)
             {
-                if (column >= _columnWidths.Length)
+                if (column >= columnWidths.Length)
                     break;
-                if (_columnWidths.Length <= i)
+                if (columnWidths.Length <= i)
                     break;
-                sum += _columnWidths[i];
+                sum += columnWidths[i];
             }
 
             sum += (colspan - 1) * GetHorizontalSpacing();
@@ -815,7 +815,7 @@ namespace UHtml.Core.Dom
         /// <returns></returns>
         private bool CanReduceWidth()
         {
-            for (int i = 0; i < _columnWidths.Length; i++)
+            for (int i = 0; i < columnWidths.Length; i++)
             {
                 if (CanReduceWidth(i))
                 {
@@ -834,9 +834,9 @@ namespace UHtml.Core.Dom
         /// <returns></returns>
         private bool CanReduceWidth(int columnIndex)
         {
-            if (_columnWidths.Length >= columnIndex || GetColumnMinWidths().Length >= columnIndex)
+            if (columnWidths.Length >= columnIndex || GetColumnMinWidths().Length >= columnIndex)
                 return false;
-            return _columnWidths[columnIndex] > GetColumnMinWidths()[columnIndex];
+            return columnWidths[columnIndex] > GetColumnMinWidths()[columnIndex];
         }
 
         /// <summary>
@@ -850,17 +850,17 @@ namespace UHtml.Core.Dom
         /// </remarks>
         private double GetAvailableTableWidth()
         {
-            CssLength tblen = new CssLength(_tableBox.Width);
+            CssLength tblen = new CssLength(tableBox.Width);
 
             //var parentAvailableWidth = _tableBox.ParentBox.AvailableWidth
             if (tblen.Number > 0)
             {
-                _widthSpecified = true;
-                return CssValueParser.ParseLength(_tableBox.Width, _tableBox.ParentBox.AvailableWidth, _tableBox);
+                widthSpecified = true;
+                return CssValueParser.ParseLength(tableBox.Width, tableBox.ParentBox.AvailableWidth, tableBox);
             }
             else
             {
-                return _tableBox.ParentBox.AvailableWidth;
+                return tableBox.ParentBox.AvailableWidth;
             }
         }
 
@@ -875,11 +875,11 @@ namespace UHtml.Core.Dom
         /// </remarks>
         private double GetMaxTableWidth()
         {
-            var tblen = new CssLength(_tableBox.MaxWidth);
+            var tblen = new CssLength(tableBox.MaxWidth);
             if (tblen.Number > 0)
             {
-                _widthSpecified = true;
-                return CssValueParser.ParseLength(_tableBox.MaxWidth, _tableBox.ParentBox.AvailableWidth, _tableBox);
+                widthSpecified = true;
+                return CssValueParser.ParseLength(tableBox.MaxWidth, tableBox.ParentBox.AvailableWidth, tableBox);
             }
             else
             {
@@ -897,17 +897,17 @@ namespace UHtml.Core.Dom
         /// <param name="maxFullWidths">return the max width for each column - the max width the cell content can take without wrapping</param>
         private void GetColumnsMinMaxWidthByContent(bool onlyNans, out double[] minFullWidths, out double[] maxFullWidths)
         {
-            maxFullWidths = new double[_columnWidths.Length];
-            minFullWidths = new double[_columnWidths.Length];
+            maxFullWidths = new double[columnWidths.Length];
+            minFullWidths = new double[columnWidths.Length];
 
-            foreach (CssBox row in _allRows)
+            foreach (CssBox row in allRows)
             {
                 for (int i = 0; i < row.Boxes.Count; i++)
                 {
                     int col = GetCellRealColumnIndex(row, row.Boxes[i]);
-                    col = _columnWidths.Length > col ? col : _columnWidths.Length - 1;
+                    col = columnWidths.Length > col ? col : columnWidths.Length - 1;
 
-                    if ((!onlyNans || double.IsNaN(_columnWidths[col])) && i < row.Boxes.Count)
+                    if ((!onlyNans || double.IsNaN(columnWidths[col])) && i < row.Boxes.Count)
                     {
                         double minWidth, maxWidth;
                         row.Boxes[i].GetMinMaxWidth(out minWidth, out maxWidth);
@@ -934,7 +934,7 @@ namespace UHtml.Core.Dom
         /// </remarks>
         private double GetAvailableCellWidth()
         {
-            return GetAvailableTableWidth() - GetHorizontalSpacing() * (_columnCount + 1) - _tableBox.ActualBorderLeftWidth - _tableBox.ActualBorderRightWidth;
+            return GetAvailableTableWidth() - GetHorizontalSpacing() * (columnCount + 1) - tableBox.ActualBorderLeftWidth - tableBox.ActualBorderRightWidth;
         }
 
         /// <summary>
@@ -945,7 +945,7 @@ namespace UHtml.Core.Dom
         {
             double f = 0f;
 
-            foreach (double t in _columnWidths)
+            foreach (double t in columnWidths)
             {
                 if (double.IsNaN(t))
                     throw new Exception("CssTable Algorithm error: There's a NaN in column widths");
@@ -954,10 +954,10 @@ namespace UHtml.Core.Dom
             }
 
             //Take cell-spacing
-            f += GetHorizontalSpacing() * (_columnWidths.Length + 1);
+            f += GetHorizontalSpacing() * (columnWidths.Length + 1);
 
             //Take table borders
-            f += _tableBox.ActualBorderLeftWidth + _tableBox.ActualBorderRightWidth;
+            f += tableBox.ActualBorderLeftWidth + tableBox.ActualBorderRightWidth;
 
             return f;
         }
@@ -978,25 +978,25 @@ namespace UHtml.Core.Dom
         /// </summary>
         private double[] GetColumnMinWidths()
         {
-            if (_columnMinWidths == null)
+            if (columnMinWidths == null)
             {
-                _columnMinWidths = new double[_columnWidths.Length];
+                columnMinWidths = new double[columnWidths.Length];
 
-                foreach (CssBox row in _allRows)
+                foreach (CssBox row in allRows)
                 {
                     foreach (CssBox cell in row.Boxes)
                     {
                         int colspan = GetColSpan(cell);
                         int col = GetCellRealColumnIndex(row, cell);
-                        int affectcol = Math.Min(col + colspan, _columnMinWidths.Length) - 1;
+                        int affectcol = Math.Min(col + colspan, columnMinWidths.Length) - 1;
                         double spannedwidth = GetSpannedMinWidth(row, cell, col, colspan) + (colspan - 1) * GetHorizontalSpacing();
 
-                        _columnMinWidths[affectcol] = Math.Max(_columnMinWidths[affectcol], cell.GetMinimumWidth() - spannedwidth);
+                        columnMinWidths[affectcol] = Math.Max(columnMinWidths[affectcol], cell.GetMinimumWidth() - spannedwidth);
                     }
                 }
             }
 
-            return _columnMinWidths;
+            return columnMinWidths;
         }
 
         /// <summary>
@@ -1004,7 +1004,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         private double GetHorizontalSpacing()
         {
-            return _tableBox.BorderCollapse == CssConstants.Collapse ? -1f : _tableBox.ActualBorderSpacingHorizontal;
+            return tableBox.BorderCollapse == CssConstants.Collapse ? -1f : tableBox.ActualBorderSpacingHorizontal;
         }
 
         /// <summary>
@@ -1020,7 +1020,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         private double GetVerticalSpacing()
         {
-            return _tableBox.BorderCollapse == CssConstants.Collapse ? -1f : _tableBox.ActualBorderSpacingVertical;
+            return tableBox.BorderCollapse == CssConstants.Collapse ? -1f : tableBox.ActualBorderSpacingVertical;
         }
 
         #endregion

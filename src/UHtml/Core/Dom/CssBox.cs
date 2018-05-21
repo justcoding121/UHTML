@@ -30,23 +30,23 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// the parent css box of this css box in the hierarchy
         /// </summary>
-        internal CssBox _parentBox;
+        internal CssBox parentBox;
 
         /// <summary>
         /// the root container for the hierarchy
         /// </summary>
-        internal HtmlContainerInt _htmlContainer;
+        internal HtmlContainerInt htmlContainer;
 
         /// <summary>
         /// the html tag that is associated with this css box, null if anonymous box
         /// </summary>
-        internal readonly HtmlTag _htmltag;
+        internal readonly HtmlTag htmltag;
 
-        internal readonly List<CssRect> _boxWords = new List<CssRect>();
-        internal readonly List<CssBox> _boxes = new List<CssBox>();
-        internal readonly List<CssLineBox> _lineBoxes = new List<CssLineBox>();
-        internal readonly List<CssLineBox> _parentLineBoxes = new List<CssLineBox>();
-        internal readonly Dictionary<CssLineBox, RRect> _rectangles = new Dictionary<CssLineBox, RRect>();
+        internal readonly List<CssRect> boxWords = new List<CssRect>();
+        internal readonly List<CssBox> boxes = new List<CssBox>();
+        internal readonly List<CssLineBox> lineBoxes = new List<CssLineBox>();
+        internal readonly List<CssLineBox> parentLineBoxes = new List<CssLineBox>();
+        internal readonly Dictionary<CssLineBox, RRect> rectangles = new Dictionary<CssLineBox, RRect>();
 
         /// <summary>
         /// the inner text of the box
@@ -83,10 +83,10 @@ namespace UHtml.Core.Dom
         {
             if (parentBox != null)
             {
-                _parentBox = parentBox;
-                _parentBox.Boxes.Add(this);
+                this.parentBox = parentBox;
+                this.parentBox.Boxes.Add(this);
             }
-            _htmltag = tag;
+            htmltag = tag;
         }
 
         /// <summary>
@@ -95,8 +95,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public HtmlContainerInt HtmlContainer
         {
-            get { return _htmlContainer ?? (_htmlContainer = _parentBox != null ? _parentBox.HtmlContainer : null); }
-            set { _htmlContainer = value; }
+            get { return htmlContainer ?? (htmlContainer = parentBox != null ? parentBox.HtmlContainer : null); }
+            set { htmlContainer = value; }
         }
 
         /// <summary>
@@ -104,18 +104,18 @@ namespace UHtml.Core.Dom
         /// </summary>
         public CssBox ParentBox
         {
-            get { return _parentBox; }
+            get { return parentBox; }
             set
             {
                 //Remove from last parent
-                if (_parentBox != null)
-                    _parentBox.Boxes.Remove(this);
+                if (parentBox != null)
+                    parentBox.Boxes.Remove(this);
 
-                _parentBox = value;
+                parentBox = value;
 
                 //Add to new parent
                 if (value != null)
-                    _parentBox.Boxes.Add(this);
+                    parentBox.Boxes.Add(this);
             }
         }
 
@@ -125,7 +125,7 @@ namespace UHtml.Core.Dom
         [JsonProperty]
         public List<CssBox> Boxes
         {
-            get { return _boxes; }
+            get { return boxes; }
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                return _htmltag != null && _htmltag.Name.Equals("br", StringComparison.OrdinalIgnoreCase);
+                return htmltag != null && htmltag.Name.Equals("br", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -251,7 +251,7 @@ namespace UHtml.Core.Dom
         [JsonProperty]
         public HtmlTag HtmlTag
         {
-            get { return _htmltag; }
+            get { return htmltag; }
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace UHtml.Core.Dom
             set
             {
                 _text = value;
-                _boxWords.Clear();
+                boxWords.Clear();
             }
         }
 
@@ -303,7 +303,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         internal List<CssLineBox> LineBoxes
         {
-            get { return _lineBoxes; }
+            get { return lineBoxes; }
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         internal List<CssLineBox> ParentLineBoxes
         {
-            get { return _parentLineBoxes; }
+            get { return parentLineBoxes; }
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         internal Dictionary<CssLineBox, RRect> Rectangles
         {
-            get { return _rectangles; }
+            get { return rectangles; }
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         internal List<CssRect> Words
         {
-            get { return _boxWords; }
+            get { return boxWords; }
         }
 
         /// <summary>
@@ -535,12 +535,12 @@ namespace UHtml.Core.Dom
         /// <param name="before"></param>
         public void SetBeforeBox(CssBox before)
         {
-            int index = _parentBox.Boxes.IndexOf(before);
+            int index = parentBox.Boxes.IndexOf(before);
             if (index < 0)
                 throw new Exception("before box doesn't exist on parent");
 
-            _parentBox.Boxes.Remove(this);
-            _parentBox.Boxes.Insert(index, this);
+            parentBox.Boxes.Remove(this);
+            parentBox.Boxes.Insert(index, this);
         }
 
         /// <summary>
@@ -549,11 +549,11 @@ namespace UHtml.Core.Dom
         /// <param name="fromBox">the box to move all its child boxes from</param>
         public void SetAllBoxes(CssBox fromBox)
         {
-            foreach (var childBox in fromBox._boxes)
-                childBox._parentBox = this;
+            foreach (var childBox in fromBox.boxes)
+                childBox.parentBox = this;
 
-            _boxes.AddRange(fromBox._boxes);
-            fromBox._boxes.Clear();
+            boxes.AddRange(fromBox.boxes);
+            fromBox.boxes.Clear();
         }
 
         /// <summary>
@@ -561,7 +561,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public void ParseToWords()
         {
-            _boxWords.Clear();
+            boxWords.Clear();
 
             int startIdx = 0;
             bool preserveSpaces = WhiteSpace == CssConstants.Pre || WhiteSpace == CssConstants.PreWrap;
@@ -580,7 +580,7 @@ namespace UHtml.Core.Dom
                     if (endIdx > startIdx)
                     {
                         if (preserveSpaces)
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), false, false));
+                            boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), false, false));
                     }
                     else
                     {
@@ -593,9 +593,9 @@ namespace UHtml.Core.Dom
 
                         if (endIdx > startIdx)
                         {
-                            var hasSpaceBefore = !preserveSpaces && (startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(_text[startIdx - 1]));
+                            var hasSpaceBefore = !preserveSpaces && (startIdx > 0 && boxWords.Count == 0 && char.IsWhiteSpace(_text[startIdx - 1]));
                             var hasSpaceAfter = !preserveSpaces && (endIdx < _text.Length && char.IsWhiteSpace(_text[endIdx]));
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), hasSpaceBefore, hasSpaceAfter));
+                            boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), hasSpaceBefore, hasSpaceAfter));
                         }
                     }
 
@@ -604,7 +604,7 @@ namespace UHtml.Core.Dom
                     {
                         endIdx++;
                         if (respoctNewline)
-                            _boxWords.Add(new CssRectWord(this, "\n", false, false));
+                            boxWords.Add(new CssRectWord(this, "\n", false, false));
                     }
 
                     startIdx = endIdx;
@@ -664,7 +664,7 @@ namespace UHtml.Core.Dom
         /// <returns></returns>
         protected override sealed CssBoxProperties GetParent()
         {
-            return _parentBox;
+            return parentBox;
         }
 
         /// <summary>
@@ -1027,9 +1027,9 @@ namespace UHtml.Core.Dom
                 value = Math.Max(prevSibling.ActualMarginBottom, ActualMarginTop);
                 CollapsedMarginTop = value;
             }
-            else if (_parentBox != null && ActualPaddingTop < 0.1 && ActualPaddingBottom < 0.1 && _parentBox.ActualPaddingTop < 0.1 && _parentBox.ActualPaddingBottom < 0.1)
+            else if (parentBox != null && ActualPaddingTop < 0.1 && ActualPaddingBottom < 0.1 && parentBox.ActualPaddingTop < 0.1 && parentBox.ActualPaddingBottom < 0.1)
             {
-                value = Math.Max(0, ActualMarginTop - Math.Max(_parentBox.ActualMarginTop, _parentBox.CollapsedMarginTop));
+                value = Math.Max(0, ActualMarginTop - Math.Max(parentBox.ActualMarginTop, parentBox.CollapsedMarginTop));
             }
             else
             {
@@ -1093,12 +1093,12 @@ namespace UHtml.Core.Dom
         internal double MarginBottomCollapse()
         {
             double margin = 0;
-            if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && _parentBox.ActualMarginBottom < 0.1)
+            if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && parentBox.ActualMarginBottom < 0.1)
             {
-                var lastChildBottomMargin = _boxes[_boxes.Count - 1].ActualMarginBottom;
+                var lastChildBottomMargin = boxes[boxes.Count - 1].ActualMarginBottom;
                 margin = Height == "auto" ? Math.Max(ActualMarginBottom, lastChildBottomMargin) : lastChildBottomMargin;
             }
-            return Math.Max(ActualBottom, _boxes[_boxes.Count - 1].ActualBottom + margin + ActualPaddingBottom + ActualBorderBottomWidth);
+            return Math.Max(ActualBottom, boxes[boxes.Count - 1].ActualBottom + margin + ActualPaddingBottom + ActualBorderBottomWidth);
         }
 
         /// <summary>
@@ -1398,7 +1398,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         internal void RectanglesReset()
         {
-            _rectangles.Clear();
+            rectangles.Clear();
         }
 
         /// <summary>

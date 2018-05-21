@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.IO;
+﻿using System.IO;
 
 namespace UHtml.Demo.Common
 {
@@ -81,17 +69,6 @@ namespace UHtml.Demo.Common
         public static Stream WebPallete
         {
             get { return GetManifestResourceStream("web_pallete.gif"); }
-        }
-
-        public static string Tooltip
-        {
-            get
-            {
-                using (var reader = new StreamReader(GetManifestResourceStream("Tooltip.html")))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
         }
 
         private static Stream GetManifestResourceStream(string name)

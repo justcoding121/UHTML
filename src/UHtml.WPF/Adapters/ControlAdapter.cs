@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-// 
-
-
-
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,7 +16,7 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// the underline WPF control.
         /// </summary>
-        private readonly Control _control;
+        private readonly Control control;
 
         /// <summary>
         /// Init.
@@ -38,7 +26,7 @@ namespace UHtml.WPF.Adapters
         {
             ArgChecker.AssertArgNotNull(control, "control");
 
-            _control = control;
+            this.control = control;
         }
 
         /// <summary>
@@ -46,12 +34,12 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public Control Control
         {
-            get { return _control; }
+            get { return control; }
         }
 
         public override RPoint MouseLocation
         {
-            get { return Utils.Convert(_control.PointFromScreen(Mouse.GetPosition(_control))); }
+            get { return Utils.Convert(control.PointFromScreen(Mouse.GetPosition(control))); }
         }
 
         public override bool LeftMouseButton
@@ -66,22 +54,22 @@ namespace UHtml.WPF.Adapters
 
         public override void SetCursorDefault()
         {
-            _control.Cursor = Cursors.Arrow;
+            control.Cursor = Cursors.Arrow;
         }
 
         public override void SetCursorHand()
         {
-            _control.Cursor = Cursors.Hand;
+            control.Cursor = Cursors.Hand;
         }
 
         public override void SetCursorIBeam()
         {
-            _control.Cursor = Cursors.IBeam;
+            control.Cursor = Cursors.IBeam;
         }
 
         public override void DoDragDropCopy(object dragDropData)
         {
-            DragDrop.DoDragDrop(_control, dragDropData, DragDropEffects.Copy);
+            DragDrop.DoDragDrop(control, dragDropData, DragDropEffects.Copy);
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
@@ -94,7 +82,7 @@ namespace UHtml.WPF.Adapters
 
         public override void Invalidate()
         {
-            _control.InvalidateVisual();
+            control.InvalidateVisual();
         }
     }
 }

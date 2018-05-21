@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Media.Imaging;
 using UHtml.Adapters;
 
 namespace UHtml.WPF.Adapters
@@ -23,14 +11,14 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// the underline WPF image.
         /// </summary>
-        private readonly BitmapImage _image;
+        private readonly BitmapImage image;
 
         /// <summary>
         /// Init.
         /// </summary>
         public ImageAdapter(BitmapImage image)
         {
-            _image = image;
+            this.image = image;
         }
 
         /// <summary>
@@ -38,23 +26,23 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public BitmapImage Image
         {
-            get { return _image; }
+            get { return image; }
         }
 
         public override double Width
         {
-            get { return _image.PixelWidth; }
+            get { return image.PixelWidth; }
         }
 
         public override double Height
         {
-            get { return _image.PixelHeight; }
+            get { return image.PixelHeight; }
         }
 
         public override void Dispose()
         {
-            if (_image.StreamSource != null)
-                _image.StreamSource.Dispose();
+            if (image.StreamSource != null)
+                image.StreamSource.Dispose();
         }
     }
 }

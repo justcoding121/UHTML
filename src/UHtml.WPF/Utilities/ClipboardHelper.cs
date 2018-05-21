@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System;
+﻿using System;
 using System.Text;
 using System.Windows;
 
@@ -55,7 +43,7 @@ EndSelection:<<<<<<<<4";
         /// <summary>
         /// Used to calculate characters byte count in UTF-8
         /// </summary>
-        private static readonly char[] _byteCount = new char[1];
+        private static readonly char[] byteCount = new char[1];
 
         #endregion
 
@@ -244,8 +232,8 @@ EndSelection:<<<<<<<<4";
             end = end > -1 ? end : sb.Length;
             for (int i = start; i < end; i++)
             {
-                _byteCount[0] = sb[i];
-                count += Encoding.UTF8.GetByteCount(_byteCount);
+                byteCount[0] = sb[i];
+                count += Encoding.UTF8.GetByteCount(byteCount);
             }
             return count;
         }

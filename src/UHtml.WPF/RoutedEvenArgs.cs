@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.Windows;
+﻿using System.Windows;
 using UHtml.Core.Utils;
 
 namespace UHtml.WPF
@@ -30,20 +18,20 @@ namespace UHtml.WPF
         /// <summary>
         /// the argument data of the routed event
         /// </summary>
-        private readonly T _data;
+        private readonly T data;
 
         public RoutedEvenArgs(RoutedEvent routedEvent, T data)
             : base(routedEvent)
         {
             ArgChecker.AssertArgNotNull(data, "args");
-            _data = data;
+            this.data = data;
         }
 
         public RoutedEvenArgs(RoutedEvent routedEvent, object source, T data)
             : base(routedEvent, source)
         {
             ArgChecker.AssertArgNotNull(data, "args");
-            _data = data;
+            this.data = data;
         }
 
         /// <summary>
@@ -51,12 +39,12 @@ namespace UHtml.WPF
         /// </summary>
         public T Data
         {
-            get { return _data; }
+            get { return data; }
         }
 
         public override string ToString()
         {
-            return string.Format("RoutedEventArgs({0})", _data);
+            return string.Format("RoutedEventArgs({0})", data);
         }
     }
 }

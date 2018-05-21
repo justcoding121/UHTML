@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using UHtml.Adapters;
 
 namespace UHtml.WPF.Adapters
@@ -25,32 +13,32 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
-        private readonly Typeface _font;
+        private readonly Typeface font;
 
         /// <summary>
         /// The glyph font for the font
         /// </summary>
-        private readonly GlyphTypeface _glyphTypeface;
+        private readonly GlyphTypeface glyphTypeface;
 
         /// <summary>
         /// the size of the font
         /// </summary>
-        private readonly double _size;
+        private readonly double size;
 
         /// <summary>
         /// the vertical offset of the font underline location from the top of the font.
         /// </summary>
-        private readonly double _underlineOffset = -1;
+        private readonly double underlineOffset = -1;
 
         /// <summary>
         /// Cached font height.
         /// </summary>
-        private readonly double _height = -1;
+        private readonly double height = -1;
 
         /// <summary>
         /// Cached font whitespace width.
         /// </summary>
-        private double _whitespaceWidth = -1;
+        private double whitespaceWidth = -1;
 
         #endregion
 
@@ -60,15 +48,15 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public FontAdapter(Typeface font, double size)
         {
-            _font = font;
-            _size = size;
-            _height = 96d / 72d * _size * _font.FontFamily.LineSpacing;
-            _underlineOffset = 96d / 72d * _size * (_font.FontFamily.LineSpacing + font.UnderlinePosition);
+            this.font = font;
+            this.size = size;
+            height = 96d / 72d * this.size * this.font.FontFamily.LineSpacing;
+            underlineOffset = 96d / 72d * this.size * (this.font.FontFamily.LineSpacing + font.UnderlinePosition);
 
             GlyphTypeface typeface;
             if (font.TryGetGlyphTypeface(out typeface))
             {
-                _glyphTypeface = typeface;
+                glyphTypeface = typeface;
             }
             else
             {
@@ -85,41 +73,41 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public Typeface Font
         {
-            get { return _font; }
+            get { return font; }
         }
 
         public GlyphTypeface GlyphTypeface
         {
-            get { return _glyphTypeface; }
+            get { return glyphTypeface; }
         }
 
         public override double Size
         {
-            get { return _size; }
+            get { return size; }
         }
 
         public override double UnderlineOffset
         {
-            get { return _underlineOffset; }
+            get { return underlineOffset; }
         }
 
         public override double Height
         {
-            get { return _height; }
+            get { return height; }
         }
 
         public override double LeftPadding
         {
-            get { return _height / 6f; }
+            get { return height / 6f; }
         }
 
         public override double GetWhitespaceWidth(RGraphics graphics)
         {
-            if (_whitespaceWidth < 0)
+            if (whitespaceWidth < 0)
             {
-                _whitespaceWidth = graphics.MeasureString(" ", this).Width;
+                whitespaceWidth = graphics.MeasureString(" ", this).Width;
             }
-            return _whitespaceWidth;
+            return whitespaceWidth;
         }
     }
 }

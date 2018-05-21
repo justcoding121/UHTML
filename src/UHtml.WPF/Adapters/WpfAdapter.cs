@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -34,22 +22,22 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        private static readonly WpfAdapter _instance = new WpfAdapter();
+        private static readonly WpfAdapter instance = new WpfAdapter();
 
         /// <summary>
         /// List of valid predefined color names in lower-case
         /// </summary>
-        private static readonly List<string> ValidColorNamesLc; 
+        private static readonly List<string> validColorNamesLc; 
 
         #endregion
 
         static WpfAdapter()
         {
-            ValidColorNamesLc = new List<string>();
+            validColorNamesLc = new List<string>();
             var colorList = new List<PropertyInfo>(typeof(Colors).GetProperties());
             foreach (var colorProp in colorList)
             {
-                ValidColorNamesLc.Add(colorProp.Name.ToLower());
+                validColorNamesLc.Add(colorProp.Name.ToLower());
             }
         }
 
@@ -78,13 +66,13 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public static WpfAdapter Instance
         {
-            get { return _instance; }
+            get { return instance; }
         }
 
         protected override RColor GetColorInt(string colorName)
         {
             // check if color name is valid to avoid ColorConverter throwing an exception
-            if (!ValidColorNamesLc.Contains(colorName.ToLower()))
+            if (!validColorNamesLc.Contains(colorName.ToLower()))
                 return RColor.Empty;
 
             var convertFromString = ColorConverter.ConvertFromString(colorName) ?? Colors.Black;

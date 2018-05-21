@@ -23,40 +23,38 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// the image word of this image box
         /// </summary>
-        private readonly CssRectImage _imageWord;
+        private readonly CssRectImage imageWord;
 
         /// <summary>
         /// is the iframe is of embeded video
         /// </summary>
-        private readonly bool _isVideo;
+        private readonly bool isVideo;
 
         /// <summary>
         /// the title of the video
         /// </summary>
-        private string _videoTitle;
+        private string videoTitle;
 
         /// <summary>
         /// the url of the video thumbnail image
         /// </summary>
-        private string _videoImageUrl;
+        private string videoImageUrl;
 
         /// <summary>
         /// link to the video on the site
         /// </summary>
-        private string _videoLinkUrl;
+        private string videoLinkUrl;
 
         /// <summary>
         /// handler used for image loading by source
         /// </summary>
-        private ImageLoadHandler _imageLoadHandler;
+        private ImageLoadHandler imageLoadHandler;
 
         /// <summary>
         /// is image load is finished, used to know if no image is found
         /// </summary>
-        private bool _imageLoadingComplete;
-
+        private bool imageLoadingComplete;
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -66,25 +64,25 @@ namespace UHtml.Core.Dom
         public CssBoxFrame(CssBox parent, HtmlTag tag)
             : base(parent, tag)
         {
-            _imageWord = new CssRectImage(this);
-            Words.Add(_imageWord);
+            imageWord = new CssRectImage(this);
+            Words.Add(imageWord);
 
             Uri uri;
             if (Uri.TryCreate(GetAttribute("src"), UriKind.Absolute, out uri))
             {
                 if (uri.Host.IndexOf("youtube.com", StringComparison.OrdinalIgnoreCase) > -1)
                 {
-                    _isVideo = true;
+                    isVideo = true;
                     LoadYoutubeDataAsync(uri);
                 }
                 else if (uri.Host.IndexOf("vimeo.com", StringComparison.OrdinalIgnoreCase) > -1)
                 {
-                    _isVideo = true;
+                    isVideo = true;
                     LoadVimeoDataAsync(uri);
                 }
             }
 
-            if (!_isVideo)
+            if (!isVideo)
             {
                 SetErrorBorder();
             }
@@ -103,7 +101,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public override string HrefLink
         {
-            get { return _videoLinkUrl ?? GetAttribute("src"); }
+            get { return videoLinkUrl ?? GetAttribute("src"); }
         }
 
         /// <summary>
@@ -111,7 +109,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public bool IsVideo
         {
-            get { return _isVideo; }
+            get { return isVideo; }
         }
 
         /// <summary>
@@ -119,8 +117,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public override void Dispose()
         {
-            if (_imageLoadHandler != null)
-                _imageLoadHandler.Dispose();
+            if (imageLoadHandler != null)
+                imageLoadHandler.Dispose();
             base.Dispose();
         }
 
@@ -179,7 +177,7 @@ namespace UHtml.Core.Dom
                                 endIdx = result.IndexOf('"', endIdx + 1);
                             if (endIdx > -1)
                             {
-                                _videoTitle = result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
+                                videoTitle = result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
                             }
                         }
                     }
@@ -233,7 +231,7 @@ namespace UHtml.Core.Dom
                         var endIdx = result.IndexOf('"', iidx);
                         if (endIdx > -1)
                         {
-                            _videoImageUrl = result.Substring(iidx, endIdx - iidx).Replace("\\\"", "\"").Replace("\\", "");
+                            videoImageUrl = result.Substring(iidx, endIdx - iidx).Replace("\\\"", "\"").Replace("\\", "");
                         }
                     }
                 }
@@ -247,7 +245,7 @@ namespace UHtml.Core.Dom
                         var endIdx = result.IndexOf('"', idx);
                         if (endIdx > -1)
                         {
-                            _videoLinkUrl = result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                            videoLinkUrl = result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
                         }
                     }
                 }
@@ -283,7 +281,7 @@ namespace UHtml.Core.Dom
                 catch (Exception ex)
                 {
                     HandleDataLoadFailure(ex, "Vimeo");
-                    _imageLoadingComplete = true;
+                    imageLoadingComplete = true;
                     SetErrorBorder();
                     HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
                     HtmlContainer.RequestRefresh(false);
@@ -310,7 +308,7 @@ namespace UHtml.Core.Dom
                             endIdx = result.IndexOf('"', endIdx + 1);
                         if (endIdx > -1)
                         {
-                            _videoTitle = result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
+                            videoTitle = result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
                         }
                     }
                 }
@@ -350,7 +348,7 @@ namespace UHtml.Core.Dom
                         var endIdx = result.IndexOf('"', idx);
                         if (endIdx > -1)
                         {
-                            _videoImageUrl = result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                            videoImageUrl = result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
                         }
                     }
                 }
@@ -364,7 +362,7 @@ namespace UHtml.Core.Dom
                         var endIdx = result.IndexOf('"', idx);
                         if (endIdx > -1)
                         {
-                            _videoLinkUrl = result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                            videoLinkUrl = result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
                         }
                     }
                 }
@@ -389,7 +387,7 @@ namespace UHtml.Core.Dom
             var webResponse = webError != null ? webError.Response as HttpWebResponse : null;
             if (webResponse != null && webResponse.StatusCode == HttpStatusCode.NotFound)
             {
-                _videoTitle = "The video is not found, possibly removed by the user.";
+                videoTitle = "The video is not found, possibly removed by the user.";
             }
             else
             {
@@ -404,9 +402,9 @@ namespace UHtml.Core.Dom
         {
             try
             {
-                if (_videoImageUrl == null)
+                if (videoImageUrl == null)
                 {
-                    _imageLoadingComplete = true;
+                    imageLoadingComplete = true;
                     SetErrorBorder();
                 }
 
@@ -425,10 +423,10 @@ namespace UHtml.Core.Dom
         /// <param name="g">the device to draw to</param>
         internal override void PaintImp(RGraphics g)
         {
-            if (_videoImageUrl != null && _imageLoadHandler == null)
+            if (videoImageUrl != null && imageLoadHandler == null)
             {
-                _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
-                _imageLoadHandler.LoadImage(_videoImageUrl, HtmlTag != null ? HtmlTag.Attributes : null);
+                imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
+                imageLoadHandler.LoadImage(videoImageUrl, HtmlTag != null ? HtmlTag.Attributes : null);
             }
 
             var rects = CommonUtils.GetFirstValueOrDefault(Rectangles);
@@ -466,22 +464,22 @@ namespace UHtml.Core.Dom
         /// </summary>
         private void DrawImage(RGraphics g, RPoint offset, RRect rect)
         {
-            if (_imageWord.Image != null)
+            if (imageWord.Image != null)
             {
                 if (rect.Width > 0 && rect.Height > 0)
                 {
-                    if (_imageWord.ImageRectangle == RRect.Empty)
-                        g.DrawImage(_imageWord.Image, rect);
+                    if (imageWord.ImageRectangle == RRect.Empty)
+                        g.DrawImage(imageWord.Image, rect);
                     else
-                        g.DrawImage(_imageWord.Image, rect, _imageWord.ImageRectangle);
+                        g.DrawImage(imageWord.Image, rect, imageWord.ImageRectangle);
 
-                    if (_imageWord.Selected)
+                    if (imageWord.Selected)
                     {
-                        g.DrawRectangle(GetSelectionBackBrush(g, true), _imageWord.Left + offset.X, _imageWord.Top + offset.Y, _imageWord.Width + 2, DomUtils.GetCssLineBoxByWord(_imageWord).LineHeight);
+                        g.DrawRectangle(GetSelectionBackBrush(g, true), imageWord.Left + offset.X, imageWord.Top + offset.Y, imageWord.Width + 2, DomUtils.GetCssLineBoxByWord(imageWord).LineHeight);
                     }
                 }
             }
-            else if (_isVideo && !_imageLoadingComplete)
+            else if (isVideo && !imageLoadingComplete)
             {
                 RenderUtils.DrawImageLoadingIcon(g, HtmlContainer, rect);
                 if (rect.Width > 19 && rect.Height > 19)
@@ -496,13 +494,13 @@ namespace UHtml.Core.Dom
         /// </summary>
         private void DrawTitle(RGraphics g, RRect rect)
         {
-            if (_videoTitle != null && _imageWord.Width > 40 && _imageWord.Height > 40)
+            if (videoTitle != null && imageWord.Width > 40 && imageWord.Height > 40)
             {
                 var font = HtmlContainer.Adapter.GetFont("Arial", 9f, RFontStyle.Regular);
                 g.DrawRectangle(g.GetSolidBrush(RColor.FromArgb(160, 0, 0, 0)), rect.X1, rect.Y1, rect.Width, ActualFont.Height + 7);
 
                 var titleRect = new RRect(rect.X1 + 3, rect.Y1 + 3, rect.Width - 6, rect.Height - 6);
-                g.DrawString(_videoTitle, font, RColor.WhiteSmoke, titleRect.Location, RSize.Empty, false);
+                g.DrawString(videoTitle, font, RColor.WhiteSmoke, titleRect.Location, RSize.Empty, false);
             }
         }
 
@@ -511,7 +509,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         private void DrawPlay(RGraphics g, RRect rect)
         {
-            if (_isVideo && _imageWord.Width > 70 && _imageWord.Height > 50)
+            if (isVideo && imageWord.Width > 70 && imageWord.Height > 50)
             {
                 var prevMode = g.SetAntiAliasSmoothingMode();
 
@@ -543,7 +541,7 @@ namespace UHtml.Core.Dom
                 MeasureWordSpacing(g);
                 _wordsSizeMeasured = true;
             }
-            CssLayoutEngine.MeasureImageSize(_imageWord);
+            CssLayoutEngine.MeasureImageSize(imageWord);
         }
 
         /// <summary>
@@ -563,12 +561,12 @@ namespace UHtml.Core.Dom
         /// <param name="async">is the callback was called async to load image call</param>
         private void OnLoadImageComplete(RImage image, RRect rectangle, bool async)
         {
-            _imageWord.Image = image;
-            _imageWord.ImageRectangle = rectangle;
-            _imageLoadingComplete = true;
+            imageWord.Image = image;
+            imageWord.ImageRectangle = rectangle;
+            imageLoadingComplete = true;
             _wordsSizeMeasured = false;
 
-            if (_imageLoadingComplete && image == null)
+            if (imageLoadingComplete && image == null)
             {
                 SetErrorBorder();
             }

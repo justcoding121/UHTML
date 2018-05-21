@@ -16,20 +16,18 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// the image word of this image box
         /// </summary>
-        private readonly CssRectImage _imageWord;
+        private readonly CssRectImage imageWord;
 
         /// <summary>
         /// handler used for image loading by source
         /// </summary>
-        private ImageLoadHandler _imageLoadHandler;
+        private ImageLoadHandler imageLoadHandler;
 
         /// <summary>
         /// is image load is finished, used to know if no image is found
         /// </summary>
-        private bool _imageLoadingComplete;
-
+        private bool imageLoadingComplete;
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -39,8 +37,8 @@ namespace UHtml.Core.Dom
         public CssBoxImage(CssBox parent, HtmlTag tag)
             : base(parent, tag)
         {
-            _imageWord = new CssRectImage(this);
-            Words.Add(_imageWord);
+            imageWord = new CssRectImage(this);
+            Words.Add(imageWord);
         }
 
         /// <summary>
@@ -48,7 +46,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public RImage Image
         {
-            get { return _imageWord.Image; }
+            get { return imageWord.Image; }
         }
 
         /// <summary>
@@ -58,10 +56,10 @@ namespace UHtml.Core.Dom
         internal override void PaintImp(RGraphics g)
         {
             // load image if it is in visible rectangle
-            if (_imageLoadHandler == null)
+            if (imageLoadHandler == null)
             {
-                _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
-                _imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag != null ? HtmlTag.Attributes : null);
+                imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
+                imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag != null ? HtmlTag.Attributes : null);
             }
 
             var rect = CommonUtils.GetFirstValueOrDefault(Rectangles);
@@ -77,31 +75,31 @@ namespace UHtml.Core.Dom
             PaintBackground(g, rect, true, true);
             BordersDrawHandler.DrawBoxBorders(g, this, rect, true, true);
 
-            RRect r = _imageWord.Rectangle;
+            RRect r = imageWord.Rectangle;
             r.Offset(offset);
             r.Height -= ActualBorderTopWidth + ActualBorderBottomWidth + ActualPaddingTop + ActualPaddingBottom;
             r.Y += ActualBorderTopWidth + ActualPaddingTop;
             r.X = Math.Floor(r.X);
             r.Y = Math.Floor(r.Y);
 
-            if (_imageWord.Image != null)
+            if (imageWord.Image != null)
             {
                 if (r.Width > 0 && r.Height > 0)
                 {
-                    if (_imageWord.ImageRectangle == RRect.Empty)
-                        g.DrawImage(_imageWord.Image, r);
+                    if (imageWord.ImageRectangle == RRect.Empty)
+                        g.DrawImage(imageWord.Image, r);
                     else
-                        g.DrawImage(_imageWord.Image, r, _imageWord.ImageRectangle);
+                        g.DrawImage(imageWord.Image, r, imageWord.ImageRectangle);
 
-                    if (_imageWord.Selected)
+                    if (imageWord.Selected)
                     {
-                        g.DrawRectangle(GetSelectionBackBrush(g, true), _imageWord.Left + offset.X, _imageWord.Top + offset.Y, _imageWord.Width + 2, DomUtils.GetCssLineBoxByWord(_imageWord).LineHeight);
+                        g.DrawRectangle(GetSelectionBackBrush(g, true), imageWord.Left + offset.X, imageWord.Top + offset.Y, imageWord.Width + 2, DomUtils.GetCssLineBoxByWord(imageWord).LineHeight);
                     }
                 }
             }
-            else if (_imageLoadingComplete)
+            else if (imageLoadingComplete)
             {
-                if (_imageLoadingComplete && r.Width > 19 && r.Height > 19)
+                if (imageLoadingComplete && r.Width > 19 && r.Height > 19)
                 {
                     RenderUtils.DrawImageErrorIcon(g, HtmlContainer, r);
                 }
@@ -127,21 +125,21 @@ namespace UHtml.Core.Dom
         {
             if (!_wordsSizeMeasured)
             {
-                if (_imageLoadHandler == null && (HtmlContainer.AvoidAsyncImagesLoading || HtmlContainer.AvoidImagesLateLoading))
+                if (imageLoadHandler == null && (HtmlContainer.AvoidAsyncImagesLoading || HtmlContainer.AvoidImagesLateLoading))
                 {
-                    _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
+                    imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
 
                     if (this.Content != null && this.Content != CssConstants.Normal)
-                        _imageLoadHandler.LoadImage(this.Content, HtmlTag != null ? HtmlTag.Attributes : null);
+                        imageLoadHandler.LoadImage(this.Content, HtmlTag != null ? HtmlTag.Attributes : null);
                     else
-                        _imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag != null ? HtmlTag.Attributes : null);
+                        imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag != null ? HtmlTag.Attributes : null);
                 }
 
                 MeasureWordSpacing(g);
                 _wordsSizeMeasured = true;
             }
 
-            CssLayoutEngine.MeasureImageSize(_imageWord);
+            CssLayoutEngine.MeasureImageSize(imageWord);
         }
 
         /// <summary>
@@ -149,8 +147,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public override void Dispose()
         {
-            if (_imageLoadHandler != null)
-                _imageLoadHandler.Dispose();
+            if (imageLoadHandler != null)
+                imageLoadHandler.Dispose();
             base.Dispose();
         }
 
@@ -174,12 +172,12 @@ namespace UHtml.Core.Dom
         /// <param name="async">is the callback was called async to load image call</param>
         private void OnLoadImageComplete(RImage image, RRect rectangle, bool async)
         {
-            _imageWord.Image = image;
-            _imageWord.ImageRectangle = rectangle;
-            _imageLoadingComplete = true;
+            imageWord.Image = image;
+            imageWord.ImageRectangle = rectangle;
+            imageLoadingComplete = true;
             _wordsSizeMeasured = false;
 
-            if (_imageLoadingComplete && image == null)
+            if (imageLoadingComplete && image == null)
             {
                 SetErrorBorder();
             }

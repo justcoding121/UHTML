@@ -77,9 +77,6 @@
     <EmbeddedResource Include="Resources\favorites32.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Tooltip.html" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\chrome.png" />
   </ItemGroup>
   <ItemGroup>

@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using UHtml.Adapters;
 
 namespace UHtml.WPF.Adapters
@@ -23,14 +11,14 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// The actual WPF brush instance.
         /// </summary>
-        private readonly Brush _brush;
+        private readonly Brush brush;
 
         /// <summary>
         /// Init.
         /// </summary>
         public BrushAdapter(Brush brush)
         {
-            _brush = brush;
+            this.brush = brush;
         }
 
         /// <summary>
@@ -38,7 +26,7 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public Brush Brush
         {
-            get { return _brush; }
+            get { return brush; }
         }
 
         public override void Dispose()

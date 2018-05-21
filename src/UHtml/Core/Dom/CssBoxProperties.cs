@@ -21,128 +21,127 @@ namespace UHtml.Core.Dom
     {
         #region CSS Fields
 
-        private string _backgroundColor = "transparent";
-        private string _backgroundGradient = "none";
-        private string _backgroundGradientAngle = "90";
-        private string _backgroundImage = "none";
-        private string _backgroundPosition = "0% 0%";
-        private string _backgroundRepeat = "repeat";
-        private string _borderTopWidth = "medium";
-        private string _borderRightWidth = "medium";
-        private string _borderBottomWidth = "medium";
-        private string _borderLeftWidth = "medium";
-        private string _borderTopColor = "black";
-        private string _borderRightColor = "black";
-        private string _borderBottomColor = "black";
-        private string _borderLeftColor = "black";
-        private string _borderTopStyle = "none";
-        private string _borderRightStyle = "none";
-        private string _borderBottomStyle = "none";
-        private string _borderLeftStyle = "none";
-        private string _borderSpacing = "0";
-        private string _borderCollapse = "separate";
-        private string _bottom;
-        private string _color = "black";
-        private string _content = "normal";
-        private string _cornerNwRadius = "0";
-        private string _cornerNeRadius = "0";
-        private string _cornerSeRadius = "0";
-        private string _cornerSwRadius = "0";
-        private string _cornerRadius = "0";
-        private string _emptyCells = "show";
-        private string _direction = "ltr";
-        private string _display = "inline";
-        private string _fontFamily;
-        private string _fontSize = "medium";
-        private string _fontStyle = "normal";
-        private string _fontVariant = "normal";
-        private string _fontWeight = "normal";
-        private string _float = "none";
-        private string _clear = "none";
-        private string _height = "auto";
-        private string _marginBottom = "0";
-        private string _marginLeft = "0";
-        private string _marginRight = "0";
-        private string _marginTop = "0";
-        private string _left = "auto";
-        private string _lineHeight = "normal";
-        private string _listStyleType = "disc";
-        private string _listStyleImage = string.Empty;
-        private string _listStylePosition = "outside";
-        private string _listStyle = string.Empty;
-        private string _overflow = "visible";
-        private string _paddingLeft = "0";
-        private string _paddingBottom = "0";
-        private string _paddingRight = "0";
-        private string _paddingTop = "0";
-        private string _pageBreakInside = CssConstants.Auto;
-        private string _right;
-        private string _textAlign = string.Empty;
-        private string _textDecoration = string.Empty;
-        private string _textIndent = "0";
-        private string _top = "auto";
-        private string _position = "static";
-        private string _verticalAlign = "baseline";
-        private string _width = "auto";
-        private string _maxWidth = "none";
-        private string _wordSpacing = "normal";
-        private string _wordBreak = "normal";
-        private string _whiteSpace = "normal";
-        private string _visibility = "visible";
+        private string backgroundColor = "transparent";
+        private string backgroundGradient = "none";
+        private string backgroundGradientAngle = "90";
+        private string backgroundImage = "none";
+        private string backgroundPosition = "0% 0%";
+        private string backgroundRepeat = "repeat";
+        private string borderTopWidth = "medium";
+        private string borderRightWidth = "medium";
+        private string borderBottomWidth = "medium";
+        private string borderLeftWidth = "medium";
+        private string borderTopColor = "black";
+        private string borderRightColor = "black";
+        private string borderBottomColor = "black";
+        private string borderLeftColor = "black";
+        private string borderTopStyle = "none";
+        private string borderRightStyle = "none";
+        private string borderBottomStyle = "none";
+        private string borderLeftStyle = "none";
+        private string borderSpacing = "0";
+        private string borderCollapse = "separate";
+        private string bottom;
+        private string color = "black";
+        private string content = "normal";
+        private string cornerNwRadius = "0";
+        private string cornerNeRadius = "0";
+        private string cornerSeRadius = "0";
+        private string cornerSwRadius = "0";
+        private string cornerRadius = "0";
+        private string emptyCells = "show";
+        private string direction = "ltr";
+        private string display = "inline";
+        private string fontFamily;
+        private string fontSize = "medium";
+        private string fontStyle = "normal";
+        private string fontVariant = "normal";
+        private string fontWeight = "normal";
+        private string @float = "none";
+        private string clear = "none";
+        private string height = "auto";
+        private string marginBottom = "0";
+        private string marginLeft = "0";
+        private string marginRight = "0";
+        private string marginTop = "0";
+        private string left = "auto";
+        private string lineHeight = "normal";
+        private string listStyleType = "disc";
+        private string listStyleImage = string.Empty;
+        private string listStylePosition = "outside";
+        private string listStyle = string.Empty;
+        private string overflow = "visible";
+        private string paddingLeft = "0";
+        private string paddingBottom = "0";
+        private string paddingRight = "0";
+        private string paddingTop = "0";
+        private string pageBreakInside = CssConstants.Auto;
+        private string right;
+        private string textAlign = string.Empty;
+        private string textDecoration = string.Empty;
+        private string textIndent = "0";
+        private string top = "auto";
+        private string position = "static";
+        private string verticalAlign = "baseline";
+        private string width = "auto";
+        private string maxWidth = "none";
+        private string wordSpacing = "normal";
+        private string wordBreak = "normal";
+        private string whiteSpace = "normal";
+        private string visibility = "visible";
 
         #endregion
-
 
         #region Fields
 
         /// <summary>
         /// Gets or sets the location of the box
         /// </summary>
-        private RPoint _location;
+        private RPoint location;
 
         /// <summary>
         /// Gets or sets the size of the box
         /// </summary>
-        private RSize _size;
+        private RSize size;
 
-        private double _actualCornerNw = double.NaN;
-        private double _actualCornerNe = double.NaN;
-        private double _actualCornerSw = double.NaN;
-        private double _actualCornerSe = double.NaN;
-        private RColor _actualColor = RColor.Empty;
-        private double _actualBackgroundGradientAngle = double.NaN;
-        private double _actualHeight = double.NaN;
-        private double _actualWidth = double.NaN;
-        private double _actualPaddingTop = double.NaN;
-        private double _actualPaddingBottom = double.NaN;
-        private double _actualPaddingRight = double.NaN;
-        private double _actualPaddingLeft = double.NaN;
-        private double _actualMarginTop = double.NaN;
-        private double _collapsedMarginTop = double.NaN;
-        private double _actualMarginBottom = double.NaN;
-        private double _actualMarginRight = double.NaN;
-        private double _actualMarginLeft = double.NaN;
-        private double _actualBorderTopWidth = double.NaN;
-        private double _actualBorderLeftWidth = double.NaN;
-        private double _actualBorderBottomWidth = double.NaN;
-        private double _actualBorderRightWidth = double.NaN;
+        private double actualCornerNw = double.NaN;
+        private double actualCornerNe = double.NaN;
+        private double actualCornerSw = double.NaN;
+        private double actualCornerSe = double.NaN;
+        private RColor actualColor = RColor.Empty;
+        private double actualBackgroundGradientAngle = double.NaN;
+        private double actualHeight = double.NaN;
+        private double actualWidth = double.NaN;
+        private double actualPaddingTop = double.NaN;
+        private double actualPaddingBottom = double.NaN;
+        private double actualPaddingRight = double.NaN;
+        private double actualPaddingLeft = double.NaN;
+        private double actualMarginTop = double.NaN;
+        private double collapsedMarginTop = double.NaN;
+        private double actualMarginBottom = double.NaN;
+        private double actualMarginRight = double.NaN;
+        private double actualMarginLeft = double.NaN;
+        private double actualBorderTopWidth = double.NaN;
+        private double actualBorderLeftWidth = double.NaN;
+        private double actualBorderBottomWidth = double.NaN;
+        private double actualBorderRightWidth = double.NaN;
 
         /// <summary>
         /// the width of whitespace between words
         /// </summary>
-        private double _actualLineHeight = double.NaN;
+        private double actualLineHeight = double.NaN;
 
-        private double _actualWordSpacing = double.NaN;
-        private double _actualTextIndent = double.NaN;
-        private double _actualBorderSpacingHorizontal = double.NaN;
-        private double _actualBorderSpacingVertical = double.NaN;
-        private RColor _actualBackgroundGradient = RColor.Empty;
-        private RColor _actualBorderTopColor = RColor.Empty;
-        private RColor _actualBorderLeftColor = RColor.Empty;
-        private RColor _actualBorderBottomColor = RColor.Empty;
-        private RColor _actualBorderRightColor = RColor.Empty;
-        private RColor _actualBackgroundColor = RColor.Empty;
-        private RFont _actualFont;
+        private double actualWordSpacing = double.NaN;
+        private double actualTextIndent = double.NaN;
+        private double actualBorderSpacingHorizontal = double.NaN;
+        private double actualBorderSpacingVertical = double.NaN;
+        private RColor actualBackgroundGradient = RColor.Empty;
+        private RColor actualBorderTopColor = RColor.Empty;
+        private RColor actualBorderLeftColor = RColor.Empty;
+        private RColor actualBorderBottomColor = RColor.Empty;
+        private RColor actualBorderRightColor = RColor.Empty;
+        private RColor actualBackgroundColor = RColor.Empty;
+        private RFont actualFont;
 
         #endregion
 
@@ -151,124 +150,124 @@ namespace UHtml.Core.Dom
         [JsonProperty]
         public string BorderBottomWidth
         {
-            get { return _borderBottomWidth; }
+            get { return borderBottomWidth; }
             set
             {
-                _borderBottomWidth = value;
-                _actualBorderBottomWidth = Single.NaN;
+                borderBottomWidth = value;
+                actualBorderBottomWidth = Single.NaN;
             }
         }
 
         [JsonProperty]
         public string BorderLeftWidth
         {
-            get { return _borderLeftWidth; }
+            get { return borderLeftWidth; }
             set
             {
-                _borderLeftWidth = value;
-                _actualBorderLeftWidth = Single.NaN;
+                borderLeftWidth = value;
+                actualBorderLeftWidth = Single.NaN;
             }
         }
         [JsonProperty]
         public string BorderRightWidth
         {
-            get { return _borderRightWidth; }
+            get { return borderRightWidth; }
             set
             {
-                _borderRightWidth = value;
-                _actualBorderRightWidth = Single.NaN;
+                borderRightWidth = value;
+                actualBorderRightWidth = Single.NaN;
             }
         }
         [JsonProperty]
         public string BorderTopWidth
         {
-            get { return _borderTopWidth; }
+            get { return borderTopWidth; }
             set
             {
-                _borderTopWidth = value;
-                _actualBorderTopWidth = Single.NaN;
+                borderTopWidth = value;
+                actualBorderTopWidth = Single.NaN;
             }
         }
         [JsonProperty]
         public string BorderBottomStyle
         {
-            get { return _borderBottomStyle; }
-            set { _borderBottomStyle = value; }
+            get { return borderBottomStyle; }
+            set { borderBottomStyle = value; }
         }
         [JsonProperty]
         public string BorderLeftStyle
         {
-            get { return _borderLeftStyle; }
-            set { _borderLeftStyle = value; }
+            get { return borderLeftStyle; }
+            set { borderLeftStyle = value; }
         }
         [JsonProperty]
         public string BorderRightStyle
         {
-            get { return _borderRightStyle; }
-            set { _borderRightStyle = value; }
+            get { return borderRightStyle; }
+            set { borderRightStyle = value; }
         }
         [JsonProperty]
         public string BorderTopStyle
         {
-            get { return _borderTopStyle; }
-            set { _borderTopStyle = value; }
+            get { return borderTopStyle; }
+            set { borderTopStyle = value; }
         }
         [JsonProperty]
         public string BorderBottomColor
         {
-            get { return _borderBottomColor; }
+            get { return borderBottomColor; }
             set
             {
-                _borderBottomColor = value;
-                _actualBorderBottomColor = RColor.Empty;
+                borderBottomColor = value;
+                actualBorderBottomColor = RColor.Empty;
             }
         }
         [JsonProperty]
         public string BorderLeftColor
         {
-            get { return _borderLeftColor; }
+            get { return borderLeftColor; }
             set
             {
-                _borderLeftColor = value;
-                _actualBorderLeftColor = RColor.Empty;
+                borderLeftColor = value;
+                actualBorderLeftColor = RColor.Empty;
             }
         }
         [JsonProperty]
         public string BorderRightColor
         {
-            get { return _borderRightColor; }
+            get { return borderRightColor; }
             set
             {
-                _borderRightColor = value;
-                _actualBorderRightColor = RColor.Empty;
+                borderRightColor = value;
+                actualBorderRightColor = RColor.Empty;
             }
         }
         [JsonProperty]
         public string BorderTopColor
         {
-            get { return _borderTopColor; }
+            get { return borderTopColor; }
             set
             {
-                _borderTopColor = value;
-                _actualBorderTopColor = RColor.Empty;
+                borderTopColor = value;
+                actualBorderTopColor = RColor.Empty;
             }
         }
         [JsonProperty]
         public string BorderSpacing
         {
-            get { return _borderSpacing; }
-            set { _borderSpacing = value; }
+            get { return borderSpacing; }
+            set { borderSpacing = value; }
         }
         [JsonProperty]
         public string BorderCollapse
         {
-            get { return _borderCollapse; }
-            set { _borderCollapse = value; }
+            get { return borderCollapse; }
+            set { borderCollapse = value; }
         }
         [JsonProperty]
         public string CornerRadius
         {
-            get { return _cornerRadius; }
+            get { return cornerRadius; }
             set
             {
                 MatchCollection r = RegexParserUtils.Match(RegexParserUtils.CssLength, value);
@@ -300,130 +299,130 @@ namespace UHtml.Core.Dom
                         break;
                 }
 
-                _cornerRadius = value;
+                cornerRadius = value;
             }
         }
         [JsonProperty]
         public string CornerNwRadius
         {
-            get { return _cornerNwRadius; }
-            set { _cornerNwRadius = value; }
+            get { return cornerNwRadius; }
+            set { cornerNwRadius = value; }
         }
         [JsonProperty]
         public string CornerNeRadius
         {
-            get { return _cornerNeRadius; }
-            set { _cornerNeRadius = value; }
+            get { return cornerNeRadius; }
+            set { cornerNeRadius = value; }
         }
         [JsonProperty]
         public string CornerSeRadius
         {
-            get { return _cornerSeRadius; }
-            set { _cornerSeRadius = value; }
+            get { return cornerSeRadius; }
+            set { cornerSeRadius = value; }
         }
         [JsonProperty]
         public string CornerSwRadius
         {
-            get { return _cornerSwRadius; }
-            set { _cornerSwRadius = value; }
+            get { return cornerSwRadius; }
+            set { cornerSwRadius = value; }
         }
         [JsonProperty]
         public string MarginBottom
         {
-            get { return _marginBottom; }
-            set { _marginBottom = value; }
+            get { return marginBottom; }
+            set { marginBottom = value; }
         }
         [JsonProperty]
         public string MarginLeft
         {
-            get { return _marginLeft; }
-            set { _marginLeft = value; }
+            get { return marginLeft; }
+            set { marginLeft = value; }
         }
         [JsonProperty]
         public string MarginRight
         {
-            get { return _marginRight; }
-            set { _marginRight = value; }
+            get { return marginRight; }
+            set { marginRight = value; }
         }
         [JsonProperty]
         public string MarginTop
         {
-            get { return _marginTop; }
-            set { _marginTop = value; }
+            get { return marginTop; }
+            set { marginTop = value; }
         }
         [JsonProperty]
         public string PaddingBottom
         {
-            get { return _paddingBottom; }
+            get { return paddingBottom; }
             set
             {
-                _paddingBottom = value;
-                _actualPaddingBottom = double.NaN;
+                paddingBottom = value;
+                actualPaddingBottom = double.NaN;
             }
         }
         [JsonProperty]
         public string PaddingLeft
         {
-            get { return _paddingLeft; }
+            get { return paddingLeft; }
             set
             {
-                _paddingLeft = value;
-                _actualPaddingLeft = double.NaN;
+                paddingLeft = value;
+                actualPaddingLeft = double.NaN;
             }
         }
         [JsonProperty]
         public string PaddingRight
         {
-            get { return _paddingRight; }
+            get { return paddingRight; }
             set
             {
-                _paddingRight = value;
-                _actualPaddingRight = double.NaN;
+                paddingRight = value;
+                actualPaddingRight = double.NaN;
             }
         }
         [JsonProperty]
         public string PaddingTop
         {
-            get { return _paddingTop; }
+            get { return paddingTop; }
             set
             {
-                _paddingTop = value;
-                _actualPaddingTop = double.NaN;
+                paddingTop = value;
+                actualPaddingTop = double.NaN;
             }
         }
         [JsonProperty]
         public string PageBreakInside
         {
-            get { return _pageBreakInside; }
+            get { return pageBreakInside; }
             set
             {
-                _pageBreakInside = value;
+                pageBreakInside = value;
             }
         }
         [JsonProperty]
         public string Left
         {
-            get { return _left; }
+            get { return left; }
             set
             {
-                _left = value;
+                left = value;
 
                 if (Position == CssConstants.Fixed)
                 {
-                    _location = GetActualLocation(Left, Top);
+                    location = GetActualLocation(Left, Top);
                 }
             }
         }
         [JsonProperty]
         public string Top
         {
-            get { return _top; }
+            get { return top; }
             set {
-                _top = value;
+                top = value;
 
                 if (Position == CssConstants.Fixed)
                 {
-                    _location = GetActualLocation(Left, Top);
+                    location = GetActualLocation(Left, Top);
                 }
 
             }
@@ -431,175 +430,175 @@ namespace UHtml.Core.Dom
         [JsonProperty]
         public string Width
         {
-            get { return _width; }
-            set { _width = value; }
+            get { return width; }
+            set { width = value; }
         }
         [JsonProperty]
         public string MaxWidth
         {
-            get { return _maxWidth; }
-            set { _maxWidth = value; }
+            get { return maxWidth; }
+            set { maxWidth = value; }
         }
         [JsonProperty]
         public string Height
         {
-            get { return _height; }
-            set { _height = value; }
+            get { return height; }
+            set { height = value; }
         }
         [JsonProperty]
         public string BackgroundColor
         {
-            get { return _backgroundColor; }
-            set { _backgroundColor = value; }
+            get { return backgroundColor; }
+            set { backgroundColor = value; }
         }
         [JsonProperty]
         public string BackgroundImage
         {
-            get { return _backgroundImage; }
-            set { _backgroundImage = value; }
+            get { return backgroundImage; }
+            set { backgroundImage = value; }
         }
         [JsonProperty]
         public string BackgroundPosition
         {
-            get { return _backgroundPosition; }
-            set { _backgroundPosition = value; }
+            get { return backgroundPosition; }
+            set { backgroundPosition = value; }
         }
         [JsonProperty]
         public string BackgroundRepeat
         {
-            get { return _backgroundRepeat; }
-            set { _backgroundRepeat = value; }
+            get { return backgroundRepeat; }
+            set { backgroundRepeat = value; }
         }
         [JsonProperty]
         public string BackgroundGradient
         {
-            get { return _backgroundGradient; }
-            set { _backgroundGradient = value; }
+            get { return backgroundGradient; }
+            set { backgroundGradient = value; }
         }
         [JsonProperty]
         public string BackgroundGradientAngle
         {
-            get { return _backgroundGradientAngle; }
-            set { _backgroundGradientAngle = value; }
+            get { return backgroundGradientAngle; }
+            set { backgroundGradientAngle = value; }
         }
         [JsonProperty]
         public string Color
         {
-            get { return _color; }
+            get { return color; }
             set
             {
-                _color = value;
-                _actualColor = RColor.Empty;
+                color = value;
+                actualColor = RColor.Empty;
             }
         }
         [JsonProperty]
         public string Content
         {
-            get { return _content; }
-            set { _content = value; }
+            get { return content; }
+            set { content = value; }
         }
         [JsonProperty]
         public string Display
         {
-            get { return _display; }
-            set { _display = value; }
+            get { return display; }
+            set { display = value; }
         }
         [JsonProperty]
         public string Direction
         {
-            get { return _direction; }
-            set { _direction = value; }
+            get { return direction; }
+            set { direction = value; }
         }
         [JsonProperty]
         public string EmptyCells
         {
-            get { return _emptyCells; }
-            set { _emptyCells = value; }
+            get { return emptyCells; }
+            set { emptyCells = value; }
         }
         [JsonProperty]
         public string Float
         {
-            get { return _float; }
-            set { _float = value; }
+            get { return @float; }
+            set { @float = value; }
         }
 
         [JsonProperty]
         public string Clear
         {
-            get { return _clear; }
-            set { _clear = value; }
+            get { return clear; }
+            set { clear = value; }
         }
 
         [JsonProperty]
         public string Position
         {
-            get { return _position; }
-            set { _position = value; }
+            get { return position; }
+            set { position = value; }
         }
         [JsonProperty]
         public string LineHeight
         {
-            get { return _lineHeight; }
-            set { _lineHeight = string.Format(NumberFormatInfo.InvariantInfo, "{0}px", CssValueParser.ParseLength(value, Size.Height, this, CssConstants.Em)); }
+            get { return lineHeight; }
+            set { lineHeight = string.Format(NumberFormatInfo.InvariantInfo, "{0}px", CssValueParser.ParseLength(value, Size.Height, this, CssConstants.Em)); }
         }
         [JsonProperty]
         public string VerticalAlign
         {
-            get { return _verticalAlign; }
-            set { _verticalAlign = value; }
+            get { return verticalAlign; }
+            set { verticalAlign = value; }
         }
         [JsonProperty]
         public string TextIndent
         {
-            get { return _textIndent; }
-            set { _textIndent = NoEms(value); }
+            get { return textIndent; }
+            set { textIndent = NoEms(value); }
         }
         [JsonProperty]
         public string TextAlign
         {
-            get { return _textAlign; }
-            set { _textAlign = value; }
+            get { return textAlign; }
+            set { textAlign = value; }
         }
         [JsonProperty]
         public string TextDecoration
         {
-            get { return _textDecoration; }
-            set { _textDecoration = value; }
+            get { return textDecoration; }
+            set { textDecoration = value; }
         }
         [JsonProperty]
         public string WhiteSpace
         {
-            get { return _whiteSpace; }
-            set { _whiteSpace = value; }
+            get { return whiteSpace; }
+            set { whiteSpace = value; }
         }
         [JsonProperty]
         public string Visibility
         {
-            get { return _visibility; }
-            set { _visibility = value; }
+            get { return visibility; }
+            set { visibility = value; }
         }
         [JsonProperty]
         public string WordSpacing
         {
-            get { return _wordSpacing; }
-            set { _wordSpacing = NoEms(value); }
+            get { return wordSpacing; }
+            set { wordSpacing = NoEms(value); }
         }
         [JsonProperty]
         public string WordBreak
         {
-            get { return _wordBreak; }
-            set { _wordBreak = value; }
+            get { return wordBreak; }
+            set { wordBreak = value; }
         }
         [JsonProperty]
         public string FontFamily
         {
-            get { return _fontFamily; }
-            set { _fontFamily = value; }
+            get { return fontFamily; }
+            set { fontFamily = value; }
         }
         [JsonProperty]
         public string FontSize
         {
-            get { return _fontSize; }
+            get { return fontSize; }
             set
             {
                 string length = RegexParserUtils.Search(RegexParserUtils.CssLength, value);
@@ -622,61 +621,61 @@ namespace UHtml.Core.Dom
                         computedValue = len.ToString();
                     }
 
-                    _fontSize = computedValue;
+                    fontSize = computedValue;
                 }
                 else
                 {
-                    _fontSize = value;
+                    fontSize = value;
                 }
             }
         }
         [JsonProperty]
         public string FontStyle
         {
-            get { return _fontStyle; }
-            set { _fontStyle = value; }
+            get { return fontStyle; }
+            set { fontStyle = value; }
         }
         [JsonProperty]
         public string FontVariant
         {
-            get { return _fontVariant; }
-            set { _fontVariant = value; }
+            get { return fontVariant; }
+            set { fontVariant = value; }
         }
         [JsonProperty]
         public string FontWeight
         {
-            get { return _fontWeight; }
-            set { _fontWeight = value; }
+            get { return fontWeight; }
+            set { fontWeight = value; }
         }
         [JsonProperty]
         public string ListStyle
         {
-            get { return _listStyle; }
-            set { _listStyle = value; }
+            get { return listStyle; }
+            set { listStyle = value; }
         }
         [JsonProperty]
         public string Overflow
         {
-            get { return _overflow; }
-            set { _overflow = value; }
+            get { return overflow; }
+            set { overflow = value; }
         }
         [JsonProperty]
         public string ListStylePosition
         {
-            get { return _listStylePosition; }
-            set { _listStylePosition = value; }
+            get { return listStylePosition; }
+            set { listStylePosition = value; }
         }
         [JsonProperty]
         public string ListStyleImage
         {
-            get { return _listStyleImage; }
-            set { _listStyleImage = value; }
+            get { return listStyleImage; }
+            set { listStyleImage = value; }
         }
         [JsonProperty]
         public string ListStyleType
         {
-            get { return _listStyleType; }
-            set { _listStyleType = value; }
+            get { return listStyleType; }
+            set { listStyleType = value; }
         }
 
         #endregion CSS Propertier
@@ -687,17 +686,17 @@ namespace UHtml.Core.Dom
         public RPoint Location
         {
             get {
-                if (_location.IsEmpty && Position == CssConstants.Fixed)
+                if (location.IsEmpty && Position == CssConstants.Fixed)
                 {
                     var left = Left;
                     var top = Top;
 
-                    _location = GetActualLocation(Left, Top);
+                    location = GetActualLocation(Left, Top);
                 }
-                return _location;
+                return location;
             }
             set {
-                _location = value;
+                location = value;
             }
         }
 
@@ -707,8 +706,8 @@ namespace UHtml.Core.Dom
         [JsonProperty]
         public RSize Size
         {
-            get { return _size; }
-            set { _size = value; }
+            get { return size; }
+            set { size = value; }
         }
 
         /// <summary>
@@ -802,11 +801,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualHeight))
+                if (double.IsNaN(actualHeight))
                 {
-                    _actualHeight = CssValueParser.ParseLength(Height, Size.Height, this);
+                    actualHeight = CssValueParser.ParseLength(Height, Size.Height, this);
                 }
-                return _actualHeight;
+                return actualHeight;
             }
         }
 
@@ -818,11 +817,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualWidth))
+                if (double.IsNaN(actualWidth))
                 {
-                    _actualWidth = CssValueParser.ParseLength(Width, Size.Width, this);
+                    actualWidth = CssValueParser.ParseLength(Width, Size.Width, this);
                 }
-                return _actualWidth;
+                return actualWidth;
             }
         }
 
@@ -833,11 +832,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualPaddingTop))
+                if (double.IsNaN(actualPaddingTop))
                 {
-                    _actualPaddingTop = CssValueParser.ParseLength(PaddingTop, Size.Width, this);
+                    actualPaddingTop = CssValueParser.ParseLength(PaddingTop, Size.Width, this);
                 }
-                return _actualPaddingTop;
+                return actualPaddingTop;
             }
         }
 
@@ -848,11 +847,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualPaddingLeft))
+                if (double.IsNaN(actualPaddingLeft))
                 {
-                    _actualPaddingLeft = CssValueParser.ParseLength(PaddingLeft, Size.Width, this);
+                    actualPaddingLeft = CssValueParser.ParseLength(PaddingLeft, Size.Width, this);
                 }
-                return _actualPaddingLeft;
+                return actualPaddingLeft;
             }
         }
 
@@ -863,11 +862,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualPaddingBottom))
+                if (double.IsNaN(actualPaddingBottom))
                 {
-                    _actualPaddingBottom = CssValueParser.ParseLength(PaddingBottom, Size.Width, this);
+                    actualPaddingBottom = CssValueParser.ParseLength(PaddingBottom, Size.Width, this);
                 }
-                return _actualPaddingBottom;
+                return actualPaddingBottom;
             }
         }
 
@@ -878,11 +877,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualPaddingRight))
+                if (double.IsNaN(actualPaddingRight))
                 {
-                    _actualPaddingRight = CssValueParser.ParseLength(PaddingRight, Size.Width, this);
+                    actualPaddingRight = CssValueParser.ParseLength(PaddingRight, Size.Width, this);
                 }
-                return _actualPaddingRight;
+                return actualPaddingRight;
             }
         }
 
@@ -893,16 +892,16 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualMarginTop))
+                if (double.IsNaN(actualMarginTop))
                 {
                     if (MarginTop == CssConstants.Auto)
                         MarginTop = "0";
                     var actualMarginTop = CssValueParser.ParseLength(MarginTop, Size.Width, this);
                     if (MarginLeft.EndsWith("%"))
                         return actualMarginTop;
-                    _actualMarginTop = actualMarginTop;
+                    this.actualMarginTop = actualMarginTop;
                 }
-                return _actualMarginTop;
+                return actualMarginTop;
             }
         }
 
@@ -912,8 +911,8 @@ namespace UHtml.Core.Dom
         [JsonProperty]
         public double CollapsedMarginTop
         {
-            get { return double.IsNaN(_collapsedMarginTop) ? 0 : _collapsedMarginTop; }
-            set { _collapsedMarginTop = value; }
+            get { return double.IsNaN(collapsedMarginTop) ? 0 : collapsedMarginTop; }
+            set { collapsedMarginTop = value; }
         }
 
         /// <summary>
@@ -923,16 +922,16 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualMarginLeft))
+                if (double.IsNaN(actualMarginLeft))
                 {
                     if (MarginLeft == CssConstants.Auto)
                         MarginLeft = "0";
                     var actualMarginLeft = CssValueParser.ParseLength(MarginLeft, Size.Width, this);
                     if (MarginLeft.EndsWith("%"))
                         return actualMarginLeft;
-                    _actualMarginLeft = actualMarginLeft;
+                    this.actualMarginLeft = actualMarginLeft;
                 }
-                return _actualMarginLeft;
+                return actualMarginLeft;
             }
         }
 
@@ -943,16 +942,16 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualMarginBottom))
+                if (double.IsNaN(actualMarginBottom))
                 {
                     if (MarginBottom == CssConstants.Auto)
                         MarginBottom = "0";
                     var actualMarginBottom = CssValueParser.ParseLength(MarginBottom, Size.Width, this);
                     if (MarginLeft.EndsWith("%"))
                         return actualMarginBottom;
-                    _actualMarginBottom = actualMarginBottom;
+                    this.actualMarginBottom = actualMarginBottom;
                 }
-                return _actualMarginBottom;
+                return actualMarginBottom;
             }
         }
 
@@ -963,16 +962,16 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualMarginRight))
+                if (double.IsNaN(actualMarginRight))
                 {
                     if (MarginRight == CssConstants.Auto)
                         MarginRight = "0";
                     var actualMarginRight = CssValueParser.ParseLength(MarginRight, Size.Width, this);
                     if (MarginLeft.EndsWith("%"))
                         return actualMarginRight;
-                    _actualMarginRight = actualMarginRight;
+                    this.actualMarginRight = actualMarginRight;
                 }
-                return _actualMarginRight;
+                return actualMarginRight;
             }
         }
 
@@ -983,15 +982,15 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualBorderTopWidth))
+                if (double.IsNaN(actualBorderTopWidth))
                 {
-                    _actualBorderTopWidth = CssValueParser.GetActualBorderWidth(BorderTopWidth, this);
+                    actualBorderTopWidth = CssValueParser.GetActualBorderWidth(BorderTopWidth, this);
                     if (string.IsNullOrEmpty(BorderTopStyle) || BorderTopStyle == CssConstants.None)
                     {
-                        _actualBorderTopWidth = 0f;
+                        actualBorderTopWidth = 0f;
                     }
                 }
-                return _actualBorderTopWidth;
+                return actualBorderTopWidth;
             }
         }
 
@@ -1002,15 +1001,15 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualBorderLeftWidth))
+                if (double.IsNaN(actualBorderLeftWidth))
                 {
-                    _actualBorderLeftWidth = CssValueParser.GetActualBorderWidth(BorderLeftWidth, this);
+                    actualBorderLeftWidth = CssValueParser.GetActualBorderWidth(BorderLeftWidth, this);
                     if (string.IsNullOrEmpty(BorderLeftStyle) || BorderLeftStyle == CssConstants.None)
                     {
-                        _actualBorderLeftWidth = 0f;
+                        actualBorderLeftWidth = 0f;
                     }
                 }
-                return _actualBorderLeftWidth;
+                return actualBorderLeftWidth;
             }
         }
 
@@ -1021,15 +1020,15 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualBorderBottomWidth))
+                if (double.IsNaN(actualBorderBottomWidth))
                 {
-                    _actualBorderBottomWidth = CssValueParser.GetActualBorderWidth(BorderBottomWidth, this);
+                    actualBorderBottomWidth = CssValueParser.GetActualBorderWidth(BorderBottomWidth, this);
                     if (string.IsNullOrEmpty(BorderBottomStyle) || BorderBottomStyle == CssConstants.None)
                     {
-                        _actualBorderBottomWidth = 0f;
+                        actualBorderBottomWidth = 0f;
                     }
                 }
-                return _actualBorderBottomWidth;
+                return actualBorderBottomWidth;
             }
         }
 
@@ -1040,15 +1039,15 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualBorderRightWidth))
+                if (double.IsNaN(actualBorderRightWidth))
                 {
-                    _actualBorderRightWidth = CssValueParser.GetActualBorderWidth(BorderRightWidth, this);
+                    actualBorderRightWidth = CssValueParser.GetActualBorderWidth(BorderRightWidth, this);
                     if (string.IsNullOrEmpty(BorderRightStyle) || BorderRightStyle == CssConstants.None)
                     {
-                        _actualBorderRightWidth = 0f;
+                        actualBorderRightWidth = 0f;
                     }
                 }
-                return _actualBorderRightWidth;
+                return actualBorderRightWidth;
             }
         }
 
@@ -1059,11 +1058,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (_actualBorderTopColor.IsEmpty)
+                if (actualBorderTopColor.IsEmpty)
                 {
-                    _actualBorderTopColor = GetActualColor(BorderTopColor);
+                    actualBorderTopColor = GetActualColor(BorderTopColor);
                 }
-                return _actualBorderTopColor;
+                return actualBorderTopColor;
             }
         }
 
@@ -1078,11 +1077,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if ((_actualBorderLeftColor.IsEmpty))
+                if ((actualBorderLeftColor.IsEmpty))
                 {
-                    _actualBorderLeftColor = GetActualColor(BorderLeftColor);
+                    actualBorderLeftColor = GetActualColor(BorderLeftColor);
                 }
-                return _actualBorderLeftColor;
+                return actualBorderLeftColor;
             }
         }
 
@@ -1093,11 +1092,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if ((_actualBorderBottomColor.IsEmpty))
+                if ((actualBorderBottomColor.IsEmpty))
                 {
-                    _actualBorderBottomColor = GetActualColor(BorderBottomColor);
+                    actualBorderBottomColor = GetActualColor(BorderBottomColor);
                 }
-                return _actualBorderBottomColor;
+                return actualBorderBottomColor;
             }
         }
 
@@ -1108,11 +1107,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if ((_actualBorderRightColor.IsEmpty))
+                if ((actualBorderRightColor.IsEmpty))
                 {
-                    _actualBorderRightColor = GetActualColor(BorderRightColor);
+                    actualBorderRightColor = GetActualColor(BorderRightColor);
                 }
-                return _actualBorderRightColor;
+                return actualBorderRightColor;
             }
         }
 
@@ -1123,11 +1122,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualCornerNw))
+                if (double.IsNaN(actualCornerNw))
                 {
-                    _actualCornerNw = CssValueParser.ParseLength(CornerNwRadius, 0, this);
+                    actualCornerNw = CssValueParser.ParseLength(CornerNwRadius, 0, this);
                 }
-                return _actualCornerNw;
+                return actualCornerNw;
             }
         }
 
@@ -1138,11 +1137,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualCornerNe))
+                if (double.IsNaN(actualCornerNe))
                 {
-                    _actualCornerNe = CssValueParser.ParseLength(CornerNeRadius, 0, this);
+                    actualCornerNe = CssValueParser.ParseLength(CornerNeRadius, 0, this);
                 }
-                return _actualCornerNe;
+                return actualCornerNe;
             }
         }
 
@@ -1153,11 +1152,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualCornerSe))
+                if (double.IsNaN(actualCornerSe))
                 {
-                    _actualCornerSe = CssValueParser.ParseLength(CornerSeRadius, 0, this);
+                    actualCornerSe = CssValueParser.ParseLength(CornerSeRadius, 0, this);
                 }
-                return _actualCornerSe;
+                return actualCornerSe;
             }
         }
 
@@ -1168,11 +1167,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualCornerSw))
+                if (double.IsNaN(actualCornerSw))
                 {
-                    _actualCornerSw = CssValueParser.ParseLength(CornerSwRadius, 0, this);
+                    actualCornerSw = CssValueParser.ParseLength(CornerSwRadius, 0, this);
                 }
-                return _actualCornerSw;
+                return actualCornerSw;
             }
         }
 
@@ -1189,7 +1188,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double ActualWordSpacing
         {
-            get { return _actualWordSpacing; }
+            get { return actualWordSpacing; }
         }
 
         /// <summary>
@@ -1200,12 +1199,12 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (_actualColor.IsEmpty)
+                if (actualColor.IsEmpty)
                 {
-                    _actualColor = GetActualColor(Color);
+                    actualColor = GetActualColor(Color);
                 }
 
-                return _actualColor;
+                return actualColor;
             }
         }
 
@@ -1216,12 +1215,12 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (_actualBackgroundColor.IsEmpty)
+                if (actualBackgroundColor.IsEmpty)
                 {
-                    _actualBackgroundColor = GetActualColor(BackgroundColor);
+                    actualBackgroundColor = GetActualColor(BackgroundColor);
                 }
 
-                return _actualBackgroundColor;
+                return actualBackgroundColor;
             }
         }
 
@@ -1232,11 +1231,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (_actualBackgroundGradient.IsEmpty)
+                if (actualBackgroundGradient.IsEmpty)
                 {
-                    _actualBackgroundGradient = GetActualColor(BackgroundGradient);
+                    actualBackgroundGradient = GetActualColor(BackgroundGradient);
                 }
-                return _actualBackgroundGradient;
+                return actualBackgroundGradient;
             }
         }
 
@@ -1247,12 +1246,12 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualBackgroundGradientAngle))
+                if (double.IsNaN(actualBackgroundGradientAngle))
                 {
-                    _actualBackgroundGradientAngle = CssValueParser.ParseNumber(BackgroundGradientAngle, 360f);
+                    actualBackgroundGradientAngle = CssValueParser.ParseNumber(BackgroundGradientAngle, 360f);
                 }
 
-                return _actualBackgroundGradientAngle;
+                return actualBackgroundGradientAngle;
             }
         }
 
@@ -1271,7 +1270,7 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (_actualFont == null)
+                if (actualFont == null)
                 {
                     if (string.IsNullOrEmpty(FontFamily))
                     {
@@ -1339,9 +1338,9 @@ namespace UHtml.Core.Dom
                         fsize = CssConstants.FontSize;
                     }
 
-                    _actualFont = GetCachedFont(FontFamily, fsize, st);
+                    actualFont = GetCachedFont(FontFamily, fsize, st);
                 }
-                return _actualFont;
+                return actualFont;
             }
         }
 
@@ -1354,11 +1353,11 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualLineHeight))
+                if (double.IsNaN(actualLineHeight))
                 {
-                    _actualLineHeight = .9f * CssValueParser.ParseLength(LineHeight, Size.Height, this);
+                    actualLineHeight = .9f * CssValueParser.ParseLength(LineHeight, Size.Height, this);
                 }
-                return _actualLineHeight;
+                return actualLineHeight;
             }
         }
 
@@ -1369,12 +1368,12 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualTextIndent))
+                if (double.IsNaN(actualTextIndent))
                 {
-                    _actualTextIndent = CssValueParser.ParseLength(TextIndent, Size.Width, this);
+                    actualTextIndent = CssValueParser.ParseLength(TextIndent, Size.Width, this);
                 }
 
-                return _actualTextIndent;
+                return actualTextIndent;
             }
         }
 
@@ -1385,22 +1384,22 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualBorderSpacingHorizontal))
+                if (double.IsNaN(actualBorderSpacingHorizontal))
                 {
                     MatchCollection matches = RegexParserUtils.Match(RegexParserUtils.CssLength, BorderSpacing);
 
                     if (matches.Count == 0)
                     {
-                        _actualBorderSpacingHorizontal = 0;
+                        actualBorderSpacingHorizontal = 0;
                     }
                     else if (matches.Count > 0)
                     {
-                        _actualBorderSpacingHorizontal = CssValueParser.ParseLength(matches[0].Value, 1, this);
+                        actualBorderSpacingHorizontal = CssValueParser.ParseLength(matches[0].Value, 1, this);
                     }
                 }
 
 
-                return _actualBorderSpacingHorizontal;
+                return actualBorderSpacingHorizontal;
             }
         }
 
@@ -1411,24 +1410,24 @@ namespace UHtml.Core.Dom
         {
             get
             {
-                if (double.IsNaN(_actualBorderSpacingVertical))
+                if (double.IsNaN(actualBorderSpacingVertical))
                 {
                     MatchCollection matches = RegexParserUtils.Match(RegexParserUtils.CssLength, BorderSpacing);
 
                     if (matches.Count == 0)
                     {
-                        _actualBorderSpacingVertical = 0;
+                        actualBorderSpacingVertical = 0;
                     }
                     else if (matches.Count == 1)
                     {
-                        _actualBorderSpacingVertical = CssValueParser.ParseLength(matches[0].Value, 1, this);
+                        actualBorderSpacingVertical = CssValueParser.ParseLength(matches[0].Value, 1, this);
                     }
                     else
                     {
-                        _actualBorderSpacingVertical = CssValueParser.ParseLength(matches[1].Value, 1, this);
+                        actualBorderSpacingVertical = CssValueParser.ParseLength(matches[1].Value, 1, this);
                     }
                 }
-                return _actualBorderSpacingVertical;
+                return actualBorderSpacingVertical;
             }
         }
 
@@ -1485,11 +1484,11 @@ namespace UHtml.Core.Dom
         {
             if (double.IsNaN(ActualWordSpacing))
             {
-                _actualWordSpacing = CssUtils.WhiteSpace(g, this);
+                actualWordSpacing = CssUtils.WhiteSpace(g, this);
                 if (WordSpacing != CssConstants.Normal)
                 {
                     string len = RegexParserUtils.Search(RegexParserUtils.CssLength, WordSpacing);
-                    _actualWordSpacing += CssValueParser.ParseLength(len, 1, this);
+                    actualWordSpacing += CssValueParser.ParseLength(len, 1, this);
                 }
             }
         }
@@ -1503,75 +1502,75 @@ namespace UHtml.Core.Dom
         {
             if (p != null)
             {
-                _borderSpacing = p._borderSpacing;
-                _borderCollapse = p._borderCollapse;
-                _color = p._color;
-                _emptyCells = p._emptyCells;
-                _whiteSpace = p._whiteSpace;
-                _visibility = p._visibility;
-                _textIndent = p._textIndent;
-                _textAlign = p._textAlign;
-                _verticalAlign = p._verticalAlign;
-                _fontFamily = p._fontFamily;
-                _fontSize = p._fontSize;
-                _fontStyle = p._fontStyle;
-                _fontVariant = p._fontVariant;
-                _fontWeight = p._fontWeight;
-                _listStyleImage = p._listStyleImage;
-                _listStylePosition = p._listStylePosition;
-                _listStyleType = p._listStyleType;
-                _listStyle = p._listStyle;
-                _lineHeight = p._lineHeight;
-                _wordBreak = p.WordBreak;
-                _direction = p._direction;
+                borderSpacing = p.borderSpacing;
+                borderCollapse = p.borderCollapse;
+                color = p.color;
+                emptyCells = p.emptyCells;
+                whiteSpace = p.whiteSpace;
+                visibility = p.visibility;
+                textIndent = p.textIndent;
+                textAlign = p.textAlign;
+                verticalAlign = p.verticalAlign;
+                fontFamily = p.fontFamily;
+                fontSize = p.fontSize;
+                fontStyle = p.fontStyle;
+                fontVariant = p.fontVariant;
+                fontWeight = p.fontWeight;
+                listStyleImage = p.listStyleImage;
+                listStylePosition = p.listStylePosition;
+                listStyleType = p.listStyleType;
+                listStyle = p.listStyle;
+                lineHeight = p.lineHeight;
+                wordBreak = p.WordBreak;
+                direction = p.direction;
 
                 if (everything)
                 {
-                    _backgroundColor = p._backgroundColor;
-                    _backgroundGradient = p._backgroundGradient;
-                    _backgroundGradientAngle = p._backgroundGradientAngle;
-                    _backgroundImage = p._backgroundImage;
-                    _backgroundPosition = p._backgroundPosition;
-                    _backgroundRepeat = p._backgroundRepeat;
-                    _borderTopWidth = p._borderTopWidth;
-                    _borderRightWidth = p._borderRightWidth;
-                    _borderBottomWidth = p._borderBottomWidth;
-                    _borderLeftWidth = p._borderLeftWidth;
-                    _borderTopColor = p._borderTopColor;
-                    _borderRightColor = p._borderRightColor;
-                    _borderBottomColor = p._borderBottomColor;
-                    _borderLeftColor = p._borderLeftColor;
-                    _borderTopStyle = p._borderTopStyle;
-                    _borderRightStyle = p._borderRightStyle;
-                    _borderBottomStyle = p._borderBottomStyle;
-                    _borderLeftStyle = p._borderLeftStyle;
-                    _bottom = p._bottom;
-                    _cornerNwRadius = p._cornerNwRadius;
-                    _cornerNeRadius = p._cornerNeRadius;
-                    _cornerSeRadius = p._cornerSeRadius;
-                    _cornerSwRadius = p._cornerSwRadius;
-                    _cornerRadius = p._cornerRadius;
-                    _display = p._display;
-                    _float = p._float;
-                    _height = p._height;
-                    _marginBottom = p._marginBottom;
-                    _marginLeft = p._marginLeft;
-                    _marginRight = p._marginRight;
-                    _marginTop = p._marginTop;
-                    _left = p._left;
-                    _lineHeight = p._lineHeight;
-                    _overflow = p._overflow;
-                    _paddingLeft = p._paddingLeft;
-                    _paddingBottom = p._paddingBottom;
-                    _paddingRight = p._paddingRight;
-                    _paddingTop = p._paddingTop;
-                    _right = p._right;
-                    _textDecoration = p._textDecoration;
-                    _top = p._top;
-                    _position = p._position;
-                    _width = p._width;
-                    _maxWidth = p._maxWidth;
-                    _wordSpacing = p._wordSpacing;
+                    backgroundColor = p.backgroundColor;
+                    backgroundGradient = p.backgroundGradient;
+                    backgroundGradientAngle = p.backgroundGradientAngle;
+                    backgroundImage = p.backgroundImage;
+                    backgroundPosition = p.backgroundPosition;
+                    backgroundRepeat = p.backgroundRepeat;
+                    borderTopWidth = p.borderTopWidth;
+                    borderRightWidth = p.borderRightWidth;
+                    borderBottomWidth = p.borderBottomWidth;
+                    borderLeftWidth = p.borderLeftWidth;
+                    borderTopColor = p.borderTopColor;
+                    borderRightColor = p.borderRightColor;
+                    borderBottomColor = p.borderBottomColor;
+                    borderLeftColor = p.borderLeftColor;
+                    borderTopStyle = p.borderTopStyle;
+                    borderRightStyle = p.borderRightStyle;
+                    borderBottomStyle = p.borderBottomStyle;
+                    borderLeftStyle = p.borderLeftStyle;
+                    bottom = p.bottom;
+                    cornerNwRadius = p.cornerNwRadius;
+                    cornerNeRadius = p.cornerNeRadius;
+                    cornerSeRadius = p.cornerSeRadius;
+                    cornerSwRadius = p.cornerSwRadius;
+                    cornerRadius = p.cornerRadius;
+                    display = p.display;
+                    @float = p.@float;
+                    height = p.height;
+                    marginBottom = p.marginBottom;
+                    marginLeft = p.marginLeft;
+                    marginRight = p.marginRight;
+                    marginTop = p.marginTop;
+                    left = p.left;
+                    lineHeight = p.lineHeight;
+                    overflow = p.overflow;
+                    paddingLeft = p.paddingLeft;
+                    paddingBottom = p.paddingBottom;
+                    paddingRight = p.paddingRight;
+                    paddingTop = p.paddingTop;
+                    right = p.right;
+                    textDecoration = p.textDecoration;
+                    top = p.top;
+                    position = p.position;
+                    width = p.width;
+                    maxWidth = p.maxWidth;
+                    wordSpacing = p.wordSpacing;
                 }
             }
         }

@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.Windows.Markup;
+﻿using System.Windows.Markup;
 using System.Windows.Media;
 using UHtml.Adapters;
 
@@ -24,19 +12,19 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// Default language to get font family name by
         /// </summary>
-        private static readonly XmlLanguage _xmlLanguage = XmlLanguage.GetLanguage("en-us");
+        private static readonly XmlLanguage xmlLanguage = XmlLanguage.GetLanguage("en-us");
 
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
-        private readonly FontFamily _fontFamily;
+        private readonly FontFamily fontFamily;
 
         /// <summary>
         /// Init.
         /// </summary>
         public FontFamilyAdapter(FontFamily fontFamily)
         {
-            _fontFamily = fontFamily;
+            this.fontFamily = fontFamily;
         }
 
         /// <summary>
@@ -44,17 +32,17 @@ namespace UHtml.WPF.Adapters
         /// </summary>
         public FontFamily FontFamily
         {
-            get { return _fontFamily; }
+            get { return fontFamily; }
         }
 
         public override string Name
         {
             get
             {
-                string name =  _fontFamily.FamilyNames[_xmlLanguage];
+                string name =  fontFamily.FamilyNames[xmlLanguage];
                 if (string.IsNullOrEmpty(name))
                 {
-                    foreach (var familyName in _fontFamily.FamilyNames)
+                    foreach (var familyName in fontFamily.FamilyNames)
                     {
                         return familyName.Value;
                     }

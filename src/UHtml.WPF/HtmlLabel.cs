@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
@@ -79,7 +67,7 @@ namespace UHtml.WPF
         /// </summary>
         protected override Size MeasureOverride(Size constraint)
         {
-            if (_htmlContainer != null)
+            if (htmlContainer != null)
             {
                 using (var ig = new GraphicsAdapter())
                 {
@@ -90,7 +78,7 @@ namespace UHtml.WPF
                     var minSize = new RSize(MinWidth < Double.PositiveInfinity ? MinWidth - horizontal : 0, MinHeight < Double.PositiveInfinity ? MinHeight - vertical : 0);
                     var maxSize = new RSize(MaxWidth < Double.PositiveInfinity ? MaxWidth - horizontal : 0, MaxHeight < Double.PositiveInfinity ? MaxHeight - vertical : 0);
 
-                    var newSize = UHtmlUtils.Layout(ig, _htmlContainer.HtmlContainerInt, size, minSize, maxSize, AutoSize, AutoSizeHeightOnly);
+                    var newSize = UHtmlUtils.Layout(ig, htmlContainer.HtmlContainerInt, size, minSize, maxSize, AutoSize, AutoSizeHeightOnly);
 
                     constraint = new Size(newSize.Width + horizontal, newSize.Height + vertical);
                 }

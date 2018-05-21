@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-// 
-
-
-
 using System;
 using System.Globalization;
 using System.Windows;
@@ -32,12 +20,12 @@ namespace UHtml.WPF.Adapters
         /// <summary>
         /// The wrapped WPF graphics object
         /// </summary>
-        private readonly DrawingContext _g;
+        private readonly DrawingContext g;
 
         /// <summary>
         /// if to release the graphics object on dispose
         /// </summary>
-        private readonly bool _releaseGraphics;
+        private readonly bool releaseGraphics;
 
         #endregion
 
@@ -53,8 +41,8 @@ namespace UHtml.WPF.Adapters
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            _g = g;
-            _releaseGraphics = releaseGraphics;
+            this.g = g;
+            this.releaseGraphics = releaseGraphics;
         }
 
         /// <summary>
@@ -63,31 +51,31 @@ namespace UHtml.WPF.Adapters
         public GraphicsAdapter()
             : base(WpfAdapter.Instance, RRect.Empty)
         {
-            _g = null;
-            _releaseGraphics = false;
+            g = null;
+            releaseGraphics = false;
         }
 
         public override void PopClip()
         {
-            _g.Pop();
-            _clipStack.Pop();
+            g.Pop();
+            clipStack.Pop();
         }
 
         public override void PushClip(RRect rect)
         {
-            _clipStack.Push(rect);
-            _g.PushClip(new RectangleGeometry(Utils.Convert(rect)));
+            clipStack.Push(rect);
+            g.PushClip(new RectangleGeometry(Utils.Convert(rect)));
         }
 
         public override void PushClipExclude(RRect rect)
         {
             var geometry = new CombinedGeometry();
-            geometry.Geometry1 = new RectangleGeometry(Utils.Convert(_clipStack.Peek()));
+            geometry.Geometry1 = new RectangleGeometry(Utils.Convert(clipStack.Peek()));
             geometry.Geometry2 = new RectangleGeometry(Utils.Convert(rect));
             geometry.GeometryCombineMode = GeometryCombineMode.Exclude;
 
-            _clipStack.Push(_clipStack.Peek());
-            _g.PushClip(geometry);
+            clipStack.Push(clipStack.Peek());
+            g.PushClip(geometry);
         }
 
         public override Object SetAntiAliasSmoothingMode()
@@ -172,7 +160,7 @@ namespace UHtml.WPF.Adapters
 
         public override void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl)
         {
-            var colorConv = ((BrushAdapter)_adapter.GetSolidBrush(color)).Brush;
+            var colorConv = ((BrushAdapter)adapter.GetSolidBrush(color)).Brush;
 
             bool glyphRendered = false;
             GlyphTypeface glyphTypeface = ((FontAdapter)font).GlyphTypeface;
@@ -201,7 +189,7 @@ namespace UHtml.WPF.Adapters
 
                     glyphRendered = true;
                     var glyphRun = new GlyphRun(glyphTypeface, rtl ? 1 : 0, false, 96d / 72d * font.Size, glyphs, Utils.ConvertRound(point), widths, null, null, null, null, null, null);
-                    _g.DrawGlyphRun(colorConv, glyphRun);
+                    g.DrawGlyphRun(colorConv, glyphRun);
                 }
             }
 
@@ -209,7 +197,7 @@ namespace UHtml.WPF.Adapters
             {
                 var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, rtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, colorConv);
                 point.X += rtl ? formattedText.Width : 0;
-                _g.DrawText(formattedText, Utils.ConvertRound(point));
+                g.DrawText(formattedText, Utils.ConvertRound(point));
             }
         }
 
@@ -232,8 +220,8 @@ namespace UHtml.WPF.Adapters
 
         public override void Dispose()
         {
-            if (_releaseGraphics)
-                _g.Close();
+            if (releaseGraphics)
+                g.Close();
         }
 
 
@@ -258,7 +246,7 @@ namespace UHtml.WPF.Adapters
                 y2 += .5;
             }
 
-            _g.DrawLine(((PenAdapter)pen).CreatePen(), new Point(x1, y1), new Point(x2, y2));
+            g.DrawLine(((PenAdapter)pen).CreatePen(), new Point(x1, y1), new Point(x2, y2));
         }
 
         public override void DrawRectangle(RPen pen, double x, double y, double width, double height)
@@ -270,33 +258,33 @@ namespace UHtml.WPF.Adapters
                 y += .5;
             }
             
-            _g.DrawRectangle(null, ((PenAdapter)pen).CreatePen(), new Rect(x, y, width, height));
+            g.DrawRectangle(null, ((PenAdapter)pen).CreatePen(), new Rect(x, y, width, height));
         }
 
         public override void DrawRectangle(RBrush brush, double x, double y, double width, double height)
         {
-            _g.DrawRectangle(((BrushAdapter)brush).Brush, null, new Rect(x, y, width, height));
+            g.DrawRectangle(((BrushAdapter)brush).Brush, null, new Rect(x, y, width, height));
         }
 
         public override void DrawImage(RImage image, RRect destRect, RRect srcRect)
         {
             CroppedBitmap croppedImage = new CroppedBitmap(((ImageAdapter)image).Image, new Int32Rect((int)srcRect.X, (int)srcRect.Y, (int)srcRect.Width, (int)srcRect.Height));
-            _g.DrawImage(croppedImage, Utils.ConvertRound(destRect));
+            g.DrawImage(croppedImage, Utils.ConvertRound(destRect));
         }
 
         public override void DrawImage(RImage image, RRect destRect)
         {
-            _g.DrawImage(((ImageAdapter)image).Image, Utils.ConvertRound(destRect));
+            g.DrawImage(((ImageAdapter)image).Image, Utils.ConvertRound(destRect));
         }
 
         public override void DrawPath(RPen pen, RGraphicsPath path)
         {
-            _g.DrawGeometry(null, ((PenAdapter)pen).CreatePen(), ((GraphicsPathAdapter)path).GetClosedGeometry());
+            g.DrawGeometry(null, ((PenAdapter)pen).CreatePen(), ((GraphicsPathAdapter)path).GetClosedGeometry());
         }
 
         public override void DrawPath(RBrush brush, RGraphicsPath path)
         {
-            _g.DrawGeometry(((BrushAdapter)brush).Brush, null, ((GraphicsPathAdapter)path).GetClosedGeometry());
+            g.DrawGeometry(((BrushAdapter)brush).Brush, null, ((GraphicsPathAdapter)path).GetClosedGeometry());
         }
 
         public override void DrawPolygon(RBrush brush, RPoint[] points)
@@ -312,7 +300,7 @@ namespace UHtml.WPF.Adapters
                 }
                 g.Freeze();
 
-                _g.DrawGeometry(((BrushAdapter)brush).Brush, null, g);
+                this.g.DrawGeometry(((BrushAdapter)brush).Brush, null, g);
             }
         }
 
