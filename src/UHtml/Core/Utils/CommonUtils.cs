@@ -27,7 +27,7 @@ namespace UHtml.Core.Utils
         /// <summary>
         /// Table to convert numbers into roman digits
         /// </summary>
-        private static readonly string[,] _romanDigitsTable =
+        private static readonly string[,] romanDigitsTable =
         {
             { "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" },
             { "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC" },
@@ -38,33 +38,33 @@ namespace UHtml.Core.Utils
             }
         };
 
-        private static readonly string[,] _hebrewDigitsTable =
+        private static readonly string[,] hebrewDigitsTable =
         {
             { "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט" },
             { "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ" },
             { "ק", "ר", "ש", "ת", "תק", "תר", "תש", "תת", "תתק", }
         };
 
-        private static readonly string[,] _georgianDigitsTable =
+        private static readonly string[,] georgianDigitsTable =
         {
             { "ა", "ბ", "გ", "დ", "ე", "ვ", "ზ", "ჱ", "თ" },
             { "ი", "პ", "ლ", "მ", "ნ", "ჲ", "ო", "პ", "ჟ" },
             { "რ", "ს", "ტ", "ჳ", "ფ", "ქ", "ღ", "ყ", "შ" }
         };
 
-        private static readonly string[,] _armenianDigitsTable =
+        private static readonly string[,] armenianDigitsTable =
         {
             { "Ա", "Բ", "Գ", "Դ", "Ե", "Զ", "Է", "Ը", "Թ" },
             { "Ժ", "Ի", "Լ", "Խ", "Ծ", "Կ", "Հ", "Ձ", "Ղ" },
             { "Ճ", "Մ", "Յ", "Ն", "Շ", "Ո", "Չ", "Պ", "Ջ" }
         };
 
-        private static readonly string[] _hiraganaDigitsTable = new[]
+        private static readonly string[] hiraganaDigitsTable = new[]
         {
             "あ", "ぃ", "ぅ", "ぇ", "ぉ", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "ゃ", "ゅ", "ょ", "ら", "り", "る", "れ", "ろ", "ゎ", "ゐ", "ゑ", "を", "ん"
         };
 
-        private static readonly string[] _satakanaDigitsTable = new[]
+        private static readonly string[] satakanaDigitsTable = new[]
         {
             "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ", "サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト", "ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ", "マ", "ミ", "ム", "メ", "モ", "ヤ", "ユ", "ヨ", "ラ", "リ", "ル", "レ", "ロ", "ワ", "ヰ", "ヱ", "ヲ", "ン"
         };
@@ -75,7 +75,6 @@ namespace UHtml.Core.Utils
         public static String _tempPath;
 
         #endregion
-
 
         /// <summary>
         /// Check if the given char is of Asian range.
@@ -346,23 +345,23 @@ namespace UHtml.Core.Utils
             }
             else if (style.Equals(CssConstants.Armenian, StringComparison.OrdinalIgnoreCase))
             {
-                return ConvertToSpecificNumbers(number, _armenianDigitsTable);
+                return ConvertToSpecificNumbers(number, armenianDigitsTable);
             }
             else if (style.Equals(CssConstants.Georgian, StringComparison.OrdinalIgnoreCase))
             {
-                return ConvertToSpecificNumbers(number, _georgianDigitsTable);
+                return ConvertToSpecificNumbers(number, georgianDigitsTable);
             }
             else if (style.Equals(CssConstants.Hebrew, StringComparison.OrdinalIgnoreCase))
             {
-                return ConvertToSpecificNumbers(number, _hebrewDigitsTable);
+                return ConvertToSpecificNumbers(number, hebrewDigitsTable);
             }
             else if (style.Equals(CssConstants.Hiragana, StringComparison.OrdinalIgnoreCase) || style.Equals(CssConstants.HiraganaIroha, StringComparison.OrdinalIgnoreCase))
             {
-                return ConvertToSpecificNumbers2(number, _hiraganaDigitsTable);
+                return ConvertToSpecificNumbers2(number, hiraganaDigitsTable);
             }
             else if (style.Equals(CssConstants.Katakana, StringComparison.OrdinalIgnoreCase) || style.Equals(CssConstants.KatakanaIroha, StringComparison.OrdinalIgnoreCase))
             {
-                return ConvertToSpecificNumbers2(number, _satakanaDigitsTable);
+                return ConvertToSpecificNumbers2(number, satakanaDigitsTable);
             }
             else
             {
@@ -439,7 +438,7 @@ namespace UHtml.Core.Utils
             for (int i = 1000, j = 3; i > 0; i /= 10, j--)
             {
                 int digit = number / i;
-                sb += string.Format(_romanDigitsTable[j, digit]);
+                sb += string.Format(romanDigitsTable[j, digit]);
                 number -= digit * i;
             }
             return lowercase ? sb.ToLower() : sb;

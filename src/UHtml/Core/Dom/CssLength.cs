@@ -15,12 +15,12 @@ namespace UHtml.Core.Dom
     {
         #region Fields
 
-        private readonly double _number;
-        private readonly bool _isRelative;
-        private readonly CssUnit _unit;
-        private readonly string _length;
-        private readonly bool _isPercentage;
-        private readonly bool _hasError;
+        private readonly double number;
+        private readonly bool isRelative;
+        private readonly CssUnit unit;
+        private readonly string length;
+        private readonly bool isPercentage;
+        private readonly bool hasError;
 
         #endregion
 
@@ -31,10 +31,10 @@ namespace UHtml.Core.Dom
         /// <param name="length">Length as specified in the Style Sheet or style fragment</param>
         public CssLength(string length)
         {
-            _length = length;
-            _number = 0f;
-            _unit = CssUnit.None;
-            _isPercentage = false;
+            this.length = length;
+            this.number = 0f;
+            unit = CssUnit.None;
+            isPercentage = false;
 
             //Return zero if no length specified, zero specified
             if (string.IsNullOrEmpty(length) || length == "0")
@@ -43,16 +43,16 @@ namespace UHtml.Core.Dom
             //If percentage, use ParseNumber
             if (length.EndsWith("%"))
             {
-                _number = CssValueParser.ParseNumber(length, 1);
-                _isPercentage = true;
+                this.number = CssValueParser.ParseNumber(length, 1);
+                isPercentage = true;
                 return;
             }
 
             //If no units, has error
             if (length.Length < 3)
             {
-                double.TryParse(length, out _number);
-                _hasError = true;
+                double.TryParse(length, out this.number);
+                hasError = true;
                 return;
             }
 
@@ -66,40 +66,40 @@ namespace UHtml.Core.Dom
             switch (u)
             {
                 case CssConstants.Em:
-                    _unit = CssUnit.Ems;
-                    _isRelative = true;
+                    unit = CssUnit.Ems;
+                    isRelative = true;
                     break;
                 case CssConstants.Ex:
-                    _unit = CssUnit.Ex;
-                    _isRelative = true;
+                    unit = CssUnit.Ex;
+                    isRelative = true;
                     break;
                 case CssConstants.Px:
-                    _unit = CssUnit.Pixels;
-                    _isRelative = true;
+                    unit = CssUnit.Pixels;
+                    isRelative = true;
                     break;
                 case CssConstants.Mm:
-                    _unit = CssUnit.Milimeters;
+                    unit = CssUnit.Milimeters;
                     break;
                 case CssConstants.Cm:
-                    _unit = CssUnit.Centimeters;
+                    unit = CssUnit.Centimeters;
                     break;
                 case CssConstants.In:
-                    _unit = CssUnit.Inches;
+                    unit = CssUnit.Inches;
                     break;
                 case CssConstants.Pt:
-                    _unit = CssUnit.Points;
+                    unit = CssUnit.Points;
                     break;
                 case CssConstants.Pc:
-                    _unit = CssUnit.Picas;
+                    unit = CssUnit.Picas;
                     break;
                 default:
-                    _hasError = true;
+                    hasError = true;
                     return;
             }
 
-            if (!double.TryParse(number, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out _number))
+            if (!double.TryParse(number, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out this.number))
             {
-                _hasError = true;
+                hasError = true;
             }
         }
 
@@ -111,7 +111,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double Number
         {
-            get { return _number; }
+            get { return number; }
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public bool HasError
         {
-            get { return _hasError; }
+            get { return hasError; }
         }
 
 
@@ -128,7 +128,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public bool IsPercentage
         {
-            get { return _isPercentage; }
+            get { return isPercentage; }
         }
 
 
@@ -137,7 +137,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public bool IsRelative
         {
-            get { return _isRelative; }
+            get { return isRelative; }
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public CssUnit Unit
         {
-            get { return _unit; }
+            get { return unit; }
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public string Length
         {
-            get { return _length; }
+            get { return length; }
         }
 
         #endregion

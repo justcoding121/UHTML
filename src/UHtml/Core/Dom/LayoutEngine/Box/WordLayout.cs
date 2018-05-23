@@ -94,10 +94,10 @@ namespace UHtml.Core.Dom
 
     internal class WordLayoutStatus
     {
-        public double CurX { get; set; }
-        public double CurY { get; set; }
+        internal double CurX;
+        internal double CurY;
 
-        public CssLineBox CurrentLineBox { get; set; }
-        public double CurrentMaxBottom { get; internal set; }
+        internal CssLineBox CurrentLineBox;
+        internal double CurrentMaxBottom;
     }
 }

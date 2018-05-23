@@ -32,22 +32,22 @@ namespace UHtml.Core.Entities
         /// <summary>
         /// use to cancel the image loading by html renderer, the provided image will be used.
         /// </summary>
-        private bool _handled;
+        private bool handled;
 
         /// <summary>
         /// the source of the image (file path or uri)
         /// </summary>
-        private readonly string _src;
+        private readonly string src;
 
         /// <summary>
         /// collection of all the attributes that are defined on the image element
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly Dictionary<string, string> attributes;
 
         /// <summary>
         /// Callback used to allow setting image externally and async.
         /// </summary>
-        private readonly HtmlImageLoadCallback _callback;
+        private readonly HtmlImageLoadCallback callback;
 
         #endregion
 
@@ -60,9 +60,9 @@ namespace UHtml.Core.Entities
         /// <param name="callback">Callback used to allow setting image externally and async.</param>
         internal HtmlImageLoadEventArgs(string src, Dictionary<string, string> attributes, HtmlImageLoadCallback callback)
         {
-            _src = src;
-            _attributes = attributes;
-            _callback = callback;
+            this.src = src;
+            this.attributes = attributes;
+            this.callback = callback;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public string Src
         {
-            get { return _src; }
+            get { return src; }
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public Dictionary<string, string> Attributes
         {
-            get { return _attributes; }
+            get { return attributes; }
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace UHtml.Core.Entities
         /// </summary>
         public bool Handled
         {
-            get { return _handled; }
-            set { _handled = value; }
+            get { return handled; }
+            set { handled = value; }
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace UHtml.Core.Entities
         /// </summary>
         public void Callback()
         {
-            _handled = true;
-            _callback(null, null, new RRect());
+            handled = true;
+            callback(null, null, new RRect());
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace UHtml.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(path, "path");
 
-            _handled = true;
-            _callback(path, null, RRect.Empty);
+            handled = true;
+            callback(path, null, RRect.Empty);
         }
 
         /// <summary>
@@ -126,8 +126,8 @@ namespace UHtml.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(path, "path");
 
-            _handled = true;
-            _callback(path, null, new RRect(x, y, width, height));
+            handled = true;
+            callback(path, null, new RRect(x, y, width, height));
         }
 
         /// <summary>
@@ -141,8 +141,8 @@ namespace UHtml.Core.Entities
         {
             ArgChecker.AssertArgNotNull(image, "image");
 
-            _handled = true;
-            _callback(null, image, RRect.Empty);
+            handled = true;
+            callback(null, image, RRect.Empty);
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace UHtml.Core.Entities
         {
             ArgChecker.AssertArgNotNull(image, "image");
 
-            _handled = true;
-            _callback(null, image, new RRect(x, y, width, height));
+            handled = true;
+            callback(null, image, new RRect(x, y, width, height));
         }
     }
 }

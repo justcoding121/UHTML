@@ -16,25 +16,23 @@ namespace UHtml.Core.Dom
     {
         #region Fields and Consts
 
-        private readonly List<CssRect> _words;
-        private readonly CssBox _ownerBox;
-        private readonly Dictionary<CssBox, RRect> _rects;
-        private readonly List<CssBox> _relatedBoxes;
+        private readonly List<CssRect> words;
+        private readonly CssBox ownerBox;
+        private readonly Dictionary<CssBox, RRect> rects;
+        private readonly List<CssBox> relatedBoxes;
 
         #endregion
-
-
 
         /// <summary>
         /// Creates a new LineBox
         /// </summary>
         public CssLineBox(CssBox ownerBox)
         {
-            _rects = new Dictionary<CssBox, RRect>();
-            _relatedBoxes = new List<CssBox>();
-            _words = new List<CssRect>();
-            _ownerBox = ownerBox;
-            _ownerBox.LineBoxes.Add(this);
+            rects = new Dictionary<CssBox, RRect>();
+            relatedBoxes = new List<CssBox>();
+            words = new List<CssRect>();
+            this.ownerBox = ownerBox;
+            this.ownerBox.LineBoxes.Add(this);
         }
 
         internal void AdjustMaxBottom()
@@ -48,7 +46,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public List<CssBox> RelatedBoxes
         {
-            get { return _relatedBoxes; }
+            get { return relatedBoxes; }
         }
 
         /// <summary>
@@ -56,7 +54,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public List<CssRect> Words
         {
-            get { return _words; }
+            get { return words; }
         }
 
         /// <summary>
@@ -64,7 +62,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public CssBox OwnerBox
         {
-            get { return _ownerBox; }
+            get { return ownerBox; }
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public Dictionary<CssBox, RRect> Rectangles
         {
-            get { return _rects; }
+            get { return rects; }
         }
 
         /// <summary>
@@ -83,7 +81,7 @@ namespace UHtml.Core.Dom
             get
             {
                 double height = 0;
-                foreach (var rect in _rects)
+                foreach (var rect in rects)
                 {
                     height = Math.Max(height, rect.Value.Height);
                 }
@@ -99,7 +97,7 @@ namespace UHtml.Core.Dom
             get
             {
                 double bottom = 0;
-                foreach (var rect in _rects)
+                foreach (var rect in rects)
                 {
                     bottom = Math.Max(bottom, rect.Value.Y2);
                 }
@@ -262,11 +260,11 @@ namespace UHtml.Core.Dom
         /// <returns></returns>
         public bool IsLastSelectedWord(CssRect word)
         {
-            for (int i = 0; i < _words.Count - 1; i++)
+            for (int i = 0; i < words.Count - 1; i++)
             {
-                if (_words[i] == word)
+                if (words[i] == word)
                 {
-                    return !_words[i + 1].Selected;
+                    return !words[i + 1].Selected;
                 }
             }
 

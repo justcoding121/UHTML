@@ -9,26 +9,26 @@
         /// <summary>
         /// the id of the link element if present
         /// </summary>
-        private readonly string _id;
+        private readonly string id;
 
         /// <summary>
         /// the href data of the link
         /// </summary>
-        private readonly string _href;
+        private readonly string href;
 
         /// <summary>
         /// the rectangle of element as calculated by html layout
         /// </summary>
-        private readonly T _rectangle;
+        private readonly T rectangle;
 
         /// <summary>
         /// Init.
         /// </summary>
         public LinkElementData(string id, string href, T rectangle)
         {
-            _id = id;
-            _href = href;
-            _rectangle = rectangle;
+            this.id = id;
+            this.href = href;
+            this.rectangle = rectangle;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@
         /// </summary>
         public string Id
         {
-            get { return _id; }
+            get { return id; }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@
         /// </summary>
         public string Href
         {
-            get { return _href; }
+            get { return href; }
         }
 
         /// <summary>
@@ -52,7 +52,7 @@
         /// </summary>
         public T Rectangle
         {
-            get { return _rectangle; }
+            get { return rectangle; }
         }
 
         /// <summary>
@@ -60,7 +60,7 @@
         /// </summary>
         public bool IsAnchor
         {
-            get { return _href.Length > 0 && _href[0] == '#'; }
+            get { return href.Length > 0 && href[0] == '#'; }
         }
 
         /// <summary>
@@ -68,12 +68,12 @@
         /// </summary>
         public string AnchorId
         {
-            get { return IsAnchor && _href.Length > 1 ? _href.Substring(1) : string.Empty; }
+            get { return IsAnchor && href.Length > 1 ? href.Substring(1) : string.Empty; }
         }
 
         public override string ToString()
         {
-            return string.Format("Id: {0}, Href: {1}, Rectangle: {2}", _id, _href, _rectangle);
+            return string.Format("Id: {0}, Href: {1}, Rectangle: {2}", id, href, rectangle);
         }
     }
 }

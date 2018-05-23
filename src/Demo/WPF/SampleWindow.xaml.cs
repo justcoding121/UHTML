@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-// 
-
-
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using UHtml.Demo.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid;

@@ -21,22 +21,21 @@ namespace UHtml.Core
         /// <summary>
         /// used to return empty array
         /// </summary>
-        private static readonly List<CssBlock> _emptyArray = new List<CssBlock>();
+        private static readonly List<CssBlock> emptyArray = new List<CssBlock>();
 
         /// <summary>
         /// dictionary of media type to dictionary of css class name to the cssBlocks collection with all the data.
         /// </summary>
-        private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> _mediaBlocks = new Dictionary<string, Dictionary<string, List<CssBlock>>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> mediaBlocks = new Dictionary<string, Dictionary<string, List<CssBlock>>>(StringComparer.OrdinalIgnoreCase);
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         internal CssData()
         {
-            _mediaBlocks.Add("all", new Dictionary<string, List<CssBlock>>(StringComparer.OrdinalIgnoreCase));
+            mediaBlocks.Add("all", new Dictionary<string, List<CssBlock>>(StringComparer.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace UHtml.Core
         /// </summary>
         internal IDictionary<string, Dictionary<string, List<CssBlock>>> MediaBlocks
         {
-            get { return _mediaBlocks; }
+            get { return mediaBlocks; }
         }
 
         /// <summary>
@@ -72,7 +71,7 @@ namespace UHtml.Core
         public bool ContainsCssBlock(string className, string media = "all")
         {
             Dictionary<string, List<CssBlock>> mid;
-            return _mediaBlocks.TryGetValue(media, out mid) && mid.ContainsKey(className);
+            return mediaBlocks.TryGetValue(media, out mid) && mid.ContainsKey(className);
         }
 
         /// <summary>
@@ -89,11 +88,11 @@ namespace UHtml.Core
         {
             List<CssBlock> block = null;
             Dictionary<string, List<CssBlock>> mid;
-            if (_mediaBlocks.TryGetValue(media, out mid))
+            if (mediaBlocks.TryGetValue(media, out mid))
             {
                 mid.TryGetValue(className, out block);
             }
-            return block ?? _emptyArray;
+            return block ?? emptyArray;
         }
 
         /// <summary>
@@ -113,10 +112,10 @@ namespace UHtml.Core
         public void AddCssBlock(string media, CssBlock cssBlock)
         {
             Dictionary<string, List<CssBlock>> mid;
-            if (!_mediaBlocks.TryGetValue(media, out mid))
+            if (!mediaBlocks.TryGetValue(media, out mid))
             {
                 mid = new Dictionary<string, List<CssBlock>>(StringComparer.OrdinalIgnoreCase);
-                _mediaBlocks.Add(media, mid);
+                mediaBlocks.Add(media, mid);
             }
 
             if (!mid.ContainsKey(cssBlock.Class))
@@ -182,7 +181,7 @@ namespace UHtml.Core
         public CssData Clone()
         {
             var clone = new CssData();
-            foreach (var mid in _mediaBlocks)
+            foreach (var mid in mediaBlocks)
             {
                 var cloneMid = new Dictionary<string, List<CssBlock>>(StringComparer.OrdinalIgnoreCase);
                 foreach (var blocks in mid.Value)
@@ -194,7 +193,7 @@ namespace UHtml.Core
                     }
                     cloneMid[blocks.Key] = cloneList;
                 }
-                clone._mediaBlocks[mid.Key] = cloneMid;
+                clone.mediaBlocks[mid.Key] = cloneMid;
             }
             return clone;
         }

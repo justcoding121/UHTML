@@ -9,7 +9,7 @@ namespace UHtml.Demo.Common
         /// <summary>
         /// Samples to test the different features of HTML Renderer that they work correctly
         /// </summary>
-        private static readonly List<HtmlSample> _testCssSamples = new List<HtmlSample>();
+        private static readonly List<HtmlSample> testCssSamples = new List<HtmlSample>();
 
         /// <summary>
         /// Init.
@@ -24,7 +24,7 @@ namespace UHtml.Demo.Common
         /// </summary>
         public static List<HtmlSample> CssTestSamples
         {
-            get { return _testCssSamples; }
+            get { return testCssSamples; }
         }
 
         private static void LoadCssSamples(string platform, string version)
@@ -44,7 +44,7 @@ namespace UHtml.Demo.Common
                     {
                         foreach (var file in testFile)
                         {
-                            _testCssSamples.Add(new HtmlSample(testDir.Name, cssModel.Name, file.Name, File.ReadAllText(file.FullName)));
+                            testCssSamples.Add(new HtmlSample(testDir.Name, cssModel.Name, file.Name, File.ReadAllText(file.FullName)));
                         }
                     }
                 }

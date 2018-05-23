@@ -10,20 +10,19 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// The word text
         /// </summary>
-        private readonly string _text;
+        private readonly string text;
 
         /// <summary>
         /// was there a whitespace before the word chars (before trim)
         /// </summary>
-        private readonly bool _hasSpaceBefore;
+        private readonly bool hasSpaceBefore;
 
         /// <summary>
         /// was there a whitespace after the word chars (before trim)
         /// </summary>
-        private readonly bool _hasSpaceAfter;
+        private readonly bool hasSpaceAfter;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -35,9 +34,9 @@ namespace UHtml.Core.Dom
         public CssRectWord(CssBox owner, string text, bool hasSpaceBefore, bool hasSpaceAfter)
             : base(owner)
         {
-            _text = text;
-            _hasSpaceBefore = hasSpaceBefore;
-            _hasSpaceAfter = hasSpaceAfter;
+            this.text = text;
+            this.hasSpaceBefore = hasSpaceBefore;
+            this.hasSpaceAfter = hasSpaceAfter;
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public override bool HasSpaceBefore
         {
-            get { return _hasSpaceBefore; }
+            get { return hasSpaceBefore; }
         }
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public override bool HasSpaceAfter
         {
-            get { return _hasSpaceAfter; }
+            get { return hasSpaceAfter; }
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public override string Text
         {
-            get { return _text; }
+            get { return text; }
         }
 
         /// <summary>

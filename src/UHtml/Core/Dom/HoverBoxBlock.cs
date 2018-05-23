@@ -10,20 +10,20 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// the box that has :hover css on
         /// </summary>
-        private readonly CssBox _cssBox;
+        private readonly CssBox cssBox;
 
         /// <summary>
         /// the :hover style block data
         /// </summary>
-        private readonly CssBlock _cssBlock;
+        private readonly CssBlock cssBlock;
 
         /// <summary>
         /// Init.
         /// </summary>
         public HoverBoxBlock(CssBox cssBox, CssBlock cssBlock)
         {
-            _cssBox = cssBox;
-            _cssBlock = cssBlock;
+            this.cssBox = cssBox;
+            this.cssBlock = cssBlock;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public CssBox CssBox
         {
-            get { return _cssBox; }
+            get { return cssBox; }
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public CssBlock CssBlock
         {
-            get { return _cssBlock; }
+            get { return cssBlock; }
         }
     }
 }

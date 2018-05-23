@@ -12,7 +12,7 @@ namespace UHtml.Core.Entities
         /// <summary>
         /// is re-layout is required for the refresh
         /// </summary>
-        private readonly bool _layout;
+        private readonly bool layout;
 
         /// <summary>
         /// Init.
@@ -20,7 +20,7 @@ namespace UHtml.Core.Entities
         /// <param name="layout">is re-layout is required for the refresh</param>
         public HtmlRefreshEventArgs(bool layout)
         {
-            _layout = layout;
+            this.layout = layout;
         }
 
         /// <summary>
@@ -28,12 +28,12 @@ namespace UHtml.Core.Entities
         /// </summary>
         public bool Layout
         {
-            get { return _layout; }
+            get { return layout; }
         }
 
         public override string ToString()
         {
-            return string.Format("Layout: {0}", _layout);
+            return string.Format("Layout: {0}", layout);
         }
     }
 }

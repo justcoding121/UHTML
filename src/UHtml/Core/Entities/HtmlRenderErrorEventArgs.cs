@@ -10,17 +10,17 @@ namespace UHtml.Core.Entities
         /// <summary>
         /// error type that is reported
         /// </summary>
-        private readonly HtmlRenderErrorType _type;
+        private readonly HtmlRenderErrorType type;
 
         /// <summary>
         /// the error message
         /// </summary>
-        private readonly string _message;
+        private readonly string message;
 
         /// <summary>
         /// the exception that occurred (can be null)
         /// </summary>
-        private readonly Exception _exception;
+        private readonly Exception exception;
 
         /// <summary>
         /// Init.
@@ -30,9 +30,9 @@ namespace UHtml.Core.Entities
         /// <param name="exception">optional: the exception that occurred</param>
         public HtmlRenderErrorEventArgs(HtmlRenderErrorType type, string message, Exception exception = null)
         {
-            _type = type;
-            _message = message;
-            _exception = exception;
+            this.type = type;
+            this.message = message;
+            this.exception = exception;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public HtmlRenderErrorType Type
         {
-            get { return _type; }
+            get { return type; }
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public string Message
         {
-            get { return _message; }
+            get { return message; }
         }
 
         /// <summary>
@@ -56,12 +56,12 @@ namespace UHtml.Core.Entities
         /// </summary>
         public Exception Exception
         {
-            get { return _exception; }
+            get { return exception; }
         }
 
         public override string ToString()
         {
-            return string.Format("Type: {0}", _type);
+            return string.Format("Type: {0}", type);
         }
     }
 }

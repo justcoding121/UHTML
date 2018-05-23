@@ -12,7 +12,7 @@ namespace UHtml.Core.Entities
         /// <summary>
         /// the location to scroll to
         /// </summary>
-        private readonly RPoint _location;
+        private readonly RPoint location;
 
         /// <summary>
         /// Init.
@@ -20,7 +20,7 @@ namespace UHtml.Core.Entities
         /// <param name="location">the location to scroll to</param>
         public HtmlScrollEventArgs(RPoint location)
         {
-            _location = location;
+            this.location = location;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public double X
         {
-            get { return _location.X; }
+            get { return location.X; }
         }
 
         /// <summary>
@@ -36,12 +36,12 @@ namespace UHtml.Core.Entities
         /// </summary>
         public double Y
         {
-            get { return _location.Y; }
+            get { return location.Y; }
         }
 
         public override string ToString()
         {
-            return string.Format("Location: {0}", _location);
+            return string.Format("Location: {0}", location);
         }
     }
 }

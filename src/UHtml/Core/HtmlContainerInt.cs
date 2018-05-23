@@ -71,123 +71,122 @@ namespace UHtml.Core
         /// <summary>
         /// Main adapter to framework specific logic.
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter adapter;
 
         /// <summary>
         /// parser for CSS data
         /// </summary>
-        private readonly CssParser _cssParser;
+        private readonly CssParser cssParser;
 
         /// <summary>
         /// the root css box of the parsed html
         /// </summary>
-        private CssBox _root;
+        private CssBox root;
 
         /// <summary>
         /// list of all css boxes that have ":hover" selector on them
         /// </summary>
-        private List<HoverBoxBlock> _hoverBoxes;
+        private List<HoverBoxBlock> hoverBoxes;
 
         /// <summary>
         /// Handler for text selection in the html. 
         /// </summary>
-        private SelectionHandler _selectionHandler;
+        private SelectionHandler selectionHandler;
 
         /// <summary>
         /// Handler for downloading of images in the html
         /// </summary>
-        private ImageDownloader _imageDownloader;
+        private ImageDownloader imageDownloader;
 
         /// <summary>
         /// the text fore color use for selected text
         /// </summary>
-        private RColor _selectionForeColor;
+        private RColor selectionForeColor;
 
         /// <summary>
         /// the back-color to use for selected text
         /// </summary>
-        private RColor _selectionBackColor;
+        private RColor selectionBackColor;
 
         /// <summary>
         /// the parsed stylesheet data used for handling the html
         /// </summary>
-        private CssData _cssData;
+        private CssData cssData;
 
         /// <summary>
         /// Is content selection is enabled for the rendered html (default - true).<br/>
         /// If set to 'false' the rendered html will be static only with ability to click on links.
         /// </summary>
-        private bool _isSelectionEnabled = true;
+        private bool isSelectionEnabled = true;
 
         /// <summary>
         /// Is the build-in context menu enabled (default - true)
         /// </summary>
-        private bool _isContextMenuEnabled = true;
+        private bool isContextMenuEnabled = true;
 
         /// <summary>
         /// Gets or sets a value indicating if anti-aliasing should be avoided 
         /// for geometry like backgrounds and borders
         /// </summary>
-        private bool _avoidGeometryAntialias;
+        private bool avoidGeometryAntialias;
 
         /// <summary>
         /// Gets or sets a value indicating if image asynchronous loading should be avoided (default - false).<br/>
         /// </summary>
-        private bool _avoidAsyncImagesLoading;
+        private bool avoidAsyncImagesLoading;
 
         /// <summary>
         /// Gets or sets a value indicating if image loading only when visible should be avoided (default - false).<br/>
         /// </summary>
-        private bool _avoidImagesLateLoading;
+        private bool avoidImagesLateLoading;
 
         /// <summary>
         /// is the load of the html document is complete
         /// </summary>
-        private bool _loadComplete;
+        private bool loadComplete;
 
         /// <summary>
         /// the top-left most location of the rendered html
         /// </summary>
-        private RPoint _location;
+        private RPoint location;
 
         /// <summary>
         /// the max width and height of the rendered html, effects layout, actual size cannot exceed this values.<br/>
         /// Set zero for unlimited.<br/>
         /// </summary>
-        private RSize _maxSize;
+        private RSize maxSize;
 
         /// <summary>
         /// Gets or sets the scroll offset of the document for scroll controls
         /// </summary>
-        private RPoint _scrollOffset;
+        private RPoint scrollOffset;
 
         /// <summary>
         /// The actual size of the rendered html (after layout)
         /// </summary>
-        private RSize _actualSize;
+        private RSize actualSize;
 
         /// <summary>
         /// the top margin between the page start and the text
         /// </summary>
-        private int _marginTop;
+        private int marginTop;
 
         /// <summary>
         /// the bottom margin between the page end and the text
         /// </summary>
-        private int _marginBottom;
+        private int marginBottom;
 
         /// <summary>
         /// the left margin between the page start and the text
         /// </summary>
-        private int _marginLeft;
+        private int marginLeft;
 
         /// <summary>
         /// the right margin between the page end and the text
         /// </summary>
-        private int _marginRight;
+        private int marginRight;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -196,8 +195,8 @@ namespace UHtml.Core
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _adapter = adapter;
-            _cssParser = new CssParser(adapter);
+            this.adapter = adapter;
+            cssParser = new CssParser(adapter);
         }
 
         /// <summary>
@@ -205,7 +204,7 @@ namespace UHtml.Core
         /// </summary>
         internal RAdapter Adapter
         {
-            get { return _adapter; }
+            get { return adapter; }
         }
 
         /// <summary>
@@ -213,7 +212,7 @@ namespace UHtml.Core
         /// </summary>
         internal CssParser CssParser
         {
-            get { return _cssParser; }
+            get { return cssParser; }
         }
 
         /// <summary>
@@ -268,7 +267,7 @@ namespace UHtml.Core
         /// </summary>
         public CssData CssData
         {
-            get { return _cssData; }
+            get { return cssData; }
         }
 
         /// <summary>
@@ -276,8 +275,8 @@ namespace UHtml.Core
         /// </summary>
         public bool AvoidGeometryAntialias
         {
-            get { return _avoidGeometryAntialias; }
-            set { _avoidGeometryAntialias = value; }
+            get { return avoidGeometryAntialias; }
+            set { avoidGeometryAntialias = value; }
         }
 
         /// <summary>
@@ -292,8 +291,8 @@ namespace UHtml.Core
         /// </remarks>
         public bool AvoidAsyncImagesLoading
         {
-            get { return _avoidAsyncImagesLoading; }
-            set { _avoidAsyncImagesLoading = value; }
+            get { return avoidAsyncImagesLoading; }
+            set { avoidAsyncImagesLoading = value; }
         }
 
         /// <summary>
@@ -311,8 +310,8 @@ namespace UHtml.Core
         /// </remarks>
         public bool AvoidImagesLateLoading
         {
-            get { return _avoidImagesLateLoading; }
-            set { _avoidImagesLateLoading = value; }
+            get { return avoidImagesLateLoading; }
+            set { avoidImagesLateLoading = value; }
         }
 
         /// <summary>
@@ -321,8 +320,8 @@ namespace UHtml.Core
         /// </summary>
         public bool IsSelectionEnabled
         {
-            get { return _isSelectionEnabled; }
-            set { _isSelectionEnabled = value; }
+            get { return isSelectionEnabled; }
+            set { isSelectionEnabled = value; }
         }
 
         /// <summary>
@@ -330,8 +329,8 @@ namespace UHtml.Core
         /// </summary>
         public bool IsContextMenuEnabled
         {
-            get { return _isContextMenuEnabled; }
-            set { _isContextMenuEnabled = value; }
+            get { return isContextMenuEnabled; }
+            set { isContextMenuEnabled = value; }
         }
 
         /// <summary>
@@ -344,8 +343,8 @@ namespace UHtml.Core
         /// </example>
         public RPoint ScrollOffset
         {
-            get { return _scrollOffset; }
-            set { _scrollOffset = value; }
+            get { return scrollOffset; }
+            set { scrollOffset = value; }
         }
 
         /// <summary>
@@ -354,8 +353,8 @@ namespace UHtml.Core
         /// </summary>
         public RPoint Location
         {
-            get { return _location; }
-            set { _location = value; }
+            get { return location; }
+            set { location = value; }
         }
 
         /// <summary>
@@ -367,8 +366,8 @@ namespace UHtml.Core
         /// </summary>
         public RSize MaxSize
         {
-            get { return _maxSize; }
-            set { _maxSize = value; }
+            get { return maxSize; }
+            set { maxSize = value; }
         }
 
         /// <summary>
@@ -376,8 +375,8 @@ namespace UHtml.Core
         /// </summary>
         public RSize ActualSize
         {
-            get { return _actualSize; }
-            set { _actualSize = value; }
+            get { return actualSize; }
+            set { actualSize = value; }
         }
 
         public RSize PageSize { get; set; }
@@ -387,11 +386,11 @@ namespace UHtml.Core
         /// </summary>
         public int MarginTop
         {
-            get { return _marginTop; }
+            get { return marginTop; }
             set
             {
                 if (value > -1)
-                    _marginTop = value;
+                    marginTop = value;
             }
         }
 
@@ -400,11 +399,11 @@ namespace UHtml.Core
         /// </summary>
         public int MarginBottom
         {
-            get { return _marginBottom; }
+            get { return marginBottom; }
             set
             {
                 if (value > -1)
-                    _marginBottom = value;
+                    marginBottom = value;
             }
         }
 
@@ -413,11 +412,11 @@ namespace UHtml.Core
         /// </summary>
         public int MarginLeft
         {
-            get { return _marginLeft; }
+            get { return marginLeft; }
             set
             {
                 if (value > -1)
-                    _marginLeft = value;
+                    marginLeft = value;
             }
         }
 
@@ -426,11 +425,11 @@ namespace UHtml.Core
         /// </summary>
         public int MarginRight
         {
-            get { return _marginRight; }
+            get { return marginRight; }
             set
             {
                 if (value > -1)
-                    _marginRight = value;
+                    marginRight = value;
             }
         }
 
@@ -441,7 +440,7 @@ namespace UHtml.Core
         public void SetMargins(int value)
         {
             if (value > -1)
-                _marginBottom = _marginLeft = _marginTop = _marginRight = value;
+                marginBottom = marginLeft = marginTop = marginRight = value;
         }
 
         /// <summary>
@@ -449,7 +448,7 @@ namespace UHtml.Core
         /// </summary>
         public string SelectedText
         {
-            get { return _selectionHandler.GetSelectedText(); }
+            get { return selectionHandler.GetSelectedText(); }
         }
 
         /// <summary>
@@ -457,7 +456,7 @@ namespace UHtml.Core
         /// </summary>
         public string SelectedHtml
         {
-            get { return _selectionHandler.GetSelectedHtml(); }
+            get { return selectionHandler.GetSelectedHtml(); }
         }
 
         /// <summary>
@@ -465,7 +464,7 @@ namespace UHtml.Core
         /// </summary>
         internal CssBox Root
         {
-            get { return _root; }
+            get { return root; }
         }
 
         /// <summary>
@@ -473,8 +472,8 @@ namespace UHtml.Core
         /// </summary>
         internal RColor SelectionForeColor
         {
-            get { return _selectionForeColor; }
-            set { _selectionForeColor = value; }
+            get { return selectionForeColor; }
+            set { selectionForeColor = value; }
         }
 
         /// <summary>
@@ -482,8 +481,8 @@ namespace UHtml.Core
         /// </summary>
         internal RColor SelectionBackColor
         {
-            get { return _selectionBackColor; }
-            set { _selectionBackColor = value; }
+            get { return selectionBackColor; }
+            set { selectionBackColor = value; }
         }
 
         /// <summary>
@@ -496,15 +495,15 @@ namespace UHtml.Core
             Clear();
             if (!string.IsNullOrEmpty(htmlSource))
             {
-                _loadComplete = false;
-                _cssData = baseCssData ?? _adapter.DefaultCssData;
+                loadComplete = false;
+                cssData = baseCssData ?? adapter.DefaultCssData;
 
-                DomParser parser = new DomParser(_cssParser);
-                _root = parser.GenerateCssTree(htmlSource, this, ref _cssData);
-                if (_root != null)
+                DomParser parser = new DomParser(cssParser);
+                root = parser.GenerateCssTree(htmlSource, this, ref cssData);
+                if (root != null)
                 {
-                    _selectionHandler = new SelectionHandler(_root);
-                    _imageDownloader = new ImageDownloader();
+                    selectionHandler = new SelectionHandler(root);
+                    imageDownloader = new ImageDownloader();
                 }
             }
         }
@@ -514,20 +513,20 @@ namespace UHtml.Core
         /// </summary>
         public void Clear()
         {
-            if (_root != null)
+            if (root != null)
             {
-                _root.Dispose();
-                _root = null;
+                root.Dispose();
+                root = null;
 
-                if (_selectionHandler != null)
-                    _selectionHandler.Dispose();
-                _selectionHandler = null;
+                if (selectionHandler != null)
+                    selectionHandler.Dispose();
+                selectionHandler = null;
 
-                if (_imageDownloader != null)
-                    _imageDownloader.Dispose();
-                _imageDownloader = null;
+                if (imageDownloader != null)
+                    imageDownloader.Dispose();
+                imageDownloader = null;
 
-                _hoverBoxes = null;
+                hoverBoxes = null;
             }
         }
 
@@ -536,9 +535,9 @@ namespace UHtml.Core
         /// </summary>
         public void ClearSelection()
         {
-            if (_selectionHandler != null)
+            if (selectionHandler != null)
             {
-                _selectionHandler.ClearSelection();
+                selectionHandler.ClearSelection();
                 RequestRefresh(false);
             }
         }
@@ -550,7 +549,7 @@ namespace UHtml.Core
         /// <returns>generated html</returns>
         public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline)
         {
-            return DomUtils.GenerateHtml(_root, styleGen);
+            return DomUtils.GenerateHtml(root, styleGen);
         }
 
         /// <summary>
@@ -564,7 +563,7 @@ namespace UHtml.Core
         {
             ArgChecker.AssertArgNotNullOrEmpty(attribute, "attribute");
 
-            var cssBox = DomUtils.GetCssBox(_root, OffsetByScroll(location));
+            var cssBox = DomUtils.GetCssBox(root, OffsetByScroll(location));
             return cssBox != null ? DomUtils.GetAttribute(cssBox, attribute) : null;
         }
 
@@ -575,7 +574,7 @@ namespace UHtml.Core
         public List<LinkElementData<RRect>> GetLinks()
         {
             var linkBoxes = new List<CssBox>();
-            DomUtils.GetAllLinkBoxes(_root, linkBoxes);
+            DomUtils.GetAllLinkBoxes(root, linkBoxes);
 
             var linkElements = new List<LinkElementData<RRect>>();
             foreach (var box in linkBoxes)
@@ -592,7 +591,7 @@ namespace UHtml.Core
         /// <returns>css link href if exists or null</returns>
         public string GetLinkAt(RPoint location)
         {
-            var link = DomUtils.GetLinkBox(_root, OffsetByScroll(location));
+            var link = DomUtils.GetLinkBox(root, OffsetByScroll(location));
             return link != null ? link.HrefLink : null;
         }
 
@@ -607,7 +606,7 @@ namespace UHtml.Core
         {
             ArgChecker.AssertArgNotNullOrEmpty(elementId, "elementId");
 
-            var box = DomUtils.GetBoxById(_root, elementId.ToLower());
+            var box = DomUtils.GetBoxById(root, elementId.ToLower());
             return box != null ? CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds) : (RRect?)null;
         }
 
@@ -619,25 +618,25 @@ namespace UHtml.Core
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            _actualSize = RSize.Empty;
-            if (_root != null)
+            actualSize = RSize.Empty;
+            if (root != null)
             {
                 // if width is not restricted we set it to large value to get the actual later
-                _root.Size = new RSize(_maxSize.Width > 0 ? _maxSize.Width : 99999, 0);
-                _root.Location = _location;
-                _root.PerformLayoutImp(g);
+                root.Size = new RSize(maxSize.Width > 0 ? maxSize.Width : 99999, 0);
+                root.Location = location;
+                root.PerformLayoutImp(g);
 
-                if (_maxSize.Width <= 0.1)
+                if (maxSize.Width <= 0.1)
                 {
                     // in case the width is not restricted we need to double layout, first will find the width so second can layout by it (center alignment)
-                    _root.Size = new RSize((int)Math.Ceiling(_actualSize.Width), 0);
-                    _actualSize = RSize.Empty;
-                    _root.PerformLayoutImp(g);
+                    root.Size = new RSize((int)Math.Ceiling(actualSize.Width), 0);
+                    actualSize = RSize.Empty;
+                    root.PerformLayoutImp(g);
                 }
 
-                if (!_loadComplete)
+                if (!loadComplete)
                 {
-                    _loadComplete = true;
+                    loadComplete = true;
                     EventHandler handler = LoadComplete;
                     if (handler != null)
                         handler(this, EventArgs.Empty);
@@ -655,16 +654,16 @@ namespace UHtml.Core
 
             if (MaxSize.Height > 0)
             {
-                g.PushClip(new RRect(_location.X, _location.Y, Math.Min(_maxSize.Width, PageSize.Width), Math.Min(_maxSize.Height, PageSize.Height)));
+                g.PushClip(new RRect(location.X, location.Y, Math.Min(maxSize.Width, PageSize.Width), Math.Min(maxSize.Height, PageSize.Height)));
             }
             else
             {
                 g.PushClip(new RRect(MarginLeft, MarginTop, PageSize.Width, PageSize.Height));
             }
 
-            if (_root != null)
+            if (root != null)
             {
-                _root.Paint(g);
+                root.Paint(g);
             }
 
             g.PopClip();
@@ -681,8 +680,8 @@ namespace UHtml.Core
 
             try
             {
-                if (_selectionHandler != null)
-                    _selectionHandler.HandleMouseDown(parent, OffsetByScroll(location), IsMouseInContainer(location));
+                if (selectionHandler != null)
+                    selectionHandler.HandleMouseDown(parent, OffsetByScroll(location), IsMouseInContainer(location));
             }
             catch (Exception ex)
             {
@@ -702,13 +701,13 @@ namespace UHtml.Core
 
             try
             {
-                if (_selectionHandler != null && IsMouseInContainer(location))
+                if (selectionHandler != null && IsMouseInContainer(location))
                 {
-                    var ignore = _selectionHandler.HandleMouseUp(parent, e.LeftButton);
+                    var ignore = selectionHandler.HandleMouseUp(parent, e.LeftButton);
                     if (!ignore && e.LeftButton)
                     {
                         var loc = OffsetByScroll(location);
-                        var link = DomUtils.GetLinkBox(_root, loc);
+                        var link = DomUtils.GetLinkBox(root, loc);
                         if (link != null)
                         {
                             HandleLinkClicked(parent, location, link);
@@ -737,8 +736,8 @@ namespace UHtml.Core
 
             try
             {
-                if (_selectionHandler != null && IsMouseInContainer(location))
-                    _selectionHandler.SelectWord(parent, OffsetByScroll(location));
+                if (selectionHandler != null && IsMouseInContainer(location))
+                    selectionHandler.SelectWord(parent, OffsetByScroll(location));
             }
             catch (Exception ex)
             {
@@ -758,8 +757,8 @@ namespace UHtml.Core
             try
             {
                 var loc = OffsetByScroll(location);
-                if (_selectionHandler != null && IsMouseInContainer(location))
-                    _selectionHandler.HandleMouseMove(parent, loc);
+                if (selectionHandler != null && IsMouseInContainer(location))
+                    selectionHandler.HandleMouseMove(parent, loc);
 
                 /*
                 if( _hoverBoxes != null )
@@ -798,8 +797,8 @@ namespace UHtml.Core
 
             try
             {
-                if (_selectionHandler != null)
-                    _selectionHandler.HandleMouseLeave(parent);
+                if (selectionHandler != null)
+                    selectionHandler.HandleMouseLeave(parent);
             }
             catch (Exception ex)
             {
@@ -819,18 +818,18 @@ namespace UHtml.Core
 
             try
             {
-                if (e.Control && _selectionHandler != null)
+                if (e.Control && selectionHandler != null)
                 {
                     // select all
                     if (e.AKeyCode)
                     {
-                        _selectionHandler.SelectAll(parent);
+                        selectionHandler.SelectAll(parent);
                     }
 
                     // copy currently selected text
                     if (e.CKeyCode)
                     {
-                        _selectionHandler.CopySelectedHtml();
+                        selectionHandler.CopySelectedHtml();
                     }
                 }
             }
@@ -968,10 +967,10 @@ namespace UHtml.Core
             ArgChecker.AssertArgNotNull(box, "box");
             ArgChecker.AssertArgNotNull(block, "block");
 
-            if (_hoverBoxes == null)
-                _hoverBoxes = new List<HoverBoxBlock>();
+            if (hoverBoxes == null)
+                hoverBoxes = new List<HoverBoxBlock>();
 
-            _hoverBoxes.Add(new HoverBoxBlock(box, block));
+            hoverBoxes.Add(new HoverBoxBlock(box, block));
         }
 
         /// <summary>
@@ -980,7 +979,7 @@ namespace UHtml.Core
         /// </summary>
         internal ImageDownloader GetImageDownloader()
         {
-            return _imageDownloader;
+            return imageDownloader;
         }
 
         /// <summary>
@@ -1011,7 +1010,7 @@ namespace UHtml.Core
         /// </summary>
         private bool IsMouseInContainer(RPoint location)
         {
-            return location.X >= _location.X && location.X <= _location.X + _actualSize.Width && location.Y >= _location.Y + ScrollOffset.Y && location.Y <= _location.Y + ScrollOffset.Y + _actualSize.Height;
+            return location.X >= this.location.X && location.X <= this.location.X + actualSize.Width && location.Y >= this.location.Y + ScrollOffset.Y && location.Y <= this.location.Y + ScrollOffset.Y + actualSize.Height;
         }
 
         /// <summary>
@@ -1030,13 +1029,13 @@ namespace UHtml.Core
                     ImageLoad = null;
                 }
 
-                _cssData = null;
-                if (_root != null)
-                    _root.Dispose();
-                _root = null;
-                if (_selectionHandler != null)
-                    _selectionHandler.Dispose();
-                _selectionHandler = null;
+                cssData = null;
+                if (root != null)
+                    root.Dispose();
+                root = null;
+                if (selectionHandler != null)
+                    selectionHandler.Dispose();
+                selectionHandler = null;
             }
             catch
             { }

@@ -18,25 +18,24 @@ namespace UHtml.Core.Entities
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-        private readonly string _class;
+        private readonly string @class;
 
         /// <summary>
         /// the CSS block properties and values
         /// </summary>
-        private readonly Dictionary<string, string> _properties;
+        private readonly Dictionary<string, string> properties;
 
         /// <summary>
         /// additional selectors to used in hierarchy (p className1 > className2)
         /// </summary>
-        private readonly List<CssBlockSelectorItem> _selectors;
+        private readonly List<CssBlockSelectorItem> selectors;
 
         /// <summary>
         /// is the css block has :hover pseudo-class
         /// </summary>
-        private readonly bool _hover;
+        private readonly bool hover;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new block from the block's source
@@ -50,10 +49,10 @@ namespace UHtml.Core.Entities
             ArgChecker.AssertArgNotNullOrEmpty(@class, "@class");
             ArgChecker.AssertArgNotNull(properties, "properties");
 
-            _class = @class;
-            _selectors = selectors;
-            _properties = properties;
-            _hover = hover;
+            this.@class = @class;
+            this.selectors = selectors;
+            this.properties = properties;
+            this.hover = hover;
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public string Class
         {
-            get { return _class; }
+            get { return @class; }
         }
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public List<CssBlockSelectorItem> Selectors
         {
-            get { return _selectors; }
+            get { return selectors; }
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public IDictionary<string, string> Properties
         {
-            get { return _properties; }
+            get { return properties; }
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public bool Hover
         {
-            get { return _hover; }
+            get { return hover; }
         }
 
         /// <summary>
@@ -97,9 +96,9 @@ namespace UHtml.Core.Entities
         {
             ArgChecker.AssertArgNotNull(other, "other");
 
-            foreach (var prop in other._properties.Keys)
+            foreach (var prop in other.properties.Keys)
             {
-                _properties[prop] = other._properties[prop];
+                properties[prop] = other.properties[prop];
             }
         }
 
@@ -109,7 +108,7 @@ namespace UHtml.Core.Entities
         /// <returns>new CssBlock with same data</returns>
         public CssBlock Clone()
         {
-            return new CssBlock(_class, new Dictionary<string, string>(_properties), _selectors != null ? new List<CssBlockSelectorItem>(_selectors) : null);
+            return new CssBlock(@class, new Dictionary<string, string>(properties), selectors != null ? new List<CssBlockSelectorItem>(selectors) : null);
         }
 
         /// <summary>
@@ -123,17 +122,17 @@ namespace UHtml.Core.Entities
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            if (!Equals(other._class, _class))
+            if (!Equals(other.@class, @class))
                 return false;
 
-            if (!Equals(other._properties.Count, _properties.Count))
+            if (!Equals(other.properties.Count, properties.Count))
                 return false;
 
-            foreach (var property in _properties)
+            foreach (var property in properties)
             {
-                if (!other._properties.ContainsKey(property.Key))
+                if (!other.properties.ContainsKey(property.Key))
                     return false;
-                if (!Equals(other._properties[property.Key], property.Value))
+                if (!Equals(other.properties[property.Key], property.Value))
                     return false;
             }
 
@@ -157,21 +156,21 @@ namespace UHtml.Core.Entities
 
             if (other.Hover != Hover)
                 return false;
-            if (other._selectors == null && _selectors != null)
+            if (other.selectors == null && selectors != null)
                 return false;
-            if (other._selectors != null && _selectors == null)
+            if (other.selectors != null && selectors == null)
                 return false;
 
-            if (other._selectors != null && _selectors != null)
+            if (other.selectors != null && selectors != null)
             {
-                if (!Equals(other._selectors.Count, _selectors.Count))
+                if (!Equals(other.selectors.Count, selectors.Count))
                     return false;
 
-                for (int i = 0; i < _selectors.Count; i++)
+                for (int i = 0; i < selectors.Count; i++)
                 {
-                    if (!Equals(other._selectors[i].Class, _selectors[i].Class))
+                    if (!Equals(other.selectors[i].Class, selectors[i].Class))
                         return false;
-                    if (!Equals(other._selectors[i].DirectParent, _selectors[i].DirectParent))
+                    if (!Equals(other.selectors[i].DirectParent, selectors[i].DirectParent))
                         return false;
                 }
             }
@@ -203,7 +202,7 @@ namespace UHtml.Core.Entities
         {
             unchecked
             {
-                return ((_class != null ? _class.GetHashCode() : 0) * 397) ^ (_properties != null ? _properties.GetHashCode() : 0);
+                return ((@class != null ? @class.GetHashCode() : 0) * 397) ^ (properties != null ? properties.GetHashCode() : 0);
             }
         }
 
@@ -212,8 +211,8 @@ namespace UHtml.Core.Entities
         /// </summary>
         public override string ToString()
         {
-            var str = _class + " { ";
-            foreach (var property in _properties)
+            var str = @class + " { ";
+            foreach (var property in properties)
             {
                 str += string.Format("{0}={1}; ", property.Key, property.Value);
             }

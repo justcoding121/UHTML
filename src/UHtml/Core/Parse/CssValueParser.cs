@@ -17,10 +17,9 @@ namespace UHtml.Core.Parse
         /// <summary>
         /// 
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter adapter;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -28,8 +27,7 @@ namespace UHtml.Core.Parse
         public CssValueParser(RAdapter adapter)
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
-
-            _adapter = adapter;
+            this.adapter = adapter;
         }
 
         /// <summary>
@@ -458,7 +456,7 @@ namespace UHtml.Core.Parse
         /// <returns>true - valid color, false - otherwise</returns>
         private bool GetColorByName(string str, int idx, int length, out RColor color)
         {
-            color = _adapter.GetColor(str.Substring(idx, length));
+            color = adapter.GetColor(str.Substring(idx, length));
             return color.A > 0;
         }
 

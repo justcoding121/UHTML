@@ -21,20 +21,19 @@ namespace UHtml.Demo.WPF
         /// <summary>
         /// timer to update the rendered html when html in editor changes with delay
         /// </summary>
-        private readonly Timer _updateHtmlTimer;
+        private readonly Timer updateHtmlTimer;
 
         /// <summary>
         /// used ignore html editor updates when updating separately
         /// </summary>
-        private bool _updateLock;
+        private bool updateLock;
 
         /// <summary>
         /// In IE view if to show original html or the html generated from the html control
         /// </summary>
-        private bool _useGeneratedHtml;
+        private bool useGeneratedHtml;
 
         #endregion
-
 
         public MainControl()
         {
@@ -48,7 +47,7 @@ namespace UHtml.Demo.WPF
 
             LoadSamples();
 
-            _updateHtmlTimer = new Timer(OnUpdateHtmlTimerTick);
+            updateHtmlTimer = new Timer(OnUpdateHtmlTimerTick);
         }
 
 
@@ -57,13 +56,13 @@ namespace UHtml.Demo.WPF
         /// </summary>
         public bool UseGeneratedHtml
         {
-            get { return _useGeneratedHtml; }
-            set { _useGeneratedHtml = value; }
+            get { return useGeneratedHtml; }
+            set { useGeneratedHtml = value; }
         }
 
         public string GetHtml()
         {
-            return _useGeneratedHtml ? _htmlPanel.GetHtml() : GetHtmlEditorText();
+            return useGeneratedHtml ? _htmlPanel.GetHtml() : GetHtmlEditorText();
         }
 
 
@@ -125,7 +124,7 @@ namespace UHtml.Demo.WPF
             var sample = item.Tag as HtmlSample;
             if (sample != null)
             {
-                _updateLock = true;
+                updateLock = true;
                 Cursor = Cursors.Wait;
 
                 try
@@ -139,7 +138,7 @@ namespace UHtml.Demo.WPF
                 }
 
                 Cursor = Cursors.Arrow;
-                _updateLock = false;
+                updateLock = false;
 
             }
         }
@@ -149,9 +148,9 @@ namespace UHtml.Demo.WPF
         /// </summary>
         private void OnHtmlEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!_updateLock)
+            if (!updateLock)
             {
-                _updateHtmlTimer.Change(1000, int.MaxValue);
+                updateHtmlTimer.Change(1000, int.MaxValue);
             }
         }
 
@@ -162,7 +161,7 @@ namespace UHtml.Demo.WPF
         {
             Dispatcher.BeginInvoke(new Action<Object>(o =>
             {
-                _updateLock = true;
+                updateLock = true;
 
                 try
                 {
@@ -173,7 +172,7 @@ namespace UHtml.Demo.WPF
                     MessageBox.Show(ex.ToString(), "Failed to render HTML");
                 }
 
-                _updateLock = false;
+                updateLock = false;
             }), state);
         }
 

@@ -75,10 +75,9 @@ namespace UHtml.Core.Parse
         /// <summary>
         /// the regexes cache that is used by the parser so not to create regex each time
         /// </summary>
-        private static readonly Dictionary<string, Regex> _regexes = new Dictionary<string, Regex>();
+        private static readonly Dictionary<string, Regex> regexes = new Dictionary<string, Regex>();
 
         #endregion
-
 
         /// <summary>
         /// Get CSS at rule from the given stylesheet.
@@ -174,10 +173,10 @@ namespace UHtml.Core.Parse
         private static Regex GetRegex(string regex)
         {
             Regex r;
-            if (!_regexes.TryGetValue(regex, out r))
+            if (!regexes.TryGetValue(regex, out r))
             {
                 r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                _regexes[regex] = r;
+                regexes[regex] = r;
             }
             return r;
         }

@@ -16,25 +16,24 @@ namespace UHtml.Core.Handlers
         /// <summary>
         /// 
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter adapter;
 
         /// <summary>
         /// Allow to map not installed fonts to different
         /// </summary>
-        private readonly Dictionary<string, string> _fontsMapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, string> fontsMapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// collection of all installed and added font families to check if font exists
         /// </summary>
-        private readonly Dictionary<string, RFontFamily> _existingFontFamilies = new Dictionary<string, RFontFamily>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, RFontFamily> existingFontFamilies = new Dictionary<string, RFontFamily>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// cache of all the font used not to create same font again and again
         /// </summary>
-        private readonly Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>> _fontsCache = new Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>> fontsCache = new Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>>(StringComparer.OrdinalIgnoreCase);
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -43,7 +42,7 @@ namespace UHtml.Core.Handlers
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _adapter = adapter;
+            this.adapter = adapter;
         }
 
         /// <summary>
@@ -53,13 +52,13 @@ namespace UHtml.Core.Handlers
         /// <returns>true - font exists by given family name, false - otherwise</returns>
         public bool IsFontExists(string family)
         {
-            bool exists = _existingFontFamilies.ContainsKey(family);
+            bool exists = existingFontFamilies.ContainsKey(family);
             if (!exists)
             {
                 string mappedFamily;
-                if (_fontsMapping.TryGetValue(family, out mappedFamily))
+                if (fontsMapping.TryGetValue(family, out mappedFamily))
                 {
-                    exists = _existingFontFamilies.ContainsKey(mappedFamily);
+                    exists = existingFontFamilies.ContainsKey(mappedFamily);
                 }
             }
             return exists;
@@ -73,7 +72,7 @@ namespace UHtml.Core.Handlers
         {
             ArgChecker.AssertArgNotNull(fontFamily, "family");
 
-            _existingFontFamilies[fontFamily.Name] = fontFamily;
+            existingFontFamilies[fontFamily.Name] = fontFamily;
         }
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace UHtml.Core.Handlers
             ArgChecker.AssertArgNotNullOrEmpty(fromFamily, "fromFamily");
             ArgChecker.AssertArgNotNullOrEmpty(toFamily, "toFamily");
 
-            _fontsMapping[fromFamily] = toFamily;
+            fontsMapping[fromFamily] = toFamily;
         }
 
         /// <summary>
@@ -101,16 +100,16 @@ namespace UHtml.Core.Handlers
             var font = TryGetFont(family, size, style);
             if (font == null)
             {
-                if (!_existingFontFamilies.ContainsKey(family))
+                if (!existingFontFamilies.ContainsKey(family))
                 {
                     string mappedFamily;
-                    if (_fontsMapping.TryGetValue(family, out mappedFamily))
+                    if (fontsMapping.TryGetValue(family, out mappedFamily))
                     {
                         font = TryGetFont(mappedFamily, size, style);
                         if (font == null)
                         {
                             font = CreateFont(mappedFamily, size, style);
-                            _fontsCache[mappedFamily][size][style] = font;
+                            fontsCache[mappedFamily][size][style] = font;
                         }
                     }
                 }
@@ -120,7 +119,7 @@ namespace UHtml.Core.Handlers
                     font = CreateFont(family, size, style);
                 }
 
-                _fontsCache[family][size][style] = font;
+                fontsCache[family][size][style] = font;
             }
             return font;
         }
@@ -134,9 +133,9 @@ namespace UHtml.Core.Handlers
         private RFont TryGetFont(string family, double size, RFontStyle style)
         {
             RFont font = null;
-            if (_fontsCache.ContainsKey(family))
+            if (fontsCache.ContainsKey(family))
             {
-                var a = _fontsCache[family];
+                var a = fontsCache[family];
                 if (a.ContainsKey(size))
                 {
                     var b = a[size];
@@ -147,13 +146,13 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    _fontsCache[family][size] = new Dictionary<RFontStyle, RFont>();
+                    fontsCache[family][size] = new Dictionary<RFontStyle, RFont>();
                 }
             }
             else
             {
-                _fontsCache[family] = new Dictionary<double, Dictionary<RFontStyle, RFont>>();
-                _fontsCache[family][size] = new Dictionary<RFontStyle, RFont>();
+                fontsCache[family] = new Dictionary<double, Dictionary<RFontStyle, RFont>>();
+                fontsCache[family][size] = new Dictionary<RFontStyle, RFont>();
             }
             return font;
         }
@@ -166,16 +165,16 @@ namespace UHtml.Core.Handlers
             RFontFamily fontFamily;
             try
             {
-                return _existingFontFamilies.TryGetValue(family, out fontFamily)
-                    ? _adapter.CreateFont(fontFamily, size, style)
-                    : _adapter.CreateFont(family, size, style);
+                return existingFontFamilies.TryGetValue(family, out fontFamily)
+                    ? adapter.CreateFont(fontFamily, size, style)
+                    : adapter.CreateFont(family, size, style);
             }
             catch
             {
                 // handle possibility of no requested style exists for the font, use regular then
-                return _existingFontFamilies.TryGetValue(family, out fontFamily)
-                    ? _adapter.CreateFont(fontFamily, size, RFontStyle.Regular)
-                    : _adapter.CreateFont(family, size, RFontStyle.Regular);
+                return existingFontFamilies.TryGetValue(family, out fontFamily)
+                    ? adapter.CreateFont(fontFamily, size, RFontStyle.Regular)
+                    : adapter.CreateFont(family, size, RFontStyle.Regular);
             }
         }
 

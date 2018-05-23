@@ -37,45 +37,44 @@ namespace UHtml.Core.Handlers
         /// <summary>
         /// the container of the html to handle load image for
         /// </summary>
-        private readonly HtmlContainerInt _htmlContainer;
+        private readonly HtmlContainerInt htmlContainer;
 
         /// <summary>
         /// callback raised when image load process is complete with image or without
         /// </summary>
-        private readonly ActionInt<RImage, RRect, bool> _loadCompleteCallback;
+        private readonly ActionInt<RImage, RRect, bool> loadCompleteCallback;
 
         /// <summary>
         /// Must be open as long as the image is in use
         /// </summary>
-        private Stream _imageFileStream;
+        private Stream imageFileStream;
 
         /// <summary>
         /// the image instance of the loaded image
         /// </summary>
-        private RImage _image;
+        private RImage image;
 
         /// <summary>
         /// the image rectangle restriction as returned from image load event
         /// </summary>
-        private RRect _imageRectangle;
+        private RRect imageRectangle;
 
         /// <summary>
         /// to know if image load event callback was sync or async raised
         /// </summary>
-        private bool _asyncCallback;
+        private bool asyncCallback;
 
         /// <summary>
         /// flag to indicate if to release the image object on box dispose (only if image was loaded by the box)
         /// </summary>
-        private bool _releaseImageObject;
+        private bool releaseImageObject;
 
         /// <summary>
         /// is the handler has been disposed
         /// </summary>
-        private bool _disposed;
+        private bool disposed;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -87,8 +86,8 @@ namespace UHtml.Core.Handlers
             ArgChecker.AssertArgNotNull(htmlContainer, "htmlContainer");
             ArgChecker.AssertArgNotNull(loadCompleteCallback, "loadCompleteCallback");
 
-            _htmlContainer = htmlContainer;
-            _loadCompleteCallback = loadCompleteCallback;
+            this.htmlContainer = htmlContainer;
+            this.loadCompleteCallback = loadCompleteCallback;
         }
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace UHtml.Core.Handlers
         /// </summary>
         public RImage Image
         {
-            get { return _image; }
+            get { return image; }
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace UHtml.Core.Handlers
         /// </summary>
         public RRect Rectangle
         {
-            get { return _imageRectangle; }
+            get { return imageRectangle; }
         }
 
         /// <summary>
@@ -126,8 +125,8 @@ namespace UHtml.Core.Handlers
             try
             {
                 var args = new HtmlImageLoadEventArgs(src, attributes, OnHtmlImageLoadEventCallback);
-                _htmlContainer.RaiseHtmlImageLoadEvent(args);
-                _asyncCallback = !_htmlContainer.AvoidAsyncImagesLoading;
+                htmlContainer.RaiseHtmlImageLoadEvent(args);
+                asyncCallback = !htmlContainer.AvoidAsyncImagesLoading;
 
                 if (!args.Handled)
                 {
@@ -150,7 +149,7 @@ namespace UHtml.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Exception in handling image source", ex);
+                htmlContainer.ReportError(HtmlRenderErrorType.Image, "Exception in handling image source", ex);
                 ImageLoadComplete(false);
             }
         }
@@ -160,7 +159,7 @@ namespace UHtml.Core.Handlers
         /// </summary>
         public void Dispose()
         {
-            _disposed = true;
+            disposed = true;
             ReleaseObjects();
         }
 
@@ -175,14 +174,14 @@ namespace UHtml.Core.Handlers
         /// <param name="imageRectangle">optional: limit to specific rectangle of the image and not all of it</param>
         private void OnHtmlImageLoadEventCallback(string path, object image, RRect imageRectangle)
         {
-            if (!_disposed)
+            if (!disposed)
             {
-                _imageRectangle = imageRectangle;
+                this.imageRectangle = imageRectangle;
 
                 if (image != null)
                 {
-                    _image = _htmlContainer.Adapter.ConvertImage(image);
-                    ImageLoadComplete(_asyncCallback);
+                    this.image = htmlContainer.Adapter.ConvertImage(image);
+                    ImageLoadComplete(asyncCallback);
                 }
                 else if (!string.IsNullOrEmpty(path))
                 {
@@ -190,7 +189,7 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    ImageLoadComplete(_asyncCallback);
+                    ImageLoadComplete(asyncCallback);
                 }
             }
         }
@@ -201,10 +200,10 @@ namespace UHtml.Core.Handlers
         /// <param name="src">the source that has the base64 encoded image</param>
         private void SetFromInlineData(string src)
         {
-            _image = GetImageFromData(src);
-            if (_image == null)
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed extract image from inline data");
-            _releaseImageObject = true;
+            image = GetImageFromData(src);
+            if (image == null)
+                htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed extract image from inline data");
+            releaseImageObject = true;
             ImageLoadComplete(false);
         }
 
@@ -231,7 +230,7 @@ namespace UHtml.Core.Handlers
                 if (imagePartsCount > 0)
                 {
                     byte[] imageData = base64PartsCount > 0 ? Convert.FromBase64String(s[1].Trim()) : new UTF8Encoding().GetBytes(Uri.UnescapeDataString(s[1].Trim()));
-                    return _htmlContainer.Adapter.ImageFromStream(new MemoryStream(imageData));
+                    return htmlContainer.Adapter.ImageFromStream(new MemoryStream(imageData));
                 }
             }
             return null;
@@ -257,7 +256,7 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed load image, invalid source: " + path);
+                    htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed load image, invalid source: " + path);
                     ImageLoadComplete(false);
                 }
             }
@@ -271,7 +270,7 @@ namespace UHtml.Core.Handlers
         {
             if (StorageUtils.FileExists(src))
             {
-                if (_htmlContainer.AvoidAsyncImagesLoading)
+                if (htmlContainer.AvoidAsyncImagesLoading)
                     LoadImageFromFile(src);
                 else
                     Task.Run(()=> LoadImageFromFile(src));
@@ -293,18 +292,18 @@ namespace UHtml.Core.Handlers
             {
                 var file = FileSystem.Current.GetFileFromPathAsync(source).Result;
                 var imageFileStream = file.OpenAsync(FileAccess.ReadAndWrite).Result;
-                lock (_loadCompleteCallback)
+                lock (loadCompleteCallback)
                 {
-                    _imageFileStream = imageFileStream;
-                    if (!_disposed)
-                        _image = _htmlContainer.Adapter.ImageFromStream(_imageFileStream);
-                    _releaseImageObject = true;
+                    this.imageFileStream = imageFileStream;
+                    if (!disposed)
+                        image = htmlContainer.Adapter.ImageFromStream(this.imageFileStream);
+                    releaseImageObject = true;
                 }
                 ImageLoadComplete();
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from disk: " + source, ex);
+                htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from disk: " + source, ex);
                 ImageLoadComplete();
             }
         }
@@ -323,7 +322,7 @@ namespace UHtml.Core.Handlers
             }
             else
             {
-                _htmlContainer.GetImageDownloader().DownloadImage(source, filePath, !_htmlContainer.AvoidAsyncImagesLoading, OnDownloadImageCompleted);
+                htmlContainer.GetImageDownloader().DownloadImage(source, filePath, !htmlContainer.AvoidAsyncImagesLoading, OnDownloadImageCompleted);
             }
         }
 
@@ -333,7 +332,7 @@ namespace UHtml.Core.Handlers
         /// </summary>
         private void OnDownloadImageCompleted(Uri imageUri, string filePath, Exception error, bool canceled)
         {
-            if (!canceled && !_disposed)
+            if (!canceled && !disposed)
             {
                 if (error == null)
                 {
@@ -341,7 +340,7 @@ namespace UHtml.Core.Handlers
                 }
                 else
                 {
-                    _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from URL: " + imageUri, error);
+                    htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from URL: " + imageUri, error);
                     ImageLoadComplete();
                 }
             }
@@ -353,10 +352,10 @@ namespace UHtml.Core.Handlers
         private void ImageLoadComplete(bool async = true)
         {
             // can happen if some operation return after the handler was disposed
-            if (_disposed)
+            if (disposed)
                 ReleaseObjects();
             else
-                _loadCompleteCallback(_image, _imageRectangle, async);
+                loadCompleteCallback(image, imageRectangle, async);
         }
 
         /// <summary>
@@ -364,17 +363,17 @@ namespace UHtml.Core.Handlers
         /// </summary>
         private void ReleaseObjects()
         {
-            lock (_loadCompleteCallback)
+            lock (loadCompleteCallback)
             {
-                if (_releaseImageObject && _image != null)
+                if (releaseImageObject && image != null)
                 {
-                    _image.Dispose();
-                    _image = null;
+                    image.Dispose();
+                    image = null;
                 }
-                if (_imageFileStream != null)
+                if (imageFileStream != null)
                 {
-                    _imageFileStream.Dispose();
-                    _imageFileStream = null;
+                    imageFileStream.Dispose();
+                    imageFileStream = null;
                 }
             }
         }

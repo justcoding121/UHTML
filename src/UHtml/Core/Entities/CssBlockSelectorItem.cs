@@ -12,15 +12,14 @@ namespace UHtml.Core.Entities
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-        private readonly string _class;
+        private readonly string @class;
 
         /// <summary>
         /// is the selector item has to be direct parent
         /// </summary>
-        private readonly bool _directParent;
+        private readonly bool directParent;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new block from the block's source
@@ -31,8 +30,8 @@ namespace UHtml.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(@class, "@class");
 
-            _class = @class;
-            _directParent = directParent;
+            this.@class = @class;
+            this.directParent = directParent;
         }
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public string Class
         {
-            get { return _class; }
+            get { return @class; }
         }
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public bool DirectParent
         {
-            get { return _directParent; }
+            get { return directParent; }
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace UHtml.Core.Entities
         /// </summary>
         public override string ToString()
         {
-            return _class + (_directParent ? " > " : string.Empty);
+            return @class + (directParent ? " > " : string.Empty);
         }
     }
 }

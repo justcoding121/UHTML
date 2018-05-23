@@ -12,20 +12,19 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// the name of the html tag
         /// </summary>
-        private readonly string _name;
+        private readonly string name;
 
         /// <summary>
         /// if the tag is single placed; in other words it doesn't have a separate closing tag;
         /// </summary>
-        private readonly bool _isSingle;
+        private readonly bool isSingle;
 
         /// <summary>
         /// collection of attributes and their value the html tag has
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly Dictionary<string, string> attributes;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -37,9 +36,9 @@ namespace UHtml.Core.Dom
         {
             ArgChecker.AssertArgNotNullOrEmpty(name, "name");
 
-            _name = name;
-            _isSingle = isSingle;
-            _attributes = attributes;
+            this.name = name;
+            this.isSingle = isSingle;
+            this.attributes = attributes;
         }
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace UHtml.Core.Dom
         [JsonProperty]
         public string Name
         {
-            get { return _name; }
+            get { return name; }
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public Dictionary<string, string> Attributes
         {
-            get { return _attributes; }
+            get { return attributes; }
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public bool IsSingle
         {
-            get { return _isSingle; }
+            get { return isSingle; }
         }
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace UHtml.Core.Dom
         /// <returns>true - has attributes, false - otherwise</returns>
         public bool HasAttributes()
         {
-            return _attributes != null && _attributes.Count > 0;
+            return attributes != null && attributes.Count > 0;
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace UHtml.Core.Dom
         /// <returns>true - attribute exists, false - otherwise</returns>
         public bool HasAttribute(string attribute)
         {
-            return _attributes != null && _attributes.ContainsKey(attribute);
+            return attributes != null && attributes.ContainsKey(attribute);
         }
 
         /// <summary>
@@ -95,12 +94,12 @@ namespace UHtml.Core.Dom
         /// <returns>attribute value or null if not found</returns>
         public string TryGetAttribute(string attribute, string defaultValue = null)
         {
-            return _attributes != null && _attributes.ContainsKey(attribute) ? _attributes[attribute] : defaultValue;
+            return attributes != null && attributes.ContainsKey(attribute) ? attributes[attribute] : defaultValue;
         }
 
         public override string ToString()
         {
-            return string.Format("<{0}>", _name);
+            return string.Format("<{0}>", name);
         }
     }
 }

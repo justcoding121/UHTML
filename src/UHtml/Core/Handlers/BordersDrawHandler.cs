@@ -16,10 +16,9 @@ namespace UHtml.Core.Handlers
         /// <summary>
         /// used for all border paint to use the same points and not create new array each time.
         /// </summary>
-        private static readonly RPoint[] _borderPts = new RPoint[4];
+        private static readonly RPoint[] borderPts = new RPoint[4];
 
         #endregion
-
 
         /// <summary>
         /// Draws all the border of the box with respect to style, width, etc.
@@ -64,7 +63,7 @@ namespace UHtml.Core.Handlers
         public static void DrawBorder(Border border, RGraphics g, CssBox box, RBrush brush, RRect rectangle)
         {
             SetInOutsetRectanglePoints(border, box, rectangle, true, true);
-            g.DrawPolygon(brush, _borderPts);
+            g.DrawPolygon(brush, borderPts);
         }
 
 
@@ -105,7 +104,7 @@ namespace UHtml.Core.Handlers
                 {
                     // inset/outset border needs special rectangle
                     SetInOutsetRectanglePoints(border, box, rect, isLineStart, isLineEnd);
-                    g.DrawPolygon(g.GetSolidBrush(color), _borderPts);
+                    g.DrawPolygon(g.GetSolidBrush(color), borderPts);
                 }
                 else
                 {
@@ -144,36 +143,36 @@ namespace UHtml.Core.Handlers
             switch (border)
             {
                 case Border.Top:
-                    _borderPts[0] = new RPoint(r.X1, r.Y1);
-                    _borderPts[1] = new RPoint(r.X2, r.Y1);
-                    _borderPts[2] = new RPoint(r.X2, r.Y1 + b.ActualBorderTopWidth);
-                    _borderPts[3] = new RPoint(r.X1, r.Y1 + b.ActualBorderTopWidth);
+                    borderPts[0] = new RPoint(r.X1, r.Y1);
+                    borderPts[1] = new RPoint(r.X2, r.Y1);
+                    borderPts[2] = new RPoint(r.X2, r.Y1 + b.ActualBorderTopWidth);
+                    borderPts[3] = new RPoint(r.X1, r.Y1 + b.ActualBorderTopWidth);
                     if (isLineEnd)
-                        _borderPts[2].X -= b.ActualBorderRightWidth;
+                        borderPts[2].X -= b.ActualBorderRightWidth;
                     if (isLineStart)
-                        _borderPts[3].X += b.ActualBorderLeftWidth;
+                        borderPts[3].X += b.ActualBorderLeftWidth;
                     break;
                 case Border.Right:
-                    _borderPts[0] = new RPoint(r.X2 - b.ActualBorderRightWidth, r.Y1 + b.ActualBorderTopWidth);
-                    _borderPts[1] = new RPoint(r.X2, r.Y1);
-                    _borderPts[2] = new RPoint(r.X2, r.Y2);
-                    _borderPts[3] = new RPoint(r.X2 - b.ActualBorderRightWidth, r.Y2 - b.ActualBorderBottomWidth);
+                    borderPts[0] = new RPoint(r.X2 - b.ActualBorderRightWidth, r.Y1 + b.ActualBorderTopWidth);
+                    borderPts[1] = new RPoint(r.X2, r.Y1);
+                    borderPts[2] = new RPoint(r.X2, r.Y2);
+                    borderPts[3] = new RPoint(r.X2 - b.ActualBorderRightWidth, r.Y2 - b.ActualBorderBottomWidth);
                     break;
                 case Border.Bottom:
-                    _borderPts[0] = new RPoint(r.X1, r.Y2 - b.ActualBorderBottomWidth);
-                    _borderPts[1] = new RPoint(r.X2, r.Y2 - b.ActualBorderBottomWidth);
-                    _borderPts[2] = new RPoint(r.X2, r.Y2);
-                    _borderPts[3] = new RPoint(r.X1, r.Y2);
+                    borderPts[0] = new RPoint(r.X1, r.Y2 - b.ActualBorderBottomWidth);
+                    borderPts[1] = new RPoint(r.X2, r.Y2 - b.ActualBorderBottomWidth);
+                    borderPts[2] = new RPoint(r.X2, r.Y2);
+                    borderPts[3] = new RPoint(r.X1, r.Y2);
                     if (isLineStart)
-                        _borderPts[0].X += b.ActualBorderLeftWidth;
+                        borderPts[0].X += b.ActualBorderLeftWidth;
                     if (isLineEnd)
-                        _borderPts[1].X -= b.ActualBorderRightWidth;
+                        borderPts[1].X -= b.ActualBorderRightWidth;
                     break;
                 case Border.Left:
-                    _borderPts[0] = new RPoint(r.X1, r.Y1);
-                    _borderPts[1] = new RPoint(r.X1 + b.ActualBorderLeftWidth, r.Y1 + b.ActualBorderTopWidth);
-                    _borderPts[2] = new RPoint(r.X1 + b.ActualBorderLeftWidth, r.Y2 - b.ActualBorderBottomWidth);
-                    _borderPts[3] = new RPoint(r.X1, r.Y2);
+                    borderPts[0] = new RPoint(r.X1, r.Y1);
+                    borderPts[1] = new RPoint(r.X1 + b.ActualBorderLeftWidth, r.Y1 + b.ActualBorderTopWidth);
+                    borderPts[2] = new RPoint(r.X1 + b.ActualBorderLeftWidth, r.Y2 - b.ActualBorderBottomWidth);
+                    borderPts[3] = new RPoint(r.X1, r.Y2);
                     break;
             }
         }

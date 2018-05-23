@@ -32,12 +32,12 @@ namespace UHtml.Core.Handlers
         /// <summary>
         /// the web client used to download image from URL (to cancel on dispose)
         /// </summary>
-        private readonly List<HttpClient> _clients = new List<HttpClient>();
+        private readonly List<HttpClient> clients = new List<HttpClient>();
 
         /// <summary>
         /// dictionary of image cache path to callbacks of download to handle multiple requests to download the same image 
         /// </summary>
-        private readonly Dictionary<string, List<DownloadFileAsyncCallback>> _imageDownloadCallbacks = new Dictionary<string, List<DownloadFileAsyncCallback>>();
+        private readonly Dictionary<string, List<DownloadFileAsyncCallback>> imageDownloadCallbacks = new Dictionary<string, List<DownloadFileAsyncCallback>>();
 
         /// <summary>
         /// Makes a request to download the image from the server and raises the <see cref="cachedFileCallback"/> when it's down.<br/>
@@ -53,16 +53,16 @@ namespace UHtml.Core.Handlers
 
             // to handle if the file is already been downloaded
             bool download = true;
-            lock (_imageDownloadCallbacks)
+            lock (imageDownloadCallbacks)
             {
-                if (_imageDownloadCallbacks.ContainsKey(filePath))
+                if (imageDownloadCallbacks.ContainsKey(filePath))
                 {
                     download = false;
-                    _imageDownloadCallbacks[filePath].Add(cachedFileCallback);
+                    imageDownloadCallbacks[filePath].Add(cachedFileCallback);
                 }
                 else
                 {
-                    _imageDownloadCallbacks[filePath] = new List<DownloadFileAsyncCallback> { cachedFileCallback };
+                    imageDownloadCallbacks[filePath] = new List<DownloadFileAsyncCallback> { cachedFileCallback };
                 }
             }
 
@@ -98,7 +98,7 @@ namespace UHtml.Core.Handlers
                 var handler = IocModule.Container.GetInstance<HttpClientHandler>();
                 using (var client = new HttpClient(handler))
                 {
-                    _clients.Add(client);
+                    clients.Add(client);
 
                     var response = client.GetAsync(source).Result;
                     var result = response.Content.ReadAsByteArrayAsync().Result;
@@ -131,7 +131,7 @@ namespace UHtml.Core.Handlers
             {
                 var handler = IocModule.Container.GetInstance<HttpClientHandler>();
                 var client = new HttpClient(handler);
-                _clients.Add(client);
+                clients.Add(client);
 
                 var response = client.GetAsync(downloadData._uri).Result;
                 var result = response.Content.ReadAsByteArrayAsync().Result;
@@ -172,7 +172,7 @@ namespace UHtml.Core.Handlers
         }
 
         /// <summary>
-        /// Checks if the file was downloaded and raises the cachedFileCallback from <see cref="_imageDownloadCallbacks"/>
+        /// Checks if the file was downloaded and raises the cachedFileCallback from <see cref="imageDownloadCallbacks"/>
         /// </summary>
         private void OnDownloadImageCompleted(HttpClient client,HttpResponseMessage response, Uri source, string tempPath, string filePath, Exception error, bool cancelled)
         {
@@ -207,10 +207,10 @@ namespace UHtml.Core.Handlers
             }
 
             List<DownloadFileAsyncCallback> callbacksList;
-            lock (_imageDownloadCallbacks)
+            lock (imageDownloadCallbacks)
             {
-                if (_imageDownloadCallbacks.TryGetValue(filePath, out callbacksList))
-                    _imageDownloadCallbacks.Remove(filePath);
+                if (imageDownloadCallbacks.TryGetValue(filePath, out callbacksList))
+                    imageDownloadCallbacks.Remove(filePath);
             }
 
             if (callbacksList != null)
@@ -232,15 +232,15 @@ namespace UHtml.Core.Handlers
         /// </summary>
         private void ReleaseObjects()
         {
-            _imageDownloadCallbacks.Clear();
-            while (_clients.Count > 0)
+            imageDownloadCallbacks.Clear();
+            while (clients.Count > 0)
             {
                 try
                 {
-                    var client = _clients[0];
+                    var client = clients[0];
                     client.CancelPendingRequests();
                     client.Dispose();
-                    _clients.RemoveAt(0);
+                    clients.RemoveAt(0);
                 }
                 catch
                 { }

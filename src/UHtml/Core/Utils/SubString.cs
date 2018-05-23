@@ -12,20 +12,19 @@ namespace UHtml.Core.Utils
         /// <summary>
         /// the full string that this sub-string is part of
         /// </summary>
-        private readonly string _fullString;
+        private readonly string fullString;
 
         /// <summary>
         /// the start index of the sub-string
         /// </summary>
-        private readonly int _startIdx;
+        private readonly int startIdx;
 
         /// <summary>
-        /// the length of the sub-string starting at <see cref="_startIdx"/>
+        /// the length of the sub-string starting at <see cref="startIdx"/>
         /// </summary>
-        private readonly int _length;
+        private readonly int length;
 
         #endregion
-
 
         /// <summary>
         /// Init sub-string that is the full string.
@@ -35,9 +34,9 @@ namespace UHtml.Core.Utils
         {
             ArgChecker.AssertArgNotNull(fullString, "fullString");
 
-            _fullString = fullString;
-            _startIdx = 0;
-            _length = fullString.Length;
+            this.fullString = fullString;
+            startIdx = 0;
+            length = fullString.Length;
         }
 
         /// <summary>
@@ -55,9 +54,9 @@ namespace UHtml.Core.Utils
             if (length < 0 || startIdx + length > fullString.Length)
                 throw new ArgumentOutOfRangeException("length", "Must within fullString boundries");
 
-            _fullString = fullString;
-            _startIdx = startIdx;
-            _length = length;
+            this.fullString = fullString;
+            this.startIdx = startIdx;
+            this.length = length;
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace UHtml.Core.Utils
         /// </summary>
         public string FullString
         {
-            get { return _fullString; }
+            get { return fullString; }
         }
 
         /// <summary>
@@ -73,15 +72,15 @@ namespace UHtml.Core.Utils
         /// </summary>
         public int StartIdx
         {
-            get { return _startIdx; }
+            get { return startIdx; }
         }
 
         /// <summary>
-        /// the length of the sub-string starting at <see cref="_startIdx"/>
+        /// the length of the sub-string starting at <see cref="startIdx"/>
         /// </summary>
         public int Length
         {
-            get { return _length; }
+            get { return length; }
         }
 
         /// <summary>
@@ -93,9 +92,9 @@ namespace UHtml.Core.Utils
         {
             get
             {
-                if (idx < 0 || idx > _length)
+                if (idx < 0 || idx > length)
                     throw new ArgumentOutOfRangeException("idx", "must be within the string range");
-                return _fullString[_startIdx + idx];
+                return fullString[startIdx + idx];
             }
         }
 
@@ -105,7 +104,7 @@ namespace UHtml.Core.Utils
         /// <returns>true - empty string, false - otherwise</returns>
         public bool IsEmpty()
         {
-            return _length < 1;
+            return length < 1;
         }
 
         /// <summary>
@@ -114,9 +113,9 @@ namespace UHtml.Core.Utils
         /// <returns>true - empty or whitespace string, false - otherwise</returns>
         public bool IsEmptyOrWhitespace()
         {
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < length; i++)
             {
-                if (!char.IsWhiteSpace(_fullString, _startIdx + i))
+                if (!char.IsWhiteSpace(fullString, startIdx + i))
                     return false;
             }
             return true;
@@ -128,11 +127,11 @@ namespace UHtml.Core.Utils
         /// <returns>true - empty or whitespace string, false - otherwise</returns>
         public bool IsWhitespace()
         {
-            if (_length < 1)
+            if (length < 1)
                 return false;
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < length; i++)
             {
-                if (!char.IsWhiteSpace(_fullString, _startIdx + i))
+                if (!char.IsWhiteSpace(fullString, startIdx + i))
                     return false;
             }
             return true;
@@ -145,7 +144,7 @@ namespace UHtml.Core.Utils
         /// <returns>new string that is the sub-string represented by this instance</returns>
         public string CutSubstring()
         {
-            return _length > 0 ? _fullString.Substring(_startIdx, _length) : string.Empty;
+            return length > 0 ? fullString.Substring(startIdx, length) : string.Empty;
         }
 
         /// <summary>
@@ -157,19 +156,19 @@ namespace UHtml.Core.Utils
         /// Empty if startIndex is equal to the length of this instance and length is zero. </returns>
         public string Substring(int startIdx, int length)
         {
-            if (startIdx < 0 || startIdx > _length)
+            if (startIdx < 0 || startIdx > this.length)
                 throw new ArgumentOutOfRangeException("startIdx");
-            if (length > _length)
+            if (length > this.length)
                 throw new ArgumentOutOfRangeException("length");
-            if (startIdx + length > _length)
+            if (startIdx + length > this.length)
                 throw new ArgumentOutOfRangeException("length");
 
-            return _fullString.Substring(_startIdx + startIdx, length);
+            return fullString.Substring(this.startIdx + startIdx, length);
         }
 
         public override string ToString()
         {
-            return string.Format("Sub-string: {0}", _length > 0 ? _fullString.Substring(_startIdx, _length) : string.Empty);
+            return string.Format("Sub-string: {0}", length > 0 ? fullString.Substring(startIdx, length) : string.Empty);
         }
     }
 }

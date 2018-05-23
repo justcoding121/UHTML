@@ -19,10 +19,9 @@ namespace UHtml.Core.Parse
         /// <summary>
         /// Parser for CSS
         /// </summary>
-        private readonly CssParser _cssParser;
+        private readonly CssParser cssParser;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -30,8 +29,7 @@ namespace UHtml.Core.Parse
         public DomParser(CssParser cssParser)
         {
             ArgChecker.AssertArgNotNull(cssParser, "cssParser");
-
-            _cssParser = cssParser;
+            this.cssParser = cssParser;
         }
 
         /// <summary>
@@ -98,7 +96,7 @@ namespace UHtml.Core.Parse
                     CssData stylesheetData;
                     StylesheetLoadHandler.LoadStylesheet(htmlContainer, box.GetAttribute("href", string.Empty), box.HtmlTag.Attributes, out stylesheet, out stylesheetData);
                     if (stylesheet != null)
-                        _cssParser.ParseStyleSheet(cssData, stylesheet);
+                        cssParser.ParseStyleSheet(cssData, stylesheet);
                     else if (stylesheetData != null)
                         cssData.Combine(stylesheetData);
                 }
@@ -108,7 +106,7 @@ namespace UHtml.Core.Parse
                 {
                     CloneCssData(ref cssData, ref cssDataChanged);
                     foreach (var child in box.Boxes)
-                        _cssParser.ParseStyleSheet(cssData, child.Text.CutSubstring());
+                        cssParser.ParseStyleSheet(cssData, child.Text.CutSubstring());
                 }
             }
 
@@ -157,7 +155,7 @@ namespace UHtml.Core.Parse
                 // Check for the style="" attribute
                 if (box.HtmlTag.HasAttribute("style"))
                 {
-                    var block = _cssParser.ParseCssBlock(box.HtmlTag.Name, box.HtmlTag.TryGetAttribute("style"));
+                    var block = cssParser.ParseCssBlock(box.HtmlTag.Name, box.HtmlTag.TryGetAttribute("style"));
                     if (block != null)
                         AssignCssBlock(box, block);
                 }
@@ -193,9 +191,9 @@ namespace UHtml.Core.Parse
                 foreach (var block in blocks)
                 {
                     if (block.Properties.ContainsKey("color"))
-                        htmlContainer.SelectionForeColor = _cssParser.ParseColor(block.Properties["color"]);
+                        htmlContainer.SelectionForeColor = cssParser.ParseColor(block.Properties["color"]);
                     if (block.Properties.ContainsKey("background-color"))
-                        htmlContainer.SelectionBackColor = _cssParser.ParseColor(block.Properties["background-color"]);
+                        htmlContainer.SelectionBackColor = cssParser.ParseColor(block.Properties["background-color"]);
                 }
             }
         }
@@ -453,7 +451,7 @@ namespace UHtml.Core.Parse
                             box.Direction = value.ToLower();
                             break;
                         case HtmlConstants.Face:
-                            box.FontFamily = _cssParser.ParseFontFamily(value);
+                            box.FontFamily = cssParser.ParseFontFamily(value);
                             break;
                         case HtmlConstants.Height:
                             box.Height = TranslateLength(value);

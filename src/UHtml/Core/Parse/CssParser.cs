@@ -19,25 +19,24 @@ namespace UHtml.Core.Parse
         /// <summary>
         /// split CSS rule
         /// </summary>
-        private static readonly char[] _cssBlockSplitters = new[] { '}', ';' };
+        private static readonly char[] cssBlockSplitters = new[] { '}', ';' };
 
         /// <summary>
         /// 
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter adapter;
 
         /// <summary>
         /// Utility for value parsing.
         /// </summary>
-        private readonly CssValueParser _valueParser;
+        private readonly CssValueParser valueParser;
 
         /// <summary>
         /// The chars to trim the css class name by
         /// </summary>
-        private static readonly char[] _cssClassTrimChars = new[] { '\r', '\n', '\t', ' ', '-', '!', '<', '>' };
+        private static readonly char[] cssClassTrimChars = new[] { '\r', '\n', '\t', ' ', '-', '!', '<', '>' };
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -46,8 +45,8 @@ namespace UHtml.Core.Parse
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _valueParser = new CssValueParser(adapter);
-            _adapter = adapter;
+            valueParser = new CssValueParser(adapter);
+            this.adapter = adapter;
         }
 
         /// <summary>
@@ -63,7 +62,7 @@ namespace UHtml.Core.Parse
         /// <returns>the CSS data with parsed CSS objects (never null)</returns>
         public CssData ParseStyleSheet(string stylesheet, bool combineWithDefault)
         {
-            var cssData = combineWithDefault ? _adapter.DefaultCssData.Clone() : new CssData();
+            var cssData = combineWithDefault ? adapter.DefaultCssData.Clone() : new CssData();
             if (!string.IsNullOrEmpty(stylesheet))
             {
                 ParseStyleSheet(cssData, stylesheet);
@@ -120,7 +119,7 @@ namespace UHtml.Core.Parse
         /// <returns>color value</returns>
         public RColor ParseColor(string colorStr)
         {
-            return _valueParser.GetActualColor(colorStr);
+            return valueParser.GetActualColor(colorStr);
         }
 
 
@@ -273,7 +272,7 @@ namespace UHtml.Core.Parse
 
                 foreach (string cls in classes)
                 {
-                    string className = cls.Trim(_cssClassTrimChars);
+                    string className = cls.Trim(cssClassTrimChars);
                     if (!String.IsNullOrEmpty(className))
                     {
                         var newblock = ParseCssBlockImp(className, blockSource);
@@ -382,12 +381,12 @@ namespace UHtml.Core.Parse
             int startIdx = 0;
             while (startIdx < blockSource.Length)
             {
-                int endIdx = blockSource.IndexOfAny(_cssBlockSplitters, startIdx);
+                int endIdx = blockSource.IndexOfAny(cssBlockSplitters, startIdx);
 
                 // If blockSource contains "data:image" then skip first semicolon since it is a part of image definition
                 // example: "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA......"
                 if (startIdx >= 0 && endIdx - startIdx >= 10 && blockSource.Length - startIdx >= 10 && blockSource.IndexOf("data:image", startIdx, endIdx - startIdx) >= 0)
-                    endIdx = blockSource.IndexOfAny(_cssBlockSplitters, endIdx + 1);
+                    endIdx = blockSource.IndexOfAny(cssBlockSplitters, endIdx + 1);
 
                 if (endIdx < 0)
                     endIdx = blockSource.Length - 1;
@@ -517,7 +516,7 @@ namespace UHtml.Core.Parse
         /// <param name="properties">the properties collection to add to</param>
         private void ParseColorProperty(string propName, string propValue, Dictionary<string, string> properties)
         {
-            if (_valueParser.IsColorValid(propValue))
+            if (valueParser.IsColorValid(propValue))
             {
                 properties[propName] = propValue;
             }
@@ -626,7 +625,7 @@ namespace UHtml.Core.Parse
 
                 var font = propValue.Substring(start, adjEnd - start + 1);
 
-                if (_adapter.IsFontExists(font))
+                if (adapter.IsFontExists(font))
                 {
                     return font;
                 }
@@ -944,7 +943,7 @@ namespace UHtml.Core.Parse
         private string ParseBorderColor(string str, int idx, int length)
         {
             RColor color;
-            return _valueParser.TryGetColor(str, idx, length, out color) ? str.Substring(idx, length) : null;
+            return valueParser.TryGetColor(str, idx, length, out color) ? str.Substring(idx, length) : null;
         }
 
         #endregion

@@ -1,5 +1,4 @@
-﻿using PCLStorage;
-using SimpleInjector;
+﻿using SimpleInjector;
 
 namespace UHtml.Demo.WPF
 {

@@ -11,34 +11,33 @@ namespace UHtml.Core.Dom
     {
         #region Fields and Consts
 
-        private readonly CssBox _extendedBox;
+        private readonly CssBox extendedBox;
 
         /// <summary>
         /// the index of the row where box starts
         /// </summary>
-        private readonly int _startRow;
+        private readonly int startRow;
 
         /// <summary>
         /// the index of the row where box ends
         /// </summary>
-        private readonly int _endRow;
+        private readonly int endRow;
 
         #endregion
-
 
         public CssSpacingBox(CssBox tableBox, ref CssBox extendedBox, int startRow)
             : base(tableBox, new HtmlTag("none", false, new Dictionary<string, string> { { "colspan", "1" } }))
         {
-            _extendedBox = extendedBox;
+            this.extendedBox = extendedBox;
             Display = CssConstants.None;
 
-            _startRow = startRow;
-            _endRow = startRow + Int32.Parse(extendedBox.GetAttribute("rowspan", "1")) - 1;
+            this.startRow = startRow;
+            endRow = startRow + Int32.Parse(extendedBox.GetAttribute("rowspan", "1")) - 1;
         }
 
         public CssBox ExtendedBox
         {
-            get { return _extendedBox; }
+            get { return extendedBox; }
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public int StartRow
         {
-            get { return _startRow; }
+            get { return startRow; }
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public int EndRow
         {
-            get { return _endRow; }
+            get { return endRow; }
         }
     }
 }

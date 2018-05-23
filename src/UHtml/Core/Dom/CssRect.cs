@@ -20,20 +20,19 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// the CSS box owner of the word
         /// </summary>
-        private readonly CssBox _ownerBox;
+        private readonly CssBox ownerBox;
 
         /// <summary>
         /// Rectangle
         /// </summary>
-        private RRect _rect;
+        private RRect rect;
 
         /// <summary>
         /// If the word is selected this points to the selection handler for more data
         /// </summary>
-        private SelectionHandler _selection;
+        private SelectionHandler selection;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -41,7 +40,7 @@ namespace UHtml.Core.Dom
         /// <param name="owner">the CSS box owner of the word</param>
         protected CssRect(CssBox owner)
         {
-            _ownerBox = owner;
+            ownerBox = owner;
         }
 
         /// <summary>
@@ -49,7 +48,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public CssBox OwnerBox
         {
-            get { return _ownerBox; }
+            get { return ownerBox; }
         }
 
         /// <summary>
@@ -57,8 +56,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public RRect Rectangle
         {
-            get { return _rect; }
-            set { _rect = value; }
+            get { return rect; }
+            set { rect = value; }
         }
 
         /// <summary>
@@ -66,8 +65,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double Left
         {
-            get { return _rect.X; }
-            set { _rect.X = value; }
+            get { return rect.X; }
+            set { rect.X = value; }
         }
 
         /// <summary>
@@ -75,8 +74,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double Top
         {
-            get { return _rect.Y; }
-            set { _rect.Y = value; }
+            get { return rect.Y; }
+            set { rect.Y = value; }
         }
 
         /// <summary>
@@ -84,8 +83,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double Width
         {
-            get { return _rect.Width; }
-            set { _rect.Width = value; }
+            get { return rect.Width; }
+            set { rect.Width = value; }
         }
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double FullWidth
         {
-            get { return _rect.Width + ActualWordSpacing; }
+            get { return rect.Width + ActualWordSpacing; }
         }
 
         /// <summary>
@@ -109,8 +108,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double Height
         {
-            get { return _rect.Height; }
-            set { _rect.Height = value; }
+            get { return rect.Height; }
+            set { rect.Height = value; }
         }
 
         /// <summary>
@@ -136,8 +135,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         public SelectionHandler Selection
         {
-            get { return _selection; }
-            set { _selection = value; }
+            get { return selection; }
+            set { selection = value; }
         }
 
         /// <summary>
@@ -205,7 +204,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public bool Selected
         {
-            get { return _selection != null; }
+            get { return selection != null; }
         }
 
         /// <summary>
@@ -213,7 +212,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public int SelectedStartIndex
         {
-            get { return _selection != null ? _selection.GetSelectingStartIndex(this) : -1; }
+            get { return selection != null ? selection.GetSelectingStartIndex(this) : -1; }
         }
 
         /// <summary>
@@ -221,7 +220,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public int SelectedEndIndexOffset
         {
-            get { return _selection != null ? _selection.GetSelectedEndIndexOffset(this) : -1; }
+            get { return selection != null ? selection.GetSelectedEndIndexOffset(this) : -1; }
         }
 
         /// <summary>
@@ -229,7 +228,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double SelectedStartOffset
         {
-            get { return _selection != null ? _selection.GetSelectedStartOffset(this) : -1; }
+            get { return selection != null ? selection.GetSelectedStartOffset(this) : -1; }
         }
 
         /// <summary>
@@ -237,7 +236,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         public double SelectedEndOffset
         {
-            get { return _selection != null ? _selection.GetSelectedEndOffset(this) : -1; }
+            get { return selection != null ? selection.GetSelectedEndOffset(this) : -1; }
         }
 
         /// <summary>
