@@ -5,7 +5,7 @@ using UHtml.Core.Dom;
 using UHtml.Core.Entities;
 using UHtml.Core.Handlers;
 using UHtml.Core.Utils;
-using UHtml.Debug;
+
 
 namespace UHtml.Core.Parse
 {
@@ -67,7 +67,6 @@ namespace UHtml.Core.Parse
                 CorrectInlineBoxesParent(root);
             }
 
-            DOMDebugger.WriteDOMToJson(root);
             return root;
         }
 
