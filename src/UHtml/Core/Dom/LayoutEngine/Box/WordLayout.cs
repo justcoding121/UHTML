@@ -19,22 +19,28 @@ namespace UHtml.Core.Dom
         private static WordLayoutStatus LayoutWords(RGraphics g,
             CssBox box,
             CssLineBox currentLineBox,
-            double curX, double curY,
-            double leftLimit, double rightLimit, double currentMaxBottom)
+            double initialX, double initialY,
+            double leftLimit, double rightLimit, double initialBottom)
         {
 
-            double localMaxLineBottom = currentMaxBottom;
+            double curX = initialX;
+            double curY = initialY;
+
+            double maxRight = initialX;
+            double maxBottom = initialBottom;
 
             if (box.Words.Count > 0)
             {
                currentLineBox = currentLineBox ?? new CssLineBox(box);
-               
+
                 if (DomUtils.DoesBoxHasWhitespace(box))
+                {
                     curX += box.ActualWordSpacing;
+                    maxRight = curX;
+                }
 
                 foreach (var word in box.Words)
                 {
-
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
@@ -43,7 +49,7 @@ namespace UHtml.Core.Dom
                     {
 
                         curX = leftLimit;
-                        curY = localMaxLineBottom;
+                        curY = maxBottom;
 
                         currentLineBox = new CssLineBox(box);
 
@@ -55,30 +61,31 @@ namespace UHtml.Core.Dom
                     word.Top = curY;
 
                     curX = word.Left + word.FullWidth;
-                    localMaxLineBottom = Math.Max(localMaxLineBottom, word.Bottom);
-
+                    maxRight = Math.Max(maxRight, curX);
+                    maxBottom = Math.Max(maxBottom, word.Bottom);
                 }
 
-                //set x,y location
                 if (box.Height == CssConstants.Auto)
                 {
-
-                    box.ActualBottom = localMaxLineBottom
-                        + box.ActualBorderBottomWidth
-                        + box.ActualPaddingBottom;
-
+                    //use the maximum bottom hit during word layout
+                    box.ActualBottom = maxBottom;
                 }
-
-                currentMaxBottom = box.ActualBottom;
-
-
+                else
+                {
+                    //use the fixed height
+                    box.ActualBottom = initialY + box.ActualHeight;
+                }
+                
                 if (box.Width == CssConstants.Auto)
                 {
-                    box.ActualRight = curX
-                        + box.ActualBorderRightWidth
-                        + box.ActualPaddingRight;
+                    //use the maximum right hit during word layout
+                    box.ActualRight = maxRight;
                 }
-
+                else
+                {
+                    //use the fixed width
+                    box.ActualRight = initialX + box.ActualWidth;
+                }
 
             }
 
@@ -87,7 +94,7 @@ namespace UHtml.Core.Dom
                 CurrentLineBox = currentLineBox,
                 CurX = curX,
                 CurY = curY,
-                CurrentMaxBottom = currentMaxBottom
+                CurrentMaxBottom = box.ActualBottom
             };
         }
     }
