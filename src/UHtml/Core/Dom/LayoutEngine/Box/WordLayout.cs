@@ -41,6 +41,7 @@ namespace UHtml.Core.Dom
 
                 foreach (var word in box.Words)
                 {
+                    //create new line if needed
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
@@ -52,7 +53,6 @@ namespace UHtml.Core.Dom
                         curY = maxBottom;
 
                         currentLineBox = new CssLineBox(box);
-
                     }
 
                     currentLineBox.ReportExistanceOf(word);
@@ -61,6 +61,7 @@ namespace UHtml.Core.Dom
                     word.Top = curY;
 
                     curX = word.Left + word.FullWidth;
+
                     maxRight = Math.Max(maxRight, curX);
                     maxBottom = Math.Max(maxBottom, word.Bottom);
                 }

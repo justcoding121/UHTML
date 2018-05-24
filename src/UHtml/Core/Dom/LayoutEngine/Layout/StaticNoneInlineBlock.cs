@@ -96,7 +96,10 @@ namespace UHtml.Core.Dom
                                 + box.ActualPaddingBottom
                                 + box.ActualBorderBottomWidth);
 
-            currentLine.ReportExistanceOf(box);
+            if (currentLine != null)
+            {
+                currentLine.ReportExistanceOf(box);
+            }
         }
     }
 }
