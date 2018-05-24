@@ -2,46 +2,32 @@
 <html>
 <head>
     <style>
-        span.a {
-            display: inline; /* the default for span */
-            width: 70px;
-            height: 70px;
-            padding: 15px;
-            border: 1px solid blue;
+        .nav {
             background-color: yellow;
+            padding: 15px;
+            list-style-type: none;
+            text-align: center;
         }
 
-        span.b {
-            display: inline-block;
-            width: 70px;
-            height: 70px;
-            padding: 15px;
-            border: 1px solid blue;
-            background-color: yellow;
-        }
-
-        span.c {
-            display: block;
-            width: 70px;
-            height: 70px;
-            padding: 15px;
-            border: 1px solid blue;
-            background-color: yellow;
-        }
+            .nav li {
+                display: inline-block;
+                font-size: 20px;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
     </style>
 </head>
 <body>
 
-    <h1>The display Property</h1>
+    <h1>Horizontal Navigation Links</h1>
 
-    <h2>display: inline</h2>
-    <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum consequat scelerisque elit sit amet consequat. Aliquam erat volutpat. <span class="a">Aliquam</span> <span class="a">venenatis</span> gravida nisl sit amet facilisis. Nullam cursus fermentum velit sed laoreet. </div>
-
-    <h2>display: inline-block</h2>
-    <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum consequat scelerisque elit sit amet consequat. Aliquam erat volutpat. <span class="b">Aliquam</span> <span class="b">venenatis</span> gravida nisl sit amet facilisis. Nullam cursus fermentum velit sed laoreet. </div>
-
-    <h2>display: block</h2>
-    <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum consequat scelerisque elit sit amet consequat. Aliquam erat volutpat. <span class="c">Aliquam</span> <span class="c">venenatis</span> gravida nisl sit amet facilisis. Nullam cursus fermentum velit sed laoreet. </div>
+    <ul class="nav">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#clients">Our Clients</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+        <li><a href="#map">Map</a></li>
+    </ul>
 
 </body>
 </html>
