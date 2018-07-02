@@ -23,7 +23,9 @@ namespace UHtml.Core.Dom
           double leftLimit, double rightLimit,
           double currentBottom)
         {
-           
+
+            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY + currentBox.ActualMarginTop);
+
             SetInlineBlockBoxSize(currentBox, curX, curY,
                                                 currentLine,
                                                 leftLimit, rightLimit,
@@ -52,6 +54,8 @@ namespace UHtml.Core.Dom
                 if (result != null)
                 {
                     layoutCoreStatus.CurrentMaxBottom = result.CurrentMaxBottom;
+                    layoutCoreStatus.CurX = result.CurX;
+                    layoutCoreStatus.CurY = result.CurY;
                 }
             }
 

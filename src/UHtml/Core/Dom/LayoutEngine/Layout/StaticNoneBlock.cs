@@ -95,6 +95,8 @@ namespace UHtml.Core.Dom
                 if(result!=null)
                 {
                     layoutCoreStatus.CurrentMaxBottom = result.CurrentMaxBottom;
+                    layoutCoreStatus.CurX = result.CurX;
+                    layoutCoreStatus.CurY = result.CurY;
                 }
             }
 
