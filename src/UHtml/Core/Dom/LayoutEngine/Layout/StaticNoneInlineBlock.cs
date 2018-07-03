@@ -1,4 +1,5 @@
-﻿using UHtml.Adapters;
+﻿using System;
+using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Parse;
 using UHtml.Core.Utils;
@@ -23,29 +24,39 @@ namespace UHtml.Core.Dom
           double leftLimit, double rightLimit,
           double currentBottom)
         {
-
-            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY + currentBox.ActualMarginTop);
+            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
 
             SetInlineBlockBoxSize(currentBox, curX, curY,
                                                 currentLine,
                                                 leftLimit, rightLimit,
                                                 currentBottom);
 
-            //position words within local max right
-            //box bottom should be updated by this method
-            //as text wrap to new lines increase bottom
-            var status = LayoutWords(g, currentBox, currentLine,
-              curX, curY, leftLimit, rightLimit, currentBottom);
+            leftLimit = currentBox.Location.X;
+            rightLimit = currentBox.Location.X + currentBox.ActualWidth;
 
 
             var layoutCoreStatus = new LayoutCoreStatus()
             {
-                CurrentLineBox = status.CurrentLineBox,
-                CurX = status.CurX,
-                CurY = status.CurY,
-                CurrentMaxBottom = status.CurrentMaxBottom
+                CurrentLineBox = currentLine,
+                CurX = currentBox.Location.X,
+                CurY = currentBox.Location.Y,
+                CurrentMaxBottom = currentBottom
             };
 
+            if (currentBox.Words.Count > 0)
+            {
+                //position words within local max right
+                //box bottom should be updated by this method
+                //as text wrap to new lines increase bottom
+                var status = LayoutWords(g, currentBox, currentLine,
+                  curX, curY, leftLimit, rightLimit, currentBottom);
+
+                layoutCoreStatus.CurrentLineBox = status.CurrentLineBox;
+                layoutCoreStatus.CurX = status.CurX;
+                layoutCoreStatus.CurY = status.CurY;
+                layoutCoreStatus.CurrentMaxBottom = status.CurrentMaxBottom;
+            }
+           
             foreach (var box in currentBox.Boxes)
             {
                 var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
@@ -62,7 +73,7 @@ namespace UHtml.Core.Dom
             return new StaticNoneInlineBlockStatus()
             {
                 CurrentLineBox = layoutCoreStatus.CurrentLineBox,
-                CurX = layoutCoreStatus.CurX,
+                CurX = currentBox.ActualRight,
                 CurY = layoutCoreStatus.CurY,
                 CurrentMaxBottom = layoutCoreStatus.CurrentMaxBottom
             };
