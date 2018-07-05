@@ -228,7 +228,7 @@ namespace UHtml.Core.Dom
                 }
 
                 var box = ParentBox;
-                while (!box.IsBlock &&
+                while (!(box.IsBlock || box.IsInlineBlock) &&
                        box.Display != CssConstants.ListItem &&
                        box.Display != CssConstants.Table &&
                        box.Display != CssConstants.TableCell &&

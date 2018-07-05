@@ -10,20 +10,19 @@ using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
 {
-    internal class StaticNoneBlockStatus
+    internal class StaticNoneBlockLayoutProgress
     {
         public double CurX { get; set; }
         public double CurY { get; set; }
+        
+        public double CurrentRight { get; set; }
+        public double CurrentBottom { get; internal set; }
 
-        public CssLineBox CurrentLineBox { get; set; }
-        public double CurrentMaxBottom { get; internal set; }
-
-        public double CurrentMaxRight { get; set; }
     }
 
     internal static partial class CssLayoutEngine
     {
-        public static StaticNoneBlockStatus LayoutStaticNoneBlock(RGraphics g,
+        public static StaticNoneBlockLayoutProgress LayoutStaticNoneBlock(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
           CssLineBox currentLine,
@@ -60,48 +59,49 @@ namespace UHtml.Core.Dom
 
             double width = CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox);
 
-            var layoutCoreStatus = new LayoutCoreStatus()
+            var layoutCoreStatus = new LayoutProgress()
             {
-                CurrentLineBox = currentLine,
+                CurrentLine = currentLine,
                 CurX = currentBox.Location.X 
                             + currentBox.ActualBorderLeftWidth
                             + currentBox.ActualPaddingLeft,
                 CurY = currentBox.Location.Y
                             + currentBox.ActualBorderTopWidth
                             + currentBox.ActualPaddingTop,
-                CurrentMaxLeft = currentBox.Location.X
-                            + currentBox.ActualBorderLeftWidth
-                            + currentBox.ActualPaddingLeft,
-                CurrentMaxRight = currentBox.Width != CssConstants.Auto &&
-                                  !string.IsNullOrEmpty(currentBox.Width) ?
-                                currentBox.Location.X 
-                                + currentBox.ActualBorderLeftWidth
-                                + currentBox.ActualPaddingLeft
-                                + width
-                                : rightLimit 
-                                - currentBox.ActualMarginRight 
-                                - currentBox.ActualPaddingRight
-                                - currentBox.ActualBorderRightWidth,
-
-                CurrentMaxBottom = currentBottom
+                CurrentBottom = currentBottom
             };
+
+            var currentMaxLeft = currentBox.Location.X
+                           + currentBox.ActualBorderLeftWidth
+                           + currentBox.ActualPaddingLeft;
+
+            var currentMaxRight = currentBox.Width != CssConstants.Auto &&
+                               !string.IsNullOrEmpty(currentBox.Width) ?
+                             currentBox.Location.X
+                             + currentBox.ActualBorderLeftWidth
+                             + currentBox.ActualPaddingLeft
+                             + width
+                             : rightLimit
+                             - currentBox.ActualMarginRight
+                             - currentBox.ActualPaddingRight
+                             - currentBox.ActualBorderRightWidth;
 
             //child boxes here
             foreach (var box in currentBox.Boxes)
             {
                 var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                     layoutCoreStatus.CurrentLineBox, layoutCoreStatus.CurrentMaxLeft, layoutCoreStatus.CurrentMaxRight, layoutCoreStatus.CurrentMaxBottom);
+                     layoutCoreStatus.CurrentLine, currentMaxLeft , currentMaxRight, layoutCoreStatus.CurrentBottom);
 
                 if(result!=null)
                 {
-                    layoutCoreStatus.CurrentMaxBottom = result.CurrentMaxBottom;
+                    layoutCoreStatus.CurrentBottom = result.CurrentBottom;
                     layoutCoreStatus.CurX = result.CurX;
                     layoutCoreStatus.CurY = result.CurY;
                 }
             }
 
 
-            SetBlockBoxSize(currentBox, leftLimit, rightLimit, layoutCoreStatus.CurrentMaxBottom - top);
+            SetBlockBoxSize(currentBox, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom - top);
 
             if (!currentBox.IsFixed)
             {
@@ -117,13 +117,11 @@ namespace UHtml.Core.Dom
                     - currentBox.HtmlContainer.Root.Location.Y));
             }
 
-            return new StaticNoneBlockStatus()
+            return new StaticNoneBlockLayoutProgress()
             {
-                CurrentLineBox = layoutCoreStatus.CurrentLineBox,
                 CurX = layoutCoreStatus.CurX,
                 CurY = layoutCoreStatus.CurY,
-                CurrentMaxBottom = layoutCoreStatus.CurrentMaxBottom + currentBox.ActualMarginBottom, 
-                CurrentMaxRight = layoutCoreStatus.CurrentMaxRight
+                CurrentBottom = layoutCoreStatus.CurrentBottom + currentBox.ActualMarginBottom
             };
 
         }

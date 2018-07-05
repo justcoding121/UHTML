@@ -51,8 +51,6 @@ namespace UHtml.Core.Dom
         }
 
 
- 
-
 
         /// <summary>
         /// Applies special vertical alignment for table-cells

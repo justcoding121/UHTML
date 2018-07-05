@@ -1,12 +1,11 @@
-﻿using System;
-using UHtml.Adapters;
+﻿using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Parse;
 using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
 {
-    internal class StaticNoneInlineBlockStatus
+    internal class StaticNoneInlineBlockLayoutProgress
     {
         public double CurX { get; set; }
         public double CurY { get; set; }
@@ -17,7 +16,7 @@ namespace UHtml.Core.Dom
 
     internal static partial class CssLayoutEngine
     {
-        public static StaticNoneInlineBlockStatus LayoutStaticNoneInlineBlock(RGraphics g,
+        public static StaticNoneInlineBlockLayoutProgress LayoutStaticNoneInlineBlock(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
           CssLineBox currentLine,
@@ -35,47 +34,41 @@ namespace UHtml.Core.Dom
             rightLimit = currentBox.Location.X + currentBox.ActualWidth;
 
 
-            var layoutCoreStatus = new LayoutCoreStatus()
+            var layoutCoreStatus = new LayoutProgress()
             {
-                CurrentLineBox = currentLine,
                 CurX = currentBox.Location.X,
                 CurY = currentBox.Location.Y,
-                CurrentMaxBottom = currentBottom
+                CurrentBottom = currentBottom
             };
 
-            if (currentBox.Words.Count > 0)
-            {
-                //position words within local max right
-                //box bottom should be updated by this method
-                //as text wrap to new lines increase bottom
-                var status = LayoutWords(g, currentBox, currentLine,
-                  curX, curY, leftLimit, rightLimit, currentBottom);
 
-                layoutCoreStatus.CurrentLineBox = status.CurrentLineBox;
-                layoutCoreStatus.CurX = status.CurX;
-                layoutCoreStatus.CurY = status.CurY;
-                layoutCoreStatus.CurrentMaxBottom = status.CurrentMaxBottom;
-            }
-           
             foreach (var box in currentBox.Boxes)
             {
                 var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                      layoutCoreStatus.CurrentLineBox, leftLimit, rightLimit, layoutCoreStatus.CurrentMaxBottom);
+                      layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
 
                 if (result != null)
                 {
-                    layoutCoreStatus.CurrentMaxBottom = result.CurrentMaxBottom;
                     layoutCoreStatus.CurX = result.CurX;
                     layoutCoreStatus.CurY = result.CurY;
+                    layoutCoreStatus.CurrentBottom = result.CurrentBottom;
+                    layoutCoreStatus.CurrentLine = result.CurrentLine;
                 }
             }
 
-            return new StaticNoneInlineBlockStatus()
+            if (currentLine == null)
             {
-                CurrentLineBox = layoutCoreStatus.CurrentLineBox,
+                currentLine = new CssLineBox(currentBox.ContainingBlock);
+            }
+
+            currentLine.ReportExistanceOfBox(currentBox);
+
+            return new StaticNoneInlineBlockLayoutProgress()
+            {
                 CurX = currentBox.ActualRight,
                 CurY = layoutCoreStatus.CurY,
-                CurrentMaxBottom = layoutCoreStatus.CurrentMaxBottom
+                CurrentMaxBottom = layoutCoreStatus.CurrentBottom,
+                CurrentLineBox = currentLine
             };
         }
 

@@ -4,21 +4,20 @@ using UHtml.Adapters;
 
 namespace UHtml.Core.Dom
 {
-    internal class LayoutCoreStatus
+    internal class LayoutProgress
     {
         public double CurX { get; set; }
         public double CurY { get; set; }
 
-        public CssLineBox CurrentLineBox { get; set; }
-        public double CurrentMaxBottom { get; internal set; }
-        public double CurrentMaxRight { get; internal set; }
-        public double CurrentMaxLeft { get; internal set; }
+        public CssLineBox CurrentLine { get; set; }
+        public double CurrentBottom { get; internal set; }
+
     }
 
     internal static partial class CssLayoutEngine
     {
         [SuppressMessage("ReSharper", "RedundantCaseLabel")]
-        public static LayoutCoreStatus LayoutRecursively(RGraphics g,
+        public static LayoutProgress LayoutRecursively(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
           CssLineBox currentLine,
@@ -60,14 +59,11 @@ namespace UHtml.Core.Dom
                                                leftLimit, rightLimit,
                                                currentBottom);
 
-                                            return new LayoutCoreStatus()
+                                            return new LayoutProgress()
                                             {
-                                                CurrentLineBox = staticNoneBlockResult.CurrentLineBox,
-                                                CurrentMaxLeft = leftLimit,
-                                                CurrentMaxBottom = staticNoneBlockResult.CurrentMaxBottom,
+                                                CurrentBottom = staticNoneBlockResult.CurrentBottom,
                                                 CurX = staticNoneBlockResult.CurX,
                                                 CurY = staticNoneBlockResult.CurY,
-                                                CurrentMaxRight = staticNoneBlockResult.CurrentMaxRight
                                             };
                                         }
 
@@ -81,14 +77,12 @@ namespace UHtml.Core.Dom
                                                 leftLimit, rightLimit,
                                                 currentBottom);
 
-                                            return new LayoutCoreStatus()
+                                            return new LayoutProgress()
                                             {
-                                                CurrentLineBox = staticNoneInlineBlockResult.CurrentLineBox,
-                                                CurrentMaxLeft = leftLimit,
-                                                CurrentMaxBottom = staticNoneInlineBlockResult.CurrentMaxBottom,
+                                                CurrentLine = staticNoneInlineBlockResult.CurrentLineBox,
+                                                CurrentBottom = staticNoneInlineBlockResult.CurrentMaxBottom,
                                                 CurX = staticNoneInlineBlockResult.CurX,
                                                 CurY = staticNoneInlineBlockResult.CurY,
-                                                CurrentMaxRight = rightLimit
                                             };
                                         }
                                     case "inline":
@@ -101,14 +95,12 @@ namespace UHtml.Core.Dom
                                                 leftLimit, rightLimit,
                                                 currentBottom);
 
-                                            return new LayoutCoreStatus()
+                                            return new LayoutProgress()
                                             {
-                                                CurrentLineBox = staticNoneInlineResult.CurrentLineBox,
-                                                CurrentMaxLeft = leftLimit,
-                                                CurrentMaxBottom = staticNoneInlineResult.CurrentMaxBottom,
+                                                CurrentLine = staticNoneInlineResult.CurrentLineBox,
+                                                CurrentBottom = staticNoneInlineResult.CurrentBottom,
                                                 CurX = staticNoneInlineResult.CurX,
                                                 CurY = staticNoneInlineResult.CurY,
-                                                CurrentMaxRight = rightLimit
                                             };
                                         }
                                 }

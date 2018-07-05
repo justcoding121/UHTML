@@ -123,6 +123,18 @@ namespace UHtml.Core.Dom
         }
 
         /// <summary>
+        /// Lets the linebox add the word an its box to their lists if necessary.
+        /// </summary>
+        /// <param name="word"></param>
+        internal void ReportExistanceOfBox(CssBox box)
+        {
+            if (!RelatedBoxes.Contains(box))
+            {
+                RelatedBoxes.Add(box);
+            }
+        }
+
+        /// <summary>
         /// Return the words of the specified box that live in this linebox
         /// </summary>
         /// <param name="box"></param>
