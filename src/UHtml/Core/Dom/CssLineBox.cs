@@ -150,11 +150,6 @@ namespace UHtml.Core.Dom
             return r;
         }
 
-        internal void ReportExistanceOf(CssBox box)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Updates the specified rectangle of the specified box.
         /// </summary>

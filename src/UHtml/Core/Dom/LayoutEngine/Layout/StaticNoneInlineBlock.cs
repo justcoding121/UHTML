@@ -1,4 +1,5 @@
-﻿using UHtml.Adapters;
+﻿using System;
+using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Parse;
 using UHtml.Core.Utils;
@@ -23,12 +24,25 @@ namespace UHtml.Core.Dom
           double leftLimit, double rightLimit,
           double currentBottom)
         {
-            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
+            if (currentLine == null)
+            {
+                currentLine = new CssLineBox(currentBox.ContainingBlock);
+            }
 
             SetInlineBlockBoxSize(currentBox, curX, curY,
                                                 currentLine,
                                                 leftLimit, rightLimit,
                                                 currentBottom);
+
+            
+            if (curX + currentBox.ActualWidth > rightLimit)
+            {
+                currentBox.Location = new RPoint(leftLimit + currentBox.ActualMarginLeft, curY +  currentBox.ActualHeight);
+            }
+            else
+            {
+                currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
+            }
 
             leftLimit = currentBox.Location.X;
             rightLimit = currentBox.Location.X + currentBox.ActualWidth;
@@ -56,18 +70,11 @@ namespace UHtml.Core.Dom
                 }
             }
 
-            if (currentLine == null)
-            {
-                currentLine = new CssLineBox(currentBox.ContainingBlock);
-            }
-
-            currentLine.ReportExistanceOfBox(currentBox);
-
             return new StaticNoneInlineBlockLayoutProgress()
             {
                 CurX = currentBox.ActualRight,
                 CurY = layoutCoreStatus.CurY,
-                CurrentMaxBottom = layoutCoreStatus.CurrentBottom,
+                CurrentMaxBottom = Math.Max(layoutCoreStatus.CurrentBottom, currentBox.ActualBottom),
                 CurrentLineBox = currentLine
             };
         }
@@ -106,7 +113,7 @@ namespace UHtml.Core.Dom
 
             if (currentLine != null)
             {
-                currentLine.ReportExistanceOf(box);
+                currentLine.ReportExistanceOfBox(box);
             }
         }
     }
