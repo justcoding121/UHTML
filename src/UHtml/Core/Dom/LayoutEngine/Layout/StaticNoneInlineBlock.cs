@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 using UHtml.Core.Parse;
@@ -17,6 +18,49 @@ namespace UHtml.Core.Dom
 
     internal static partial class CssLayoutEngine
     {
+        public static StaticNoneInlineBlockLayoutProgress LayoutInlineBlockBoxes(RGraphics g, CssBox blockBox)
+        {
+            var curX = blockBox.Location.X;
+            var curY = blockBox.Location.Y;
+
+            var leftLimit = curX;
+            var rightLimit = curX + blockBox.ActualWidth;
+
+            var currentBottom = curX;
+            CssLineBox currentLine;
+
+            var layoutCoreStatus = new LayoutProgress()
+            {
+                CurX = curX,
+                CurY = curY,
+                CurrentBottom = currentBottom
+            };
+
+            foreach (var word in blockBox.Boxes)
+            {
+                var localLeftLimit = curX;
+                double localRightLimit;
+
+                if (word.Width != null)
+                {
+                    localRightLimit = curX + word.ActualWidth;
+                }
+                else
+                {
+                    localRightLimit = rightLimit;
+                }
+
+                layoutCoreStatus = LayoutRecursively(g, word, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                      layoutCoreStatus.CurrentLine, localLeftLimit, localRightLimit, layoutCoreStatus.CurrentBottom);
+
+                curX = layoutCoreStatus.CurX;
+                //cur
+
+            }
+
+            throw new NotImplementedException();
+        }
+
         public static StaticNoneInlineBlockLayoutProgress LayoutStaticNoneInlineBlock(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
@@ -34,10 +78,10 @@ namespace UHtml.Core.Dom
                                                 leftLimit, rightLimit,
                                                 currentBottom);
 
-            
+
             if (curX + currentBox.ActualWidth > rightLimit)
             {
-                currentBox.Location = new RPoint(leftLimit + currentBox.ActualMarginLeft, curY +  currentBox.ActualHeight);
+                currentBox.Location = new RPoint(leftLimit + currentBox.ActualMarginLeft, curY + currentBox.ActualHeight);
             }
             else
             {
@@ -98,7 +142,7 @@ namespace UHtml.Core.Dom
                                 + box.ActualPaddingLeft
                                 + box.ActualBorderRightWidth
                                 + box.ActualPaddingRight
-                                : rightLimit 
+                                : rightLimit
                                 - box.ActualMarginLeft
                                 - box.ActualMarginRight
                                 ,
