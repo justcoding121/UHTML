@@ -43,7 +43,7 @@ namespace UHtml.Core.Dom
                 top = currentBox.ParentBox.ClientTop + currentBox.MarginTopCollapse(prevSibling);
             }
             else
-            {
+             {
                 if (prevSibling != null)
                 {
                     top = prevSibling.ActualBottom + currentBox.MarginTopCollapse(prevSibling);
@@ -101,7 +101,7 @@ namespace UHtml.Core.Dom
             }
 
 
-            SetBlockBoxSize(currentBox, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom - top);
+            SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.CurrentBottom);
 
             if (!currentBox.IsFixed)
             {
@@ -134,7 +134,7 @@ namespace UHtml.Core.Dom
         private static void SetBlockBoxSize(CssBox box,
             double leftLimit,
             double rightLimit,
-            double currentBottom)
+            double top, double bottom)
         {
 
             double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
@@ -154,7 +154,7 @@ namespace UHtml.Core.Dom
                                 + box.ActualPaddingTop
                                 + box.ActualBorderBottomWidth
                                 + box.ActualPaddingBottom
-                                : currentBottom
+                                : bottom - top
                                 + box.ActualPaddingBottom
                                 + box.ActualBorderBottomWidth);
 

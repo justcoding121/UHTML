@@ -76,7 +76,9 @@ namespace UHtml.Core.Dom
                     //use the fixed height
                     box.ActualBottom = initialY + box.ActualHeight;
                 }
-                
+
+                maxBottom = box.ActualBottom;
+
                 if (box.Width == CssConstants.Auto)
                 {
                     //use the maximum right hit during word layout
@@ -87,7 +89,6 @@ namespace UHtml.Core.Dom
                     //use the fixed width
                     box.ActualRight = initialX + box.ActualWidth;
                 }
-
             }
 
             return new WordLayoutStatus()
@@ -95,7 +96,7 @@ namespace UHtml.Core.Dom
                 CurrentLineBox = currentLineBox,
                 CurX = curX,
                 CurY = curY,
-                CurrentMaxBottom = box.ActualBottom
+                CurrentMaxBottom = maxBottom
             };
         }
     }

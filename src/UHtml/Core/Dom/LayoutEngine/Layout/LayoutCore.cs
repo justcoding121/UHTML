@@ -52,19 +52,29 @@ namespace UHtml.Core.Dom
                                         break;
                                     case "block":
                                         {
-                                            var staticNoneBlockResult = LayoutStaticNoneBlock(g,
-                                               currentBox,
-                                               curX, curY,
-                                               currentLine,
-                                               leftLimit, rightLimit,
-                                               currentBottom);
-
-                                            return new LayoutProgress()
+                                            if (currentBox.boxes.Count > 0 && currentBox.Boxes[0].Display == "inline-block")
                                             {
-                                                CurrentBottom = staticNoneBlockResult.CurrentBottom,
-                                                CurX = staticNoneBlockResult.CurX,
-                                                CurY = staticNoneBlockResult.CurY,
-                                            };
+                                                return LayoutInlineBlockBoxes(g, 
+                                                    currentBox, curX, curY, 
+                                                    leftLimit, rightLimit,
+                                                    currentBottom);
+                                            }
+                                            else
+                                            {
+                                                var staticNoneBlockResult = LayoutStaticNoneBlock(g,
+                                                   currentBox,
+                                                   curX, curY,
+                                                   currentLine,
+                                                   leftLimit, rightLimit,
+                                                   currentBottom);
+
+                                                return new LayoutProgress()
+                                                {
+                                                    CurrentBottom = staticNoneBlockResult.CurrentBottom,
+                                                    CurX = staticNoneBlockResult.CurX,
+                                                    CurY = staticNoneBlockResult.CurY,
+                                                };
+                                            }
                                         }
 
 
@@ -73,7 +83,6 @@ namespace UHtml.Core.Dom
                                             var staticNoneInlineBlockResult = LayoutStaticNoneInlineBlock(g,
                                                 currentBox,
                                                 curX, curY,
-                                                currentLine,
                                                 leftLimit, rightLimit,
                                                 currentBottom);
 

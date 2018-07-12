@@ -39,7 +39,7 @@ namespace UHtml.Core.Dom
             //position words within local max right
             //box bottom should be updated by this method
             //as text wrap to new lines increase bottom
-            var status = LayoutWords(g, currentBox, null,
+            var status = LayoutWords(g, currentBox, currentLine,
                  curX, curY, leftLimit, rightLimit, currentBottom);
 
 
@@ -58,16 +58,11 @@ namespace UHtml.Core.Dom
 
                 if (result != null)
                 {
+                    layoutCoreStatus.CurX = result.CurX;
+                    layoutCoreStatus.CurY = result.CurY;
                     layoutCoreStatus.CurrentBottom = result.CurrentBottom;
                 }
             }
-
-            if(currentLine==null)
-            {
-                currentLine = new CssLineBox(currentBox.ContainingBlock);
-            }
-
-            currentLine.ReportExistanceOfBox(currentBox);
 
             return new StaticNoneInlineLayoutProgress()
             {

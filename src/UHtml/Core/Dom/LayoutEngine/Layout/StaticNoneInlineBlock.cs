@@ -18,79 +18,102 @@ namespace UHtml.Core.Dom
 
     internal static partial class CssLayoutEngine
     {
-        public static StaticNoneInlineBlockLayoutProgress LayoutInlineBlockBoxes(RGraphics g, CssBox blockBox)
+        public static LayoutProgress LayoutInlineBlockBoxes(RGraphics g, 
+            CssBox currentBox,
+            double curX, double curY,
+            double leftLimit, double rightLimit, double currentBottom)
         {
-            var curX = blockBox.Location.X;
-            var curY = blockBox.Location.Y;
+            //get previous sibling to adjust margin overlapping on top
+            var prevSibling = DomUtils.GetPreviousSibling(currentBox);
 
-            var leftLimit = curX;
-            var rightLimit = curX + blockBox.ActualWidth;
+            double left;
+            double top;
 
-            var currentBottom = curX;
-            CssLineBox currentLine;
 
-            var layoutCoreStatus = new LayoutProgress()
+            left = leftLimit + currentBox.ActualMarginLeft;
+
+            if (prevSibling == null && currentBox.ParentBox != null)
             {
-                CurX = curX,
-                CurY = curY,
-                CurrentBottom = currentBottom
-            };
-
-            foreach (var word in blockBox.Boxes)
+                top = currentBox.ParentBox.ClientTop + currentBox.MarginTopCollapse(prevSibling);
+            }
+            else
             {
-                var localLeftLimit = curX;
-                double localRightLimit;
-
-                if (word.Width != null)
+                if (prevSibling != null)
                 {
-                    localRightLimit = curX + word.ActualWidth;
+                    top = prevSibling.ActualBottom + currentBox.MarginTopCollapse(prevSibling);
                 }
                 else
                 {
-                    localRightLimit = rightLimit;
+                    top = currentBox.MarginTopCollapse(prevSibling);
                 }
-
-                layoutCoreStatus = LayoutRecursively(g, word, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                      layoutCoreStatus.CurrentLine, localLeftLimit, localRightLimit, layoutCoreStatus.CurrentBottom);
-
-                curX = layoutCoreStatus.CurX;
-                //cur
 
             }
 
-            throw new NotImplementedException();
+            currentBox.Location = new RPoint(left, top);
+
+            double width = CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox);
+
+            var currentLine = new CssLineBox(currentBox);
+
+            var layoutCoreStatus = new LayoutProgress()
+            {
+                CurrentLine = currentLine,
+                CurX = currentBox.Location.X
+                            + currentBox.ActualBorderLeftWidth
+                            + currentBox.ActualPaddingLeft,
+                CurY = currentBox.Location.Y
+                            + currentBox.ActualBorderTopWidth
+                            + currentBox.ActualPaddingTop,
+                CurrentBottom = currentBottom
+            };
+
+            var currentMaxLeft = currentBox.Location.X
+                           + currentBox.ActualBorderLeftWidth
+                           + currentBox.ActualPaddingLeft;
+
+            var currentMaxRight = currentBox.Width != CssConstants.Auto &&
+                               !string.IsNullOrEmpty(currentBox.Width) ?
+                             currentBox.Location.X
+                             + currentBox.ActualBorderLeftWidth
+                             + currentBox.ActualPaddingLeft
+                             + width
+                             : rightLimit
+                             - currentBox.ActualMarginRight
+                             - currentBox.ActualPaddingRight
+                             - currentBox.ActualBorderRightWidth;
+           
+
+            foreach (var inlineBox in currentBox.Boxes)
+            {
+                if (inlineBox.Width != CssConstants.Auto &&
+                               !string.IsNullOrEmpty(inlineBox.Width))
+                {
+                    if (layoutCoreStatus.CurX + inlineBox.ActualWidth > rightLimit)
+                    {
+                        currentLine = new CssLineBox(currentBox);
+                        layoutCoreStatus.CurX = leftLimit;
+                    }
+                }
+
+
+                layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                      layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
+
+                currentLine.ReportExistanceOfBox(inlineBox);
+            }
+
+            SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.CurrentBottom);
+
+            return layoutCoreStatus;
         }
 
         public static StaticNoneInlineBlockLayoutProgress LayoutStaticNoneInlineBlock(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
-          CssLineBox currentLine,
           double leftLimit, double rightLimit,
           double currentBottom)
-        {
-            if (currentLine == null)
-            {
-                currentLine = new CssLineBox(currentBox.ContainingBlock);
-            }
-
-            SetInlineBlockBoxSize(currentBox, curX, curY,
-                                                currentLine,
-                                                leftLimit, rightLimit,
-                                                currentBottom);
-
-
-            if (curX + currentBox.ActualWidth > rightLimit)
-            {
-                currentBox.Location = new RPoint(leftLimit + currentBox.ActualMarginLeft, curY + currentBox.ActualHeight);
-            }
-            else
-            {
-                currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
-            }
-
-            leftLimit = currentBox.Location.X;
-            rightLimit = currentBox.Location.X + currentBox.ActualWidth;
-
+        {   
+           currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
 
             var layoutCoreStatus = new LayoutProgress()
             {
@@ -98,7 +121,6 @@ namespace UHtml.Core.Dom
                 CurY = currentBox.Location.Y,
                 CurrentBottom = currentBottom
             };
-
 
             foreach (var box in currentBox.Boxes)
             {
@@ -114,12 +136,15 @@ namespace UHtml.Core.Dom
                 }
             }
 
+            SetInlineBlockBoxSize(currentBox, curX, curY,
+                                   curX, layoutCoreStatus.CurX,
+                                   layoutCoreStatus.CurrentBottom);
+
             return new StaticNoneInlineBlockLayoutProgress()
             {
                 CurX = currentBox.ActualRight,
                 CurY = layoutCoreStatus.CurY,
-                CurrentMaxBottom = Math.Max(layoutCoreStatus.CurrentBottom, currentBox.ActualBottom),
-                CurrentLineBox = currentLine
+                CurrentMaxBottom = currentBox.ActualBottom
             };
         }
 
@@ -128,37 +153,37 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="box"></param>
         private static void SetInlineBlockBoxSize(CssBox box,
-          double curX, double curY,
-          CssLineBox currentLine,
-          double leftLimit, double rightLimit,
+          double startX, double startY,
+          double leftEnd, double rightEnd,
           double currentBottom)
         {
 
             double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
             double width = CssValueParser.ParseLength(box.Width, box.ContainingBlock.Size.Width, box);
 
+
             box.Size = new RSize(box.Width != CssConstants.Auto && !string.IsNullOrEmpty(box.Width) ? width
                                 + box.ActualBorderLeftWidth
                                 + box.ActualPaddingLeft
                                 + box.ActualBorderRightWidth
                                 + box.ActualPaddingRight
-                                : rightLimit
-                                - box.ActualMarginLeft
-                                - box.ActualMarginRight
+                                : rightEnd - leftEnd
+                                + box.ActualBorderLeftWidth
+                                + box.ActualPaddingLeft
+                                + box.ActualBorderRightWidth
+                                + box.ActualPaddingRight
                                 ,
                                 box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height) ? height
                                 + box.ActualBorderTopWidth
                                 + box.ActualPaddingTop
                                 + box.ActualBorderBottomWidth
                                 + box.ActualPaddingBottom
-                                : currentBottom
+                                : currentBottom - startY
+                                + box.ActualBorderTopWidth
+                                + box.ActualPaddingTop
                                 + box.ActualPaddingBottom
                                 + box.ActualBorderBottomWidth);
 
-            if (currentLine != null)
-            {
-                currentLine.ReportExistanceOfBox(box);
-            }
         }
     }
 }
