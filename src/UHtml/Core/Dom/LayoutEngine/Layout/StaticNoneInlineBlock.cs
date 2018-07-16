@@ -114,18 +114,25 @@ namespace UHtml.Core.Dom
           double currentBottom)
         {   
            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
-
+                
             var layoutCoreStatus = new LayoutProgress()
             {
-                CurX = currentBox.Location.X,
-                CurY = currentBox.Location.Y,
+                CurX = currentBox.Location.X + currentBox.ActualPaddingLeft + currentBox.ActualBorderLeftWidth,
+                CurY = currentBox.Location.Y + currentBox.ActualPaddingTop + currentBox.ActualBorderTopWidth,
                 CurrentBottom = currentBottom
             };
 
+            var maxRight = 0.0;
+
             foreach (var box in currentBox.Boxes)
             {
-                var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                      layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
+
+                var result = LayoutRecursively(g, box, 
+                    layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                    layoutCoreStatus.CurrentLine,
+                    layoutCoreStatus.CurX,
+                    rightLimit - currentBox.ActualPaddingRight - currentBox.ActualBorderRightWidth, 
+                    layoutCoreStatus.CurrentBottom);
 
                 if (result != null)
                 {
@@ -134,10 +141,14 @@ namespace UHtml.Core.Dom
                     layoutCoreStatus.CurrentBottom = result.CurrentBottom;
                     layoutCoreStatus.CurrentLine = result.CurrentLine;
                 }
+
+                maxRight = Math.Max(maxRight, box.ActualRight);
             }
 
+            maxRight += currentBox.ActualPaddingRight + currentBox.ActualBorderRightWidth;
+
             SetInlineBlockBoxSize(currentBox, curX, curY,
-                                   curX, layoutCoreStatus.CurX,
+                                   curX, maxRight,
                                    layoutCoreStatus.CurrentBottom);
 
             return new StaticNoneInlineBlockLayoutProgress()
@@ -168,10 +179,6 @@ namespace UHtml.Core.Dom
                                 + box.ActualBorderRightWidth
                                 + box.ActualPaddingRight
                                 : rightEnd - leftEnd
-                                + box.ActualBorderLeftWidth
-                                + box.ActualPaddingLeft
-                                + box.ActualBorderRightWidth
-                                + box.ActualPaddingRight
                                 ,
                                 box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height) ? height
                                 + box.ActualBorderTopWidth
