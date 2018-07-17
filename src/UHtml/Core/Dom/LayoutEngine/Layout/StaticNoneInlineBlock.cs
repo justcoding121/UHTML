@@ -114,24 +114,30 @@ namespace UHtml.Core.Dom
           double currentBottom)
         {   
            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
-                
+
+            leftLimit = currentBox.Location.X + currentBox.ActualPaddingLeft + currentBox.ActualBorderLeftWidth;
+            rightLimit = currentBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(currentBox.Width) ?
+                leftLimit + CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox)
+                : rightLimit - currentBox.ActualPaddingRight - currentBox.ActualBorderRightWidth - currentBox.ActualMarginRight;
+
+            var top = currentBox.Location.Y + currentBox.ActualPaddingTop + currentBox.ActualBorderTopWidth;
+
             var layoutCoreStatus = new LayoutProgress()
             {
-                CurX = currentBox.Location.X + currentBox.ActualPaddingLeft + currentBox.ActualBorderLeftWidth,
-                CurY = currentBox.Location.Y + currentBox.ActualPaddingTop + currentBox.ActualBorderTopWidth,
+                CurX = leftLimit,
+                CurY = top,
                 CurrentBottom = currentBottom
             };
 
             var maxRight = 0.0;
 
             foreach (var box in currentBox.Boxes)
-            {
-
+            {           
                 var result = LayoutRecursively(g, box, 
                     layoutCoreStatus.CurX, layoutCoreStatus.CurY,
                     layoutCoreStatus.CurrentLine,
-                    layoutCoreStatus.CurX,
-                    rightLimit - currentBox.ActualPaddingRight - currentBox.ActualBorderRightWidth, 
+                    leftLimit,
+                    rightLimit, 
                     layoutCoreStatus.CurrentBottom);
 
                 if (result != null)
@@ -145,17 +151,15 @@ namespace UHtml.Core.Dom
                 maxRight = Math.Max(maxRight, box.ActualRight);
             }
 
-            maxRight += currentBox.ActualPaddingRight + currentBox.ActualBorderRightWidth;
-
-            SetInlineBlockBoxSize(currentBox, curX, curY,
-                                   curX, maxRight,
-                                   layoutCoreStatus.CurrentBottom);
+            SetInlineBlockBoxSize(currentBox,
+                                   leftLimit, maxRight,
+                                   top, layoutCoreStatus.CurrentBottom);
 
             return new StaticNoneInlineBlockLayoutProgress()
             {
-                CurX = currentBox.ActualRight,
+                CurX = currentBox.ActualRight + currentBox.ActualMarginRight,
                 CurY = layoutCoreStatus.CurY,
-                CurrentMaxBottom = currentBox.ActualBottom
+                CurrentMaxBottom = currentBox.ActualBottom + currentBox.ActualMarginBottom
             };
         }
 
@@ -164,28 +168,24 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="box"></param>
         private static void SetInlineBlockBoxSize(CssBox box,
-          double startX, double startY,
           double leftEnd, double rightEnd,
-          double currentBottom)
+          double currentTop, double currentBottom)
         {
 
-            double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
-            double width = CssValueParser.ParseLength(box.Width, box.ContainingBlock.Size.Width, box);
+            double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);    
 
-
-            box.Size = new RSize(box.Width != CssConstants.Auto && !string.IsNullOrEmpty(box.Width) ? width
+            box.Size = new RSize(rightEnd - leftEnd
                                 + box.ActualBorderLeftWidth
                                 + box.ActualPaddingLeft
                                 + box.ActualBorderRightWidth
                                 + box.ActualPaddingRight
-                                : rightEnd - leftEnd
                                 ,
                                 box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height) ? height
                                 + box.ActualBorderTopWidth
                                 + box.ActualPaddingTop
                                 + box.ActualBorderBottomWidth
                                 + box.ActualPaddingBottom
-                                : currentBottom - startY
+                                : currentBottom - currentTop
                                 + box.ActualBorderTopWidth
                                 + box.ActualPaddingTop
                                 + box.ActualPaddingBottom

@@ -48,7 +48,7 @@ namespace UHtml.Core.Dom
                          && (box.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces))
                         || word.IsLineBreak)
                     {
-
+                        maxRight = rightLimit;
                         curX = leftLimit;
                         curY = maxBottom;
 
@@ -62,7 +62,7 @@ namespace UHtml.Core.Dom
 
                     curX = word.Left + word.FullWidth;
 
-                    maxRight = Math.Max(maxRight, curX);
+                    maxRight = Math.Max(maxRight, word.Right);
                     maxBottom = Math.Max(maxBottom, word.Bottom);
                 }
 
@@ -94,7 +94,7 @@ namespace UHtml.Core.Dom
             return new WordLayoutStatus()
             {
                 CurrentLineBox = currentLineBox,
-                CurX = curX,
+                CurX = maxRight,
                 CurY = curY,
                 CurrentMaxBottom = maxBottom
             };
