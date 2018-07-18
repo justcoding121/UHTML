@@ -94,7 +94,7 @@ namespace UHtml.Core.Dom
             return new WordLayoutStatus()
             {
                 CurrentLineBox = currentLineBox,
-                CurX = maxRight,
+                CurX = curX,
                 CurY = curY,
                 CurrentMaxBottom = maxBottom
             };

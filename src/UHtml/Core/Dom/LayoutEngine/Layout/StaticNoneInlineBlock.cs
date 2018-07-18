@@ -18,7 +18,7 @@ namespace UHtml.Core.Dom
 
     internal static partial class CssLayoutEngine
     {
-        public static LayoutProgress LayoutInlineBlockBoxes(RGraphics g, 
+        public static LayoutProgress LayoutInlineBlockBoxes(RGraphics g,
             CssBox currentBox,
             double curX, double curY,
             double leftLimit, double rightLimit, double currentBottom)
@@ -81,7 +81,7 @@ namespace UHtml.Core.Dom
                              - currentBox.ActualMarginRight
                              - currentBox.ActualPaddingRight
                              - currentBox.ActualBorderRightWidth;
-           
+
 
             foreach (var inlineBox in currentBox.Boxes)
             {
@@ -94,7 +94,6 @@ namespace UHtml.Core.Dom
                         layoutCoreStatus.CurX = leftLimit;
                     }
                 }
-
 
                 layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
                       layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
@@ -110,21 +109,22 @@ namespace UHtml.Core.Dom
         public static StaticNoneInlineBlockLayoutProgress LayoutStaticNoneInlineBlock(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
+          CssLineBox currentLine,
           double leftLimit, double rightLimit,
           double currentBottom)
-        {   
-           currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
+        {
+            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
 
-            leftLimit = currentBox.Location.X + currentBox.ActualPaddingLeft + currentBox.ActualBorderLeftWidth;
-            rightLimit = currentBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(currentBox.Width) ?
-                leftLimit + CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox)
-                : rightLimit - currentBox.ActualPaddingRight - currentBox.ActualBorderRightWidth - currentBox.ActualMarginRight;
+            var boxLeftLimit = currentBox.Location.X + currentBox.ActualPaddingLeft + currentBox.ActualBorderLeftWidth;
+            var boxRightLimit = currentBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(currentBox.Width) ?
+                boxLeftLimit + CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox)
+                :  rightLimit - currentBox.ActualPaddingRight - currentBox.ActualBorderRightWidth - currentBox.ActualMarginRight;
 
             var top = currentBox.Location.Y + currentBox.ActualPaddingTop + currentBox.ActualBorderTopWidth;
 
             var layoutCoreStatus = new LayoutProgress()
             {
-                CurX = leftLimit,
+                CurX = boxLeftLimit,
                 CurY = top,
                 CurrentBottom = currentBottom
             };
@@ -132,12 +132,12 @@ namespace UHtml.Core.Dom
             var maxRight = 0.0;
 
             foreach (var box in currentBox.Boxes)
-            {           
-                var result = LayoutRecursively(g, box, 
+            {
+                var result = LayoutRecursively(g, box,
                     layoutCoreStatus.CurX, layoutCoreStatus.CurY,
                     layoutCoreStatus.CurrentLine,
-                    leftLimit,
-                    rightLimit, 
+                    boxLeftLimit,
+                    boxRightLimit,
                     layoutCoreStatus.CurrentBottom);
 
                 if (result != null)
@@ -152,14 +152,15 @@ namespace UHtml.Core.Dom
             }
 
             SetInlineBlockBoxSize(currentBox,
-                                   leftLimit, maxRight,
+                                   boxLeftLimit, maxRight,
                                    top, layoutCoreStatus.CurrentBottom);
 
             return new StaticNoneInlineBlockLayoutProgress()
             {
                 CurX = currentBox.ActualRight + currentBox.ActualMarginRight,
                 CurY = layoutCoreStatus.CurY,
-                CurrentMaxBottom = currentBox.ActualBottom + currentBox.ActualMarginBottom
+                CurrentMaxBottom = currentBox.ActualBottom + currentBox.ActualMarginBottom,
+                CurrentLineBox = currentLine
             };
         }
 
@@ -172,7 +173,7 @@ namespace UHtml.Core.Dom
           double currentTop, double currentBottom)
         {
 
-            double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);    
+            double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
 
             box.Size = new RSize(rightEnd - leftEnd
                                 + box.ActualBorderLeftWidth

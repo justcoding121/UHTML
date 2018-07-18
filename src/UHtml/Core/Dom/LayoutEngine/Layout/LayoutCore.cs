@@ -83,6 +83,7 @@ namespace UHtml.Core.Dom
                                             var staticNoneInlineBlockResult = LayoutStaticNoneInlineBlock(g,
                                                 currentBox,
                                                 curX, curY,
+                                                currentLine,
                                                 leftLimit, rightLimit,
                                                 currentBottom);
 
