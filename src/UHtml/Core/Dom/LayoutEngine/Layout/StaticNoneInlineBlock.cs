@@ -138,7 +138,7 @@ namespace UHtml.Core.Dom
                     layoutCoreStatus.CurrentLine,
                     boxLeftLimit,
                     boxRightLimit,
-                    layoutCoreStatus.CurrentBottom);
+                    layoutCoreStatus.CurY);
 
                 if (result != null)
                 {
