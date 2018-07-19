@@ -82,6 +82,8 @@ namespace UHtml.Core.Dom
                              - currentBox.ActualPaddingRight
                              - currentBox.ActualBorderRightWidth;
 
+            var maxBottom = 0.0;
+            curY = layoutCoreStatus.CurY;
 
             foreach (var inlineBox in currentBox.Boxes)
             {
@@ -92,13 +94,19 @@ namespace UHtml.Core.Dom
                     {
                         currentLine = new CssLineBox(currentBox);
                         layoutCoreStatus.CurX = leftLimit;
+                        curY = maxBottom;
                     }
                 }
 
-                layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, curY,
                       layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
 
-                currentLine.ReportExistanceOfBox(inlineBox);
+                if(inlineBox.Display=="inline")
+                {
+                    curY = layoutCoreStatus.CurY;
+                }
+
+                maxBottom = Math.Max(maxBottom, layoutCoreStatus.CurrentBottom);
             }
 
             SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.CurrentBottom);
@@ -154,6 +162,8 @@ namespace UHtml.Core.Dom
             SetInlineBlockBoxSize(currentBox,
                                    boxLeftLimit, maxRight,
                                    top, layoutCoreStatus.CurrentBottom);
+
+            currentLine.ReportExistanceOfBox(currentBox);
 
             return new StaticNoneInlineBlockLayoutProgress()
             {
