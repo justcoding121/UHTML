@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using UHtml.Adapters;
-
+using System.Linq;
 
 namespace UHtml.Core.Dom
 {
@@ -52,10 +52,11 @@ namespace UHtml.Core.Dom
                                         break;
                                     case "block":
                                         {
-                                            if (currentBox.boxes.Count > 0 && currentBox.Boxes[0].Display == "inline-block")
+                                            if (currentBox.boxes.Count > 0
+                                                && currentBox.Boxes.Any(x => x.Display == "inline-block"))
                                             {
-                                                return LayoutInlineBlockBoxes(g, 
-                                                    currentBox, curX, curY, 
+                                                return LayoutInlineBlockBoxes(g,
+                                                    currentBox, curX, curY,
                                                     leftLimit, rightLimit,
                                                     currentBottom);
                                             }

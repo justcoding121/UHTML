@@ -98,10 +98,12 @@ namespace UHtml.Core.Dom
                     }
                 }
 
+                currentLine = layoutCoreStatus.CurrentLine;
+
                 layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, curY,
                       layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
 
-                if(inlineBox.Display=="inline")
+                if(inlineBox.Display=="inline" || currentLine!=layoutCoreStatus.CurrentLine)
                 {
                     curY = layoutCoreStatus.CurY;
                 }
@@ -119,14 +121,14 @@ namespace UHtml.Core.Dom
           double curX, double curY,
           CssLineBox currentLine,
           double leftLimit, double rightLimit,
-          double currentBottom)
+          double maxBottom)
         {
             currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
 
             var boxLeftLimit = currentBox.Location.X + currentBox.ActualPaddingLeft + currentBox.ActualBorderLeftWidth;
             var boxRightLimit = currentBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(currentBox.Width) ?
                 boxLeftLimit + CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox)
-                :  rightLimit - currentBox.ActualPaddingRight - currentBox.ActualBorderRightWidth - currentBox.ActualMarginRight;
+                :  curX + rightLimit - leftLimit - currentBox.ActualPaddingRight - currentBox.ActualBorderRightWidth - currentBox.ActualMarginRight;
 
             var top = currentBox.Location.Y + currentBox.ActualPaddingTop + currentBox.ActualBorderTopWidth;
 
@@ -134,7 +136,7 @@ namespace UHtml.Core.Dom
             {
                 CurX = boxLeftLimit,
                 CurY = top,
-                CurrentBottom = currentBottom
+                CurrentBottom = maxBottom
             };
 
             var maxRight = 0.0;
@@ -163,7 +165,22 @@ namespace UHtml.Core.Dom
                                    boxLeftLimit, maxRight,
                                    top, layoutCoreStatus.CurrentBottom);
 
-            currentLine.ReportExistanceOfBox(currentBox);
+            if (currentBox.ActualRight + currentBox.ActualMarginRight > rightLimit)
+            {
+                currentLine = new CssLineBox(currentBox);
+                layoutCoreStatus.CurX = leftLimit + currentBox.ActualMarginLeft;
+                layoutCoreStatus.CurY = maxBottom;
+
+                var xDiff = currentBox.Location.X - layoutCoreStatus.CurX;
+                var yDiff = currentBox.Location.Y - layoutCoreStatus.CurY;
+
+                moveBox(currentBox, xDiff, yDiff);
+            }
+            else
+            {
+                currentLine.ReportExistanceOfBox(currentBox);
+            }
+
 
             return new StaticNoneInlineBlockLayoutProgress()
             {
@@ -172,6 +189,25 @@ namespace UHtml.Core.Dom
                 CurrentMaxBottom = currentBox.ActualBottom + currentBox.ActualMarginBottom,
                 CurrentLineBox = currentLine
             };
+        }
+
+        private static void moveBox(CssBox currentBox, double xDiff, double yDiff)
+        {
+            currentBox.Location = new RPoint(currentBox.Location.X - xDiff, currentBox.Location.Y - yDiff);
+
+            if(currentBox.Words.Count > 0)
+            {
+                foreach(var word in currentBox.Words)
+                {
+                    word.Left = word.Left - xDiff;
+                    word.Top = word.Top - yDiff;
+                }
+            }
+
+            foreach(var box in currentBox.Boxes)
+            {
+                moveBox(box, xDiff, yDiff);
+            }
         }
 
         /// <summary>
