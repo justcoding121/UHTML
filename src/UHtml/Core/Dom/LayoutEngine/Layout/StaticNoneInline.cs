@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
+using UHtml.Core.Parse;
 using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
@@ -36,33 +37,62 @@ namespace UHtml.Core.Dom
                 currentBox.MeasureWordsSize(g);
             }
 
+            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
+
+            var layoutCoreStatus = new LayoutProgress()
+            {
+                CurrentLine = currentLine,
+                CurX = currentBox.Location.X
+                          + currentBox.ActualBorderLeftWidth
+                          + currentBox.ActualPaddingLeft,
+                CurY = currentBox.Location.Y,
+                CurrentBottom = currentBottom
+            };
+
             //position words within local max right
             //box bottom should be updated by this method
             //as text wrap to new lines increase bottom
             var status = LayoutWords(g, currentBox, currentLine,
-                 curX, curY, leftLimit, rightLimit, currentBottom);
+                 layoutCoreStatus.CurX, layoutCoreStatus.CurY, leftLimit, rightLimit, currentBottom);
 
+            layoutCoreStatus.CurX = status.CurX;
+            layoutCoreStatus.CurY = status.CurY;
+            layoutCoreStatus.CurrentBottom = status.CurrentMaxBottom;
+            layoutCoreStatus.CurrentLine = status.CurrentLineBox;
 
-            var layoutCoreStatus = new LayoutProgress()
+            if (currentBox.Boxes.Count > 0)
             {
-                CurX = status.CurX,
-                CurY = status.CurY,
-                CurrentBottom = status.CurrentMaxBottom,
-                CurrentLine = status.CurrentLineBox
-            };
+                var maxRight = 0.0; 
+                var top = currentBox.Location.Y;
 
-            foreach (var box in currentBox.Boxes)
-            {
-                var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                      layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
-
-                if (result != null)
+                foreach (var box in currentBox.Boxes)
                 {
-                    layoutCoreStatus.CurX = result.CurX;
-                    layoutCoreStatus.CurY = result.CurY;
-                    layoutCoreStatus.CurrentBottom = result.CurrentBottom;
+                    var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                          layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
+
+                    if (result != null)
+                    {
+                        layoutCoreStatus.CurX = result.CurX;
+                        layoutCoreStatus.CurY = result.CurY;
+                        layoutCoreStatus.CurrentBottom = result.CurrentBottom;
+                    }
+
+                    maxRight = Math.Max(maxRight, box.ActualRight);
                 }
+                
+                SetInlineBoxSize(currentBox,
+                                    leftLimit, maxRight,
+                                    top, layoutCoreStatus.CurrentBottom);
+
+                return new StaticNoneInlineLayoutProgress()
+                {
+                    CurrentLineBox = currentLine,
+                    CurX = layoutCoreStatus.CurX,
+                    CurY = layoutCoreStatus.CurY,
+                    CurrentBottom = layoutCoreStatus.CurrentBottom
+                };
             }
+
 
             return new StaticNoneInlineLayoutProgress()
             {
@@ -71,6 +101,35 @@ namespace UHtml.Core.Dom
                 CurY = layoutCoreStatus.CurY,
                 CurrentBottom = layoutCoreStatus.CurrentBottom
             };
+        }
+
+        /// <summary>
+        /// Set Width & Height for Box
+        /// </summary>
+        /// <param name="box"></param>
+        private static void SetInlineBoxSize(CssBox box,
+          double leftEnd, double rightEnd,
+          double currentTop, double currentBottom)
+        {
+            double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
+
+            box.Size = new RSize(rightEnd - leftEnd
+                                + box.ActualBorderLeftWidth
+                                + box.ActualPaddingLeft
+                                + box.ActualBorderRightWidth
+                                + box.ActualPaddingRight
+                                ,
+                                box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height) ? height
+                                + box.ActualBorderTopWidth
+                                + box.ActualPaddingTop
+                                + box.ActualBorderBottomWidth
+                                + box.ActualPaddingBottom
+                                : currentBottom - currentTop
+                                + box.ActualBorderTopWidth
+                                + box.ActualPaddingTop
+                                + box.ActualPaddingBottom
+                                + box.ActualBorderBottomWidth);
+
         }
     }
 }

@@ -51,8 +51,6 @@ namespace UHtml.Core.Dom
 
             currentBox.Location = new RPoint(left, top);
 
-            double width = CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox);
-
             var currentLine = new CssLineBox(currentBox);
 
             var layoutCoreStatus = new LayoutProgress()
@@ -67,20 +65,6 @@ namespace UHtml.Core.Dom
                 CurrentBottom = currentBottom
             };
 
-            var currentMaxLeft = currentBox.Location.X
-                           + currentBox.ActualBorderLeftWidth
-                           + currentBox.ActualPaddingLeft;
-
-            var currentMaxRight = currentBox.Width != CssConstants.Auto &&
-                               !string.IsNullOrEmpty(currentBox.Width) ?
-                             currentBox.Location.X
-                             + currentBox.ActualBorderLeftWidth
-                             + currentBox.ActualPaddingLeft
-                             + width
-                             : rightLimit
-                             - currentBox.ActualMarginRight
-                             - currentBox.ActualPaddingRight
-                             - currentBox.ActualBorderRightWidth;
 
             var maxBottom = 0.0;
             curY = layoutCoreStatus.CurY;
