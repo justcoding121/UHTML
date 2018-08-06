@@ -39,12 +39,14 @@ namespace UHtml.Core.Dom
 
             currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
 
+            var startX = currentBox.Location.X
+                          + currentBox.ActualBorderLeftWidth
+                          + currentBox.ActualPaddingLeft;
+
             var layoutCoreStatus = new LayoutProgress()
             {
                 CurrentLine = currentLine,
-                CurX = currentBox.Location.X
-                          + currentBox.ActualBorderLeftWidth
-                          + currentBox.ActualPaddingLeft,
+                CurX = startX,
                 CurY = currentBox.Location.Y,
                 CurrentBottom = currentBottom
             };
@@ -62,7 +64,7 @@ namespace UHtml.Core.Dom
 
             if (currentBox.Boxes.Count > 0)
             {
-                var maxRight = 0.0; 
+                var maxRight = 0.0;
                 var top = currentBox.Location.Y;
 
                 foreach (var box in currentBox.Boxes)
@@ -77,20 +79,13 @@ namespace UHtml.Core.Dom
                         layoutCoreStatus.CurrentBottom = result.CurrentBottom;
                     }
 
-                    maxRight = Math.Max(maxRight, box.ActualRight);
+                    maxRight = Math.Max(maxRight, box.ActualRight + box.ActualMarginRight);
                 }
-                
+
                 SetInlineBoxSize(currentBox,
-                                    leftLimit, maxRight,
+                                    startX, maxRight,
                                     top, layoutCoreStatus.CurrentBottom);
 
-                return new StaticNoneInlineLayoutProgress()
-                {
-                    CurrentLineBox = currentLine,
-                    CurX = layoutCoreStatus.CurX,
-                    CurY = layoutCoreStatus.CurY,
-                    CurrentBottom = layoutCoreStatus.CurrentBottom
-                };
             }
 
 
@@ -119,7 +114,8 @@ namespace UHtml.Core.Dom
                                 + box.ActualBorderRightWidth
                                 + box.ActualPaddingRight
                                 ,
-                                box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height) ? height
+                                box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height) ?
+                                 height
                                 + box.ActualBorderTopWidth
                                 + box.ActualPaddingTop
                                 + box.ActualBorderBottomWidth

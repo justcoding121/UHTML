@@ -142,7 +142,7 @@ namespace UHtml.Core.Dom
                     layoutCoreStatus.CurrentLine = result.CurrentLine;
                 }
 
-                maxRight = Math.Max(maxRight, box.ActualRight);
+                maxRight = Math.Max(maxRight, box.ActualRight + box.ActualMarginRight);
             }
 
             SetInlineBlockBoxSize(currentBox,
