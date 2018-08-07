@@ -131,6 +131,7 @@ namespace UHtml.Demo.WPF
                 {
                     _htmlPanel.AvoidImagesLateLoading = !sample.FullName.Contains("Many images");
                     _htmlPanel.Text = sample.Html;
+                    _htmlEditor.Text = sample.Html;
                 }
                 catch (Exception ex)
                 {
@@ -181,7 +182,10 @@ namespace UHtml.Demo.WPF
         /// </summary>
         private void OnRefreshLink_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            SetColoredText(GetHtmlEditorText(), true);
+            if (!updateLock)
+            {
+                updateHtmlTimer.Change(1000, int.MaxValue);
+            }
         }
 
         /// <summary>
@@ -217,22 +221,14 @@ namespace UHtml.Demo.WPF
             }
         }
 
-        /// <summary>
-        /// Set html syntax color text on the RTF html editor.
-        /// </summary>
-        private void SetColoredText(string text, bool color)
-        {
-            var selectionStart = _htmlEditor.CaretPosition;
-            _htmlEditor.Text = color ? HtmlSyntaxHighlighter.Process(text) : text.Replace("\n", "\\par ");
-            _htmlEditor.CaretPosition = selectionStart;
-        }
+  
 
         /// <summary>
         /// Get the html text from the html editor control.
         /// </summary>
         private string GetHtmlEditorText()
         {
-            return new TextRange(_htmlEditor.Document.ContentStart, _htmlEditor.Document.ContentEnd).Text;
+            return _htmlEditor.Text;
         }
 
         #endregion

@@ -51,6 +51,25 @@ namespace UHtml.Core.Dom
                 CurrentBottom = currentBottom
             };
 
+            // handle box that is only a whitespace
+            if (currentBox.Text != null 
+                && currentBox.Text.IsWhitespace() 
+                && !currentBox.IsImage 
+                && currentBox.Boxes.Count == 0 
+                && currentBox.Words.Count == 0)
+            {
+                layoutCoreStatus.CurX += currentBox.ActualWordSpacing;
+
+                return new StaticNoneInlineLayoutProgress()
+                {
+                    CurrentLineBox = currentLine,
+                    CurX = layoutCoreStatus.CurX + currentBox.ActualMarginRight,
+                    CurY = layoutCoreStatus.CurY,
+                    CurrentBottom = layoutCoreStatus.CurrentBottom
+                };
+
+            }
+
             //position words within local max right
             //box bottom should be updated by this method
             //as text wrap to new lines increase bottom
@@ -92,7 +111,10 @@ namespace UHtml.Core.Dom
             return new StaticNoneInlineLayoutProgress()
             {
                 CurrentLineBox = currentLine,
-                CurX = layoutCoreStatus.CurX,
+                CurX = layoutCoreStatus.CurX 
+                        + currentBox.ActualPaddingRight 
+                        + currentBox.ActualBorderRightWidth 
+                        + currentBox.ActualMarginRight,
                 CurY = layoutCoreStatus.CurY,
                 CurrentBottom = layoutCoreStatus.CurrentBottom
             };
@@ -114,13 +136,7 @@ namespace UHtml.Core.Dom
                                 + box.ActualBorderRightWidth
                                 + box.ActualPaddingRight
                                 ,
-                                box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height) ?
-                                 height
-                                + box.ActualBorderTopWidth
-                                + box.ActualPaddingTop
-                                + box.ActualBorderBottomWidth
-                                + box.ActualPaddingBottom
-                                : currentBottom - currentTop
+                                 currentBottom - currentTop
                                 + box.ActualBorderTopWidth
                                 + box.ActualPaddingTop
                                 + box.ActualPaddingBottom
