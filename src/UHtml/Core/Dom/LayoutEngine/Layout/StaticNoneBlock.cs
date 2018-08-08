@@ -15,8 +15,8 @@ namespace UHtml.Core.Dom
         public double CurX { get; set; }
         public double CurY { get; set; }
         
-        public double CurrentRight { get; set; }
-        public double CurrentBottom { get; internal set; }
+        public double Right { get; set; }
+        public double Bottom { get; internal set; }
 
     }
 
@@ -68,7 +68,7 @@ namespace UHtml.Core.Dom
                 CurY = currentBox.Location.Y
                             + currentBox.ActualBorderTopWidth
                             + currentBox.ActualPaddingTop,
-                CurrentBottom = currentBottom
+                Bottom = currentBottom
             };
 
             var currentMaxLeft = currentBox.Location.X
@@ -90,18 +90,32 @@ namespace UHtml.Core.Dom
             foreach (var box in currentBox.Boxes)
             {
                 var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                     layoutCoreStatus.CurrentLine, currentMaxLeft , currentMaxRight, layoutCoreStatus.CurrentBottom);
+                     layoutCoreStatus.CurrentLine, currentMaxLeft , currentMaxRight, layoutCoreStatus.Bottom);
 
                 if(result!=null)
                 {
-                    layoutCoreStatus.CurrentBottom = result.CurrentBottom;
                     layoutCoreStatus.CurX = result.CurX;
                     layoutCoreStatus.CurY = result.CurY;
+                    layoutCoreStatus.Bottom = result.Bottom;
+                    layoutCoreStatus.Right = result.Right;
                 }
             }
 
+            SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.Bottom);
 
-            SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.CurrentBottom);
+            //If there's just inline boxes, create LineBoxes
+            if (DomUtils.ContainsInlinesOnly(currentBox))
+            {
+                //Gets the rectangles for each line-box
+                //foreach (var linebox in currentBox.LineBoxes)
+                //{
+                //    ApplyHorizontalAlignment(g, linebox);
+                //    ApplyRightToLeft(currentBox, linebox);
+                //    BubbleRectangles(currentBox, linebox);
+                //    ApplyVerticalAlignment(g, linebox);
+                //    linebox.AssignRectanglesToBoxes();
+                //}
+            }
 
             if (!currentBox.IsFixed)
             {
@@ -121,7 +135,8 @@ namespace UHtml.Core.Dom
             {
                 CurX = layoutCoreStatus.CurX,
                 CurY = layoutCoreStatus.CurY,
-                CurrentBottom = layoutCoreStatus.CurrentBottom + currentBox.ActualMarginBottom
+                Right = currentBox.ActualRight + currentBox.ActualMarginRight,
+                Bottom = layoutCoreStatus.Bottom + currentBox.ActualMarginBottom
             };
 
         }

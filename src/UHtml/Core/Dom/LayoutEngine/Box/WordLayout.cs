@@ -11,11 +11,6 @@ namespace UHtml.Core.Dom
         /// <summary>
         /// Should update the actual bottom of the box is height is auto
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="box"></param>
-        /// <param name="curX"></param>
-        /// <param name="curY"></param>
-        /// <param name="rightLimit"></param>
         private static WordLayoutStatus LayoutWords(RGraphics g,
             CssBox box,
             CssLineBox currentLineBox,
@@ -31,7 +26,7 @@ namespace UHtml.Core.Dom
 
             if (box.Words.Count > 0)
             {
-               currentLineBox = currentLineBox ?? new CssLineBox(box);
+               currentLineBox = currentLineBox ?? new CssLineBox(box.ContainingBlock);
 
                 if (DomUtils.DoesBoxHasWhitespace(box))
                 {
@@ -52,7 +47,7 @@ namespace UHtml.Core.Dom
                         curX = leftLimit;
                         curY = maxBottom;
 
-                        currentLineBox = new CssLineBox(box);
+                        currentLineBox = new CssLineBox(box.ContainingBlock);
                     }
 
                     currentLineBox.ReportExistanceOf(word);
@@ -96,7 +91,8 @@ namespace UHtml.Core.Dom
                 CurrentLineBox = currentLineBox,
                 CurX = curX,
                 CurY = curY,
-                CurrentMaxBottom = maxBottom
+                Right = box.ActualRight,
+                Bottom = maxBottom
             };
         }
     }
@@ -106,7 +102,9 @@ namespace UHtml.Core.Dom
         internal double CurX;
         internal double CurY;
 
+        internal double Right;
+        internal double Bottom;
+
         internal CssLineBox CurrentLineBox;
-        internal double CurrentMaxBottom;
     }
 }

@@ -10,7 +10,9 @@ namespace UHtml.Core.Dom
         public double CurY { get; set; }
 
         public CssLineBox CurrentLine { get; set; }
-        public double CurrentBottom { get; internal set; }
+
+        public double Right { get; set; }
+        public double Bottom { get; internal set; }
 
     }
 
@@ -69,11 +71,14 @@ namespace UHtml.Core.Dom
                                                    leftLimit, rightLimit,
                                                    currentBottom);
 
+
                                                 return new LayoutProgress()
                                                 {
-                                                    CurrentBottom = staticNoneBlockResult.CurrentBottom,
                                                     CurX = staticNoneBlockResult.CurX,
                                                     CurY = staticNoneBlockResult.CurY,
+                                                    Right = staticNoneBlockResult.Right,
+                                                    Bottom = staticNoneBlockResult.Bottom,
+
                                                 };
                                             }
                                         }
@@ -90,10 +95,11 @@ namespace UHtml.Core.Dom
 
                                             return new LayoutProgress()
                                             {
-                                                CurrentLine = staticNoneInlineBlockResult.CurrentLineBox,
-                                                CurrentBottom = staticNoneInlineBlockResult.CurrentMaxBottom,
                                                 CurX = staticNoneInlineBlockResult.CurX,
                                                 CurY = staticNoneInlineBlockResult.CurY,
+                                                Right = staticNoneInlineBlockResult.Right,
+                                                Bottom = staticNoneInlineBlockResult.Bottom,
+                                                CurrentLine = staticNoneInlineBlockResult.CurrentLineBox,
                                             };
                                         }
                                     case "inline":
@@ -108,10 +114,11 @@ namespace UHtml.Core.Dom
 
                                             return new LayoutProgress()
                                             {
-                                                CurrentLine = staticNoneInlineResult.CurrentLineBox,
-                                                CurrentBottom = staticNoneInlineResult.CurrentBottom,
                                                 CurX = staticNoneInlineResult.CurX,
                                                 CurY = staticNoneInlineResult.CurY,
+                                                Right = staticNoneInlineResult.Right,
+                                                Bottom = staticNoneInlineResult.Bottom,
+                                                CurrentLine = staticNoneInlineResult.CurrentLineBox,
                                             };
                                         }
                                 }

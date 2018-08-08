@@ -15,7 +15,9 @@ namespace UHtml.Core.Dom
         public double CurX { get; set; }
         public double CurY { get; set; }
 
-        public double CurrentBottom { get; internal set; }
+        public double Right { get; internal set; }
+        public double Bottom { get; internal set; }
+     
         public CssLineBox CurrentLineBox { get; set; }
     }
 
@@ -48,7 +50,7 @@ namespace UHtml.Core.Dom
                 CurrentLine = currentLine,
                 CurX = startX,
                 CurY = currentBox.Location.Y,
-                CurrentBottom = currentBottom
+                Bottom = currentBottom
             };
 
             // handle box that is only a whitespace
@@ -65,7 +67,7 @@ namespace UHtml.Core.Dom
                     CurrentLineBox = currentLine,
                     CurX = layoutCoreStatus.CurX + currentBox.ActualMarginRight,
                     CurY = layoutCoreStatus.CurY,
-                    CurrentBottom = layoutCoreStatus.CurrentBottom
+                    Bottom = layoutCoreStatus.Bottom
                 };
 
             }
@@ -78,32 +80,36 @@ namespace UHtml.Core.Dom
 
             layoutCoreStatus.CurX = status.CurX;
             layoutCoreStatus.CurY = status.CurY;
-            layoutCoreStatus.CurrentBottom = status.CurrentMaxBottom;
+            layoutCoreStatus.Bottom = status.Bottom;
+            layoutCoreStatus.Right = status.Right;
             layoutCoreStatus.CurrentLine = status.CurrentLineBox;
+
+            var maxRight = layoutCoreStatus.Right;
 
             if (currentBox.Boxes.Count > 0)
             {
-                var maxRight = 0.0;
+               
                 var top = currentBox.Location.Y;
 
                 foreach (var box in currentBox.Boxes)
                 {
                     var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                          layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.CurrentBottom);
+                          layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.Bottom);
 
                     if (result != null)
                     {
                         layoutCoreStatus.CurX = result.CurX;
                         layoutCoreStatus.CurY = result.CurY;
-                        layoutCoreStatus.CurrentBottom = result.CurrentBottom;
+                        layoutCoreStatus.Right = result.Right;
+                        layoutCoreStatus.Bottom = result.Bottom;
                     }
 
-                    maxRight = Math.Max(maxRight, box.ActualRight + box.ActualMarginRight);
+                    maxRight = Math.Max(maxRight, layoutCoreStatus.Right);
                 }
 
-                SetInlineBoxSize(currentBox,
-                                    startX, maxRight,
-                                    top, layoutCoreStatus.CurrentBottom);
+                //SetInlineBoxSize(currentBox,
+                //                    startX, maxRight,
+                //                    top, layoutCoreStatus.CurrentBottom);
 
             }
 
@@ -111,12 +117,13 @@ namespace UHtml.Core.Dom
             return new StaticNoneInlineLayoutProgress()
             {
                 CurrentLineBox = currentLine,
-                CurX = layoutCoreStatus.CurX 
+                CurX = layoutCoreStatus.CurX
                         + currentBox.ActualPaddingRight 
                         + currentBox.ActualBorderRightWidth 
                         + currentBox.ActualMarginRight,
                 CurY = layoutCoreStatus.CurY,
-                CurrentBottom = layoutCoreStatus.CurrentBottom
+                Right = maxRight,
+                Bottom = layoutCoreStatus.Bottom
             };
         }
 

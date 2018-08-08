@@ -79,8 +79,6 @@
     <Compile Include="Core\Dom\CssUnit.cs" />
     <Compile Include="Core\Dom\HoverBoxBlock.cs" />
     <Compile Include="Core\Dom\HtmlTag.cs" />
-    <Compile Include="Core\Dom\LayoutEngine\Box\BoxLayout.cs" />
-    <Compile Include="Core\Dom\LayoutEngine\Box\InlineBoxLayout.cs" />
     <Compile Include="Core\Dom\LayoutEngine\Box\WordLayout.cs" />
     <Compile Include="Core\Entities\CssBlock.cs" />
     <Compile Include="Core\Entities\CssBlockSelectorItem.cs" />

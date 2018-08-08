@@ -15,44 +15,6 @@ namespace UHtml.Core.Dom
     {
 
         /// <summary>
-        /// Set Width & Height for Box
-        /// </summary>
-        /// <param name="box"></param>
-        private static void SetInlineBoxSize(CssBox box)
-        {
-            //Inline don't respect Height & Width
-            if (box.IsInlineBlock)
-            {
-                if (box.Height != CssConstants.Auto && !string.IsNullOrEmpty(box.Height))
-                {
-                    double height = CssValueParser.ParseLength(box.Height, box.ContainingBlock.Size.Height, box);
-                    box.Size = new RSize(box.Size.Width
-                            , height
-                            + box.ActualBorderTopWidth
-                            + box.ActualPaddingTop
-                            + box.ActualBorderBottomWidth
-                            + box.ActualPaddingBottom);
-                }
-
-                //overrride with custom width
-                if (box.Width != CssConstants.Auto && !string.IsNullOrEmpty(box.Width))
-                {
-                    double width = CssValueParser.ParseLength(box.Width, box.ContainingBlock.Size.Width, box);
-                    box.Size = new RSize(width
-                            + box.ActualBorderLeftWidth
-                            + box.ActualPaddingLeft
-                            + box.ActualBorderRightWidth
-                            + box.ActualPaddingRight
-                            , box.Size.Height);
-
-                }
-            }
-
-        }
-
-
-
-        /// <summary>
         /// Applies special vertical alignment for table-cells
         /// </summary>
         /// <param name="g"></param>
