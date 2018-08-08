@@ -14,7 +14,7 @@ namespace UHtml.Core.Dom
     {
         public double CurX { get; set; }
         public double CurY { get; set; }
-        
+
         public double Right { get; set; }
         public double Bottom { get; internal set; }
 
@@ -29,6 +29,12 @@ namespace UHtml.Core.Dom
           double leftLimit, double rightLimit,
           double currentBottom)
         {
+            if (currentBox.Display != CssConstants.None)
+            {
+                currentBox.RectanglesReset();
+                currentBox.MeasureWordsSize(g);
+            }
+
             //get previous sibling to adjust margin overlapping on top
             var prevSibling = DomUtils.GetPreviousSibling(currentBox);
 
@@ -43,7 +49,7 @@ namespace UHtml.Core.Dom
                 top = currentBox.ParentBox.ClientTop + currentBox.MarginTopCollapse(prevSibling);
             }
             else
-             {
+            {
                 if (prevSibling != null)
                 {
                     top = prevSibling.ActualBottom + currentBox.MarginTopCollapse(prevSibling);
@@ -62,7 +68,7 @@ namespace UHtml.Core.Dom
             var layoutCoreStatus = new LayoutProgress()
             {
                 CurrentLine = currentLine,
-                CurX = currentBox.Location.X 
+                CurX = currentBox.Location.X
                             + currentBox.ActualBorderLeftWidth
                             + currentBox.ActualPaddingLeft,
                 CurY = currentBox.Location.Y
@@ -90,9 +96,9 @@ namespace UHtml.Core.Dom
             foreach (var box in currentBox.Boxes)
             {
                 var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
-                     layoutCoreStatus.CurrentLine, currentMaxLeft , currentMaxRight, layoutCoreStatus.Bottom);
+                     layoutCoreStatus.CurrentLine, currentMaxLeft, currentMaxRight, layoutCoreStatus.Bottom);
 
-                if(result!=null)
+                if (result != null)
                 {
                     layoutCoreStatus.CurX = result.CurX;
                     layoutCoreStatus.CurY = result.CurY;
@@ -103,31 +109,32 @@ namespace UHtml.Core.Dom
 
             SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.Bottom);
 
-            //If there's just inline boxes, create LineBoxes
-            if (DomUtils.ContainsInlinesOnly(currentBox))
-            {
-                //Gets the rectangles for each line-box
-                //foreach (var linebox in currentBox.LineBoxes)
-                //{
-                //    ApplyHorizontalAlignment(g, linebox);
-                //    ApplyRightToLeft(currentBox, linebox);
-                //    BubbleRectangles(currentBox, linebox);
-                //    ApplyVerticalAlignment(g, linebox);
-                //    linebox.AssignRectanglesToBoxes();
-                //}
-            }
+            ////If there's just inline boxes, create LineBoxes
+            //if (DomUtils.ContainsInlinesOnly(currentBox))
+            //{
+             
+            //    //Gets the rectangles for each line-box
+            //    foreach (var linebox in currentBox.LineBoxes)
+            //    {
+            //        ApplyHorizontalAlignment(g, linebox);
+            //        ApplyRightToLeft(currentBox, linebox);
+            //        BubbleRectangles(currentBox, linebox);
+            //        ApplyVerticalAlignment(g, linebox);
+            //        linebox.AssignRectanglesToBoxes();
+            //    }
+            //}
 
             if (!currentBox.IsFixed)
             {
-                var actualWidth = Math.Max(currentBox.GetMinimumWidth() 
-                        + currentBox.GetWidthMarginDeep(currentBox), 
-                        currentBox.Size.Width < 90999 ? 
-                        currentBox.ActualRight - currentBox.HtmlContainer.Root.Location.X 
+                var actualWidth = Math.Max(currentBox.GetMinimumWidth()
+                        + currentBox.GetWidthMarginDeep(currentBox),
+                        currentBox.Size.Width < 90999 ?
+                        currentBox.ActualRight - currentBox.HtmlContainer.Root.Location.X
                         : 0);
 
-                currentBox.HtmlContainer.ActualSize = 
+                currentBox.HtmlContainer.ActualSize =
                     CommonUtils.Max(currentBox.HtmlContainer.ActualSize,
-                    new RSize(actualWidth, currentBox.ActualBottom 
+                    new RSize(actualWidth, currentBox.ActualBottom
                     - currentBox.HtmlContainer.Root.Location.Y));
             }
 

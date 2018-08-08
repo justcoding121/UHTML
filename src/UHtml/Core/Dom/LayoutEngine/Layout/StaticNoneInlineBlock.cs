@@ -109,6 +109,12 @@ namespace UHtml.Core.Dom
           double leftLimit, double rightLimit,
           double maxBottom)
         {
+            if (currentBox.Display != CssConstants.None)
+            {
+                currentBox.RectanglesReset();
+                currentBox.MeasureWordsSize(g);
+            }
+
             currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
 
             var boxLeftLimit = currentBox.Location.X + currentBox.ActualPaddingLeft + currentBox.ActualBorderLeftWidth;
