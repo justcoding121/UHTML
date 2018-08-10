@@ -184,6 +184,7 @@ namespace UHtml.Core.Dom
                         y = Math.Min(y, word.Top);
                         b = Math.Max(b, word.Bottom);
                     }
+
                     line.UpdateRectangle(box, x, y, r, b);
                 }
             }

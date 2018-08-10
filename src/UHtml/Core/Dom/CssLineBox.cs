@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
 
@@ -174,7 +175,6 @@ namespace UHtml.Core.Dom
                 b += bottomspacing;
             }
 
-
             if (!Rectangles.ContainsKey(box))
             {
                 Rectangles.Add(box, RRect.FromCoordinates(x, y, r, b));
@@ -187,7 +187,9 @@ namespace UHtml.Core.Dom
                     Math.Max(f.X2, r), Math.Max(f.Y2, b));
             }
 
-            if (!box.IsInlineBlock && box.ParentBox != null && (box.ParentBox.IsInline || box.ParentBox.IsInlineBlock))
+            //inline blocks don't need to propagate up the size of child rectangles?
+            //only propogate up when parent box is inline?
+            if (box.ParentBox != null && (box.ParentBox.IsInline || box.ParentBox.IsInlineBlock))
             {
                 UpdateRectangle(box.ParentBox, x, y, r, b);
             }

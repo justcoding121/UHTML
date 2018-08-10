@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using UHtml.Adapters;
 using System.Linq;
+using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
 {
@@ -26,6 +27,16 @@ namespace UHtml.Core.Dom
           double leftLimit, double rightLimit,
           double currentBottom)
         {
+            ArgChecker.AssertArgNotNull(g, "g");
+            ArgChecker.AssertArgNotNull(currentBox, "currentBox");
+
+            if (currentBox.Display != CssConstants.None)
+            {
+                currentBox.RectanglesReset();
+                currentBox.MeasureWordsSize(g);
+                currentBox.LineBoxes.Clear();
+            }
+
             switch (currentBox.Position)
             {
                 case "absolute":

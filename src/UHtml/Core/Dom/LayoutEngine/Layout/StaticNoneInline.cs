@@ -30,14 +30,6 @@ namespace UHtml.Core.Dom
           double leftLimit, double rightLimit,
           double currentBottom)
         {
-            ArgChecker.AssertArgNotNull(g, "g");
-            ArgChecker.AssertArgNotNull(currentBox, "blockBox");
-
-            if (currentBox.Display != CssConstants.None)
-            {
-                currentBox.RectanglesReset();
-                currentBox.MeasureWordsSize(g);
-            }
 
             currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
 
@@ -88,41 +80,40 @@ namespace UHtml.Core.Dom
 
             if (currentBox.Boxes.Count > 0)
             {
-               
                 var top = currentBox.Location.Y;
+
+                LayoutProgress result = null;
 
                 foreach (var box in currentBox.Boxes)
                 {
-                    var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                    result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
                           layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.Bottom);
-
-                    if (result != null)
-                    {
-                        layoutCoreStatus.CurX = result.CurX;
-                        layoutCoreStatus.CurY = result.CurY;
-                        layoutCoreStatus.Right = result.Right;
-                        layoutCoreStatus.Bottom = result.Bottom;
-                    }
 
                     maxRight = Math.Max(maxRight, layoutCoreStatus.Right);
                 }
 
-                //SetInlineBoxSize(currentBox,
-                //                    startX, maxRight,
-                //                    top, layoutCoreStatus.CurrentBottom);
-
+                if (result != null)
+                {
+                    layoutCoreStatus.CurX = result.CurX;
+                    layoutCoreStatus.CurY = result.CurY;
+                    layoutCoreStatus.Right = result.Right;
+                    layoutCoreStatus.Bottom = result.Bottom;
+                    layoutCoreStatus.CurrentLine = result.CurrentLine;
+                }
             }
+
+            layoutCoreStatus.CurX +=
+                        currentBox.ActualPaddingRight
+                        + currentBox.ActualBorderRightWidth
+                        + currentBox.ActualMarginRight;
 
 
             return new StaticNoneInlineLayoutProgress()
             {
-                CurrentLineBox = currentLine,
-                CurX = layoutCoreStatus.CurX
-                        + currentBox.ActualPaddingRight 
-                        + currentBox.ActualBorderRightWidth 
-                        + currentBox.ActualMarginRight,
+                CurrentLineBox = layoutCoreStatus.CurrentLine,
+                CurX = layoutCoreStatus.CurX,
                 CurY = layoutCoreStatus.CurY,
-                Right = maxRight,
+                Right = Math.Max(maxRight, layoutCoreStatus.CurX),
                 Bottom = layoutCoreStatus.Bottom
             };
         }

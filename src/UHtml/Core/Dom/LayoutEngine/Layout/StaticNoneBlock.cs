@@ -22,19 +22,8 @@ namespace UHtml.Core.Dom
 
     internal static partial class CssLayoutEngine
     {
-        public static StaticNoneBlockLayoutProgress LayoutStaticNoneBlock(RGraphics g,
-          CssBox currentBox,
-          double curX, double curY,
-          CssLineBox currentLine,
-          double leftLimit, double rightLimit,
-          double currentBottom)
+        private static void setBlockBoxLocation(CssBox currentBox, double leftLimit)
         {
-            if (currentBox.Display != CssConstants.None)
-            {
-                currentBox.RectanglesReset();
-                currentBox.MeasureWordsSize(g);
-            }
-
             //get previous sibling to adjust margin overlapping on top
             var prevSibling = DomUtils.GetPreviousSibling(currentBox);
 
@@ -62,8 +51,21 @@ namespace UHtml.Core.Dom
             }
 
             currentBox.Location = new RPoint(left, top);
+        }
 
-            double width = CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox);
+        public static StaticNoneBlockLayoutProgress LayoutStaticNoneBlock(RGraphics g,
+          CssBox currentBox,
+          double curX, double curY,
+          CssLineBox currentLine,
+          double leftLimit, double rightLimit,
+          double currentBottom)
+        {
+
+            setBlockBoxLocation(currentBox, leftLimit);
+
+            var top = currentBox.Location.Y;
+
+            double width = CssValueParser.ParseLength(currentBox.Width, rightLimit - leftLimit, currentBox);
 
             var layoutCoreStatus = new LayoutProgress()
             {
@@ -109,20 +111,15 @@ namespace UHtml.Core.Dom
 
             SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.Bottom);
 
-            ////If there's just inline boxes, create LineBoxes
-            //if (DomUtils.ContainsInlinesOnly(currentBox))
-            //{
-             
-            //    //Gets the rectangles for each line-box
-            //    foreach (var linebox in currentBox.LineBoxes)
-            //    {
-            //        ApplyHorizontalAlignment(g, linebox);
-            //        ApplyRightToLeft(currentBox, linebox);
-            //        BubbleRectangles(currentBox, linebox);
-            //        ApplyVerticalAlignment(g, linebox);
-            //        linebox.AssignRectanglesToBoxes();
-            //    }
-            //}
+            //Gets the rectangles for each line-box
+            foreach (var linebox in currentBox.LineBoxes)
+            {
+                ApplyHorizontalAlignment(g, linebox);
+                ApplyRightToLeft(currentBox, linebox);
+                BubbleRectangles(currentBox, linebox);
+                ApplyVerticalAlignment(g, linebox);
+                linebox.AssignRectanglesToBoxes();
+            }
 
             if (!currentBox.IsFixed)
             {
