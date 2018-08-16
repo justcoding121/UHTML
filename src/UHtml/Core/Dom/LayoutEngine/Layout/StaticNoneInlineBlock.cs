@@ -6,18 +6,7 @@ using UHtml.Core.Parse;
 using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
-{
-    internal class StaticNoneInlineBlockLayoutProgress
-    {
-        public double CurX { get; set; }
-        public double CurY { get; set; }
-
-        public double Right { get; set; }
-        public double Bottom { get; internal set; }
-
-        public CssLineBox CurrentLineBox { get; set; }
-    }
-
+{ 
     internal static partial class CssLayoutEngine
     {
         public static LayoutProgress LayoutInlineBlockBoxes(RGraphics g,
@@ -45,7 +34,7 @@ namespace UHtml.Core.Dom
 
 
             var maxBottom = 0.0;
-            //curY = layoutCoreStatus.CurY;
+            curY = layoutCoreStatus.CurY;
 
             foreach (var inlineBox in currentBox.Boxes)
             {
@@ -54,9 +43,10 @@ namespace UHtml.Core.Dom
                 {
                     if (layoutCoreStatus.CurX + inlineBox.ActualWidth > rightLimit)
                     {
+                        alignLine(g, currentLine);
                         currentLine = new CssLineBox(currentBox);
                         layoutCoreStatus.CurX = leftLimit;
-                        //curY = maxBottom;
+                        curY = maxBottom;
                     }
                 }
 
@@ -65,25 +55,22 @@ namespace UHtml.Core.Dom
                 layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
                       layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.Bottom);
 
-                //if (inlineBox.Display == "inline" || currentLine != layoutCoreStatus.CurrentLine)
-                //{
-                //    curY = layoutCoreStatus.CurY;
-                //}
+                if (inlineBox.Display == "inline" || currentLine != layoutCoreStatus.CurrentLine)
+                {
+                    curY = layoutCoreStatus.CurY;
+                }
 
                 maxBottom = Math.Max(maxBottom, layoutCoreStatus.Bottom);
             }
 
+            if(layoutCoreStatus.CurrentLine!=null)
+            {
+                alignLine(g, layoutCoreStatus.CurrentLine);
+                layoutCoreStatus.CurrentLine = null;
+            }
+
             SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.Bottom);
 
-            //Gets the rectangles for each line-box
-            foreach (var linebox in currentBox.LineBoxes)
-            {
-                ApplyHorizontalAlignment(g, linebox);
-                ApplyRightToLeft(currentBox, linebox);
-                BubbleRectangles(currentBox, linebox);
-                ApplyVerticalAlignment(g, linebox);
-                linebox.AssignRectanglesToBoxes();
-            }
 
             return layoutCoreStatus;
         }
@@ -108,7 +95,7 @@ namespace UHtml.Core.Dom
                 boxLeftLimit + CssValueParser.ParseLength(currentBox.Width, currentBox.ContainingBlock.Size.Width, currentBox)
                 : curX + rightLimit - leftLimit - currentBox.ActualPaddingRight - currentBox.ActualBorderRightWidth - currentBox.ActualMarginRight;
 
-            var top = currentBox.Location.Y + currentBox.ActualPaddingTop + currentBox.ActualBorderTopWidth;
+            var top = currentBox.Location.Y;
 
             var layoutCoreStatus = new LayoutProgress()
             {
@@ -118,10 +105,9 @@ namespace UHtml.Core.Dom
                 Right = boxLeftLimit,
             };
 
-            var maxRight = boxLeftLimit;
-
             foreach (var box in currentBox.Boxes)
             {
+
                 var result = LayoutRecursively(g, box,
                     layoutCoreStatus.CurX, layoutCoreStatus.CurY,
                     layoutCoreStatus.CurrentLine,
@@ -133,69 +119,54 @@ namespace UHtml.Core.Dom
                 {
                     layoutCoreStatus.CurX = result.CurX;
                     layoutCoreStatus.CurY = result.CurY;
+                    layoutCoreStatus.Right = result.Right;
                     layoutCoreStatus.Bottom = result.Bottom;
                     layoutCoreStatus.CurrentLine = result.CurrentLine;
                 }
 
-                maxRight = Math.Max(maxRight, result.Right);
             }
 
-            //SetInlineBlockBoxSize(currentBox,
-            //                     boxLeftLimit, maxRight,
-            //                     top, layoutCoreStatus.Bottom);
+            if(layoutCoreStatus.CurrentLine!=null)
+            {
+                alignLine(g, layoutCoreStatus.CurrentLine);
+            }
 
 
             if (layoutCoreStatus.Right + currentBox.ActualPaddingRight
                    + currentBox.ActualBorderRightWidth
                    + currentBox.ActualMarginRight > rightLimit)
             {
+                alignLine(g, currentLine);
                 currentLine = new CssLineBox(currentBox);
 
-                layoutCoreStatus.CurX = leftLimit
-                    + currentBox.ActualMarginLeft
-                    + currentBox.ActualBorderLeftWidth
-                    + currentBox.ActualPaddingLeft;
-
+                layoutCoreStatus.CurX = leftLimit;
                 layoutCoreStatus.CurY = maxBottom;
 
                 var xDiff = currentBox.Location.X - layoutCoreStatus.CurX;
                 var yDiff = currentBox.Location.Y - layoutCoreStatus.CurY;
 
                 moveBox(currentBox, xDiff, yDiff);
+                layoutCoreStatus.Right -= xDiff;
             }
             else
             {
                 currentLine.ReportExistanceOfBox(currentBox);
             }
 
+            setInlineBlockBoxSize(currentBox, boxLeftLimit, layoutCoreStatus.Right, top, layoutCoreStatus.Bottom);
 
-            //foreach (var linebox in currentBox.LineBoxes)
-            //{
-            //    ApplyHorizontalAlignment(g, linebox);
-            //    ApplyRightToLeft(currentBox, linebox);
-            //    BubbleRectangles(currentBox, linebox);
-            //    ApplyVerticalAlignment(g, linebox);
-            //    linebox.AssignRectanglesToBoxes();
-            //}
-
-            maxRight +=
+            layoutCoreStatus.Right +=
                    currentBox.ActualPaddingRight
                    + currentBox.ActualBorderRightWidth
                    + currentBox.ActualMarginRight;
 
-            var height = currentBox.Height != CssConstants.Auto && !string.IsNullOrEmpty(currentBox.Height) ?
-                                CssValueParser.ParseLength(currentBox.Height, currentBox.ContainingBlock.Size.Height, currentBox)
-                                : layoutCoreStatus.Bottom - top;
 
             return new StaticNoneInlineBlockLayoutProgress()
             {
-                CurX = maxRight,
+                CurX = layoutCoreStatus.Right,
                 CurY = layoutCoreStatus.CurY,
-                Right = maxRight,
-                Bottom = top + height
-                        + currentBox.ActualPaddingBottom
-                        + currentBox.ActualBorderBottomWidth
-                        + currentBox.ActualMarginBottom,
+                Right = layoutCoreStatus.Right,
+                Bottom = layoutCoreStatus.Bottom,
                 CurrentLineBox = currentLine
             };
         }
@@ -223,7 +194,7 @@ namespace UHtml.Core.Dom
         /// Set Width & Height for Box
         /// </summary>
         /// <param name="box"></param>
-        private static void SetInlineBlockBoxSize(CssBox box,
+        private static void setInlineBlockBoxSize(CssBox box,
           double leftEnd, double rightEnd,
           double currentTop, double currentBottom)
         {
@@ -248,6 +219,28 @@ namespace UHtml.Core.Dom
                                 + box.ActualBorderBottomWidth);
 
         }
+
+        private static void alignLine(RGraphics g, CssLineBox linebox)
+        {
+            var currentBox = linebox.OwnerBox;
+
+            ApplyHorizontalAlignment(g, linebox);
+            ApplyRightToLeft(currentBox, linebox);
+            BubbleRectangles(currentBox, linebox);
+            ApplyVerticalAlignment(g, linebox);
+            linebox.AssignRectanglesToBoxes();
+        }
+    }
+
+    internal class StaticNoneInlineBlockLayoutProgress
+    {
+        public double CurX { get; set; }
+        public double CurY { get; set; }
+
+        public double Right { get; set; }
+        public double Bottom { get; internal set; }
+
+        public CssLineBox CurrentLineBox { get; set; }
     }
 }
 

@@ -10,17 +10,6 @@ using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
 {
-    internal class StaticNoneInlineLayoutProgress
-    {
-        public double CurX { get; set; }
-        public double CurY { get; set; }
-
-        public double Right { get; internal set; }
-        public double Bottom { get; internal set; }
-     
-        public CssLineBox CurrentLineBox { get; set; }
-    }
-
     internal static partial class CssLayoutEngine
     {
         public static StaticNoneInlineLayoutProgress LayoutStaticNoneInline(RGraphics g,
@@ -30,7 +19,6 @@ namespace UHtml.Core.Dom
           double leftLimit, double rightLimit,
           double currentBottom)
         {
-
             currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
 
             var startX = currentBox.Location.X
@@ -56,7 +44,7 @@ namespace UHtml.Core.Dom
 
                 return new StaticNoneInlineLayoutProgress()
                 {
-                    CurrentLineBox = currentLine,
+                    CurrentLineBox = layoutCoreStatus.CurrentLine,
                     CurX = layoutCoreStatus.CurX + currentBox.ActualMarginRight,
                     CurY = layoutCoreStatus.CurY,
                     Bottom = layoutCoreStatus.Bottom
@@ -67,7 +55,7 @@ namespace UHtml.Core.Dom
             //position words within local max right
             //box bottom should be updated by this method
             //as text wrap to new lines increase bottom
-            var status = LayoutWords(g, currentBox, currentLine,
+            var status = LayoutWords(g, currentBox, layoutCoreStatus.CurrentLine,
                  layoutCoreStatus.CurX, layoutCoreStatus.CurY, leftLimit, rightLimit, currentBottom);
 
             layoutCoreStatus.CurX = status.CurX;
@@ -89,17 +77,18 @@ namespace UHtml.Core.Dom
                     result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
                           layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.Bottom);
 
+                    if (result != null)
+                    {
+                        layoutCoreStatus.CurX = result.CurX;
+                        layoutCoreStatus.CurY = result.CurY;
+                        layoutCoreStatus.Right = result.Right;
+                        layoutCoreStatus.Bottom = result.Bottom;
+                        layoutCoreStatus.CurrentLine = result.CurrentLine;
+                    }
+
                     maxRight = Math.Max(maxRight, layoutCoreStatus.Right);
                 }
-
-                if (result != null)
-                {
-                    layoutCoreStatus.CurX = result.CurX;
-                    layoutCoreStatus.CurY = result.CurY;
-                    layoutCoreStatus.Right = result.Right;
-                    layoutCoreStatus.Bottom = result.Bottom;
-                    layoutCoreStatus.CurrentLine = result.CurrentLine;
-                }
+              
             }
 
             layoutCoreStatus.CurX +=
@@ -141,5 +130,16 @@ namespace UHtml.Core.Dom
                                 + box.ActualBorderBottomWidth);
 
         }
+    }
+
+    internal class StaticNoneInlineLayoutProgress
+    {
+        public double CurX { get; set; }
+        public double CurY { get; set; }
+
+        public double Right { get; internal set; }
+        public double Bottom { get; internal set; }
+
+        public CssLineBox CurrentLineBox { get; set; }
     }
 }

@@ -10,16 +10,6 @@ using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
 {
-    internal class StaticNoneBlockLayoutProgress
-    {
-        public double CurX { get; set; }
-        public double CurY { get; set; }
-
-        public double Right { get; set; }
-        public double Bottom { get; internal set; }
-
-    }
-
     internal static partial class CssLayoutEngine
     {
         private static void setBlockBoxLocation(CssBox currentBox, double leftLimit)
@@ -56,7 +46,6 @@ namespace UHtml.Core.Dom
         public static StaticNoneBlockLayoutProgress LayoutStaticNoneBlock(RGraphics g,
           CssBox currentBox,
           double curX, double curY,
-          CssLineBox currentLine,
           double leftLimit, double rightLimit,
           double currentBottom)
         {
@@ -69,7 +58,6 @@ namespace UHtml.Core.Dom
 
             var layoutCoreStatus = new LayoutProgress()
             {
-                CurrentLine = currentLine,
                 CurX = currentBox.Location.X
                             + currentBox.ActualBorderLeftWidth
                             + currentBox.ActualPaddingLeft,
@@ -109,17 +97,13 @@ namespace UHtml.Core.Dom
                 }
             }
 
-            SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.Bottom);
-
-            //Gets the rectangles for each line-box
-            foreach (var linebox in currentBox.LineBoxes)
+            if (layoutCoreStatus.CurrentLine != null)
             {
-                ApplyHorizontalAlignment(g, linebox);
-                ApplyRightToLeft(currentBox, linebox);
-                BubbleRectangles(currentBox, linebox);
-                ApplyVerticalAlignment(g, linebox);
-                linebox.AssignRectanglesToBoxes();
+                alignLine(g, layoutCoreStatus.CurrentLine);
+                layoutCoreStatus.CurrentLine = null;
             }
+
+            SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.Bottom);
 
             if (!currentBox.IsFixed)
             {
@@ -178,5 +162,15 @@ namespace UHtml.Core.Dom
                                 + box.ActualBorderBottomWidth);
 
         }
+    }
+
+    internal class StaticNoneBlockLayoutProgress
+    {
+        public double CurX { get; set; }
+        public double CurY { get; set; }
+
+        public double Right { get; set; }
+        public double Bottom { get; internal set; }
+
     }
 }

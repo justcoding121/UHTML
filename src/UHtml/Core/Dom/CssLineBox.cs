@@ -189,7 +189,7 @@ namespace UHtml.Core.Dom
 
             //inline blocks don't need to propagate up the size of child rectangles?
             //only propogate up when parent box is inline?
-            if (box.ParentBox != null && (box.ParentBox.IsInline || box.ParentBox.IsInlineBlock))
+            if (box.ParentBox != null && box.ParentBox.IsInline)
             {
                 UpdateRectangle(box.ParentBox, x, y, r, b);
             }

@@ -47,6 +47,7 @@ namespace UHtml.Core.Dom
                         curX = leftLimit;
                         curY = maxBottom;
 
+                        alignLine(g, currentLineBox);
                         currentLineBox = new CssLineBox(box.ContainingBlock);
                     }
 

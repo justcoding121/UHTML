@@ -2,20 +2,10 @@
 using UHtml.Adapters;
 using System.Linq;
 using UHtml.Core.Utils;
+using System;
 
 namespace UHtml.Core.Dom
 {
-    internal class LayoutProgress
-    {
-        public double CurX { get; set; }
-        public double CurY { get; set; }
-
-        public CssLineBox CurrentLine { get; set; }
-
-        public double Right { get; set; }
-        public double Bottom { get; internal set; }
-
-    }
 
     internal static partial class CssLayoutEngine
     {
@@ -29,6 +19,11 @@ namespace UHtml.Core.Dom
         {
             ArgChecker.AssertArgNotNull(g, "g");
             ArgChecker.AssertArgNotNull(currentBox, "currentBox");
+
+            if (currentBox.Words.Count > 0 && currentBox.Boxes.Count > 0)
+            {
+                throw new Exception("A box cannot have box words and child boxes.");
+            }
 
             if (currentBox.Display != CssConstants.None)
             {
@@ -78,7 +73,6 @@ namespace UHtml.Core.Dom
                                                 var staticNoneBlockResult = LayoutStaticNoneBlock(g,
                                                    currentBox,
                                                    curX, curY,
-                                                   currentLine,
                                                    leftLimit, rightLimit,
                                                    currentBottom);
 
@@ -142,6 +136,18 @@ namespace UHtml.Core.Dom
 
             return null;
         }
+    }
+
+    internal class LayoutProgress
+    {
+        public double CurX { get; set; }
+        public double CurY { get; set; }
+
+        public CssLineBox CurrentLine { get; set; }
+
+        public double Right { get; set; }
+        public double Bottom { get; internal set; }
+
     }
 }
 

@@ -163,6 +163,16 @@ namespace UHtml.Core.Dom
         /// </summary>
         private static void BubbleRectangles(CssBox box, CssLineBox line)
         {
+            if (box.IsInlineBlock)
+            {
+                double x = box.ClientRectangle.Location.X,
+                    y = box.ClientRectangle.Location.Y, 
+                    r = box.ClientRectangle.Location.X + box.ClientRectangle.Width, 
+                    b = box.ClientRectangle.Location.Y + box.ClientRectangle.Height;
+
+                line.UpdateRectangle(box, x, y, r, b);
+            }
+            else
             if (box.Words.Count > 0)
             {
                 double x = Single.MaxValue, y = Single.MaxValue, r = Single.MinValue, b = Single.MinValue;
