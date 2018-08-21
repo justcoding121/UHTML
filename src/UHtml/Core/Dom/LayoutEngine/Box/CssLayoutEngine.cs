@@ -163,12 +163,12 @@ namespace UHtml.Core.Dom
         /// </summary>
         private static void BubbleRectangles(CssBox box, CssLineBox line)
         {
-            if (box.IsInlineBlock)
+            if (box.IsInlineBlock && line.RelatedBoxes.Any(x=> x == box))
             {
-                double x = box.ClientRectangle.Location.X,
-                    y = box.ClientRectangle.Location.Y, 
-                    r = box.ClientRectangle.Location.X + box.ClientRectangle.Width, 
-                    b = box.ClientRectangle.Location.Y + box.ClientRectangle.Height;
+                double  x = box.ClientLeft,
+                        y = box.ClientTop, 
+                        r = box.ClientRight, 
+                        b = box.ContentBottom;
 
                 line.UpdateRectangle(box, x, y, r, b);
             }
@@ -317,7 +317,7 @@ namespace UHtml.Core.Dom
             double baseline = Single.MinValue;
             foreach (var box in lineBox.Rectangles.Keys)
             {
-                baseline = Math.Max(baseline, lineBox.Rectangles[box].Y1);
+                baseline = Math.Max(baseline, lineBox.Rectangles[box].Y2);
             }
 
             var boxes = new List<CssBox>(lineBox.Rectangles.Keys);

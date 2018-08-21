@@ -37,7 +37,7 @@ namespace UHtml.Core.Dom
                 case "absolute":
                     break;
                 case "fixed":
-                    break;
+                    break; 
                 case "relative":
                     break;
 

@@ -52,7 +52,7 @@ namespace UHtml.Core.Dom
 
                 currentLine = layoutCoreStatus.CurrentLine;
 
-                layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
+                layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, curY,
                       layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.Bottom);
 
                 if (inlineBox.Display == "inline" || currentLine != layoutCoreStatus.CurrentLine)
@@ -88,7 +88,7 @@ namespace UHtml.Core.Dom
                 currentBox.MeasureWordsSize(g);
             }
 
-            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY);
+            currentBox.Location = new RPoint(curX + currentBox.ActualMarginLeft, curY + currentBox.ActualMarginTop);
 
             var boxLeftLimit = currentBox.Location.X + currentBox.ActualPaddingLeft + currentBox.ActualBorderLeftWidth;
             var boxRightLimit = currentBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(currentBox.Width) ?
@@ -100,7 +100,7 @@ namespace UHtml.Core.Dom
             var layoutCoreStatus = new LayoutProgress()
             {
                 CurX = boxLeftLimit,
-                CurY = top,
+                CurY = top + currentBox.ActualBorderTopWidth + currentBox.ActualPaddingTop,
                 Bottom = maxBottom,
                 Right = boxLeftLimit,
             };
@@ -126,10 +126,10 @@ namespace UHtml.Core.Dom
 
             }
 
-            if(layoutCoreStatus.CurrentLine!=null)
-            {
-                alignLine(g, layoutCoreStatus.CurrentLine);
-            }
+            //if(layoutCoreStatus.CurrentLine!=null)
+            //{
+            //    alignLine(g, layoutCoreStatus.CurrentLine);
+            //}
 
 
             if (layoutCoreStatus.Right + currentBox.ActualPaddingRight
@@ -166,7 +166,7 @@ namespace UHtml.Core.Dom
                 CurX = layoutCoreStatus.Right,
                 CurY = layoutCoreStatus.CurY,
                 Right = layoutCoreStatus.Right,
-                Bottom = layoutCoreStatus.Bottom,
+                Bottom = Math.Max(currentBox.ActualBottom, currentBox.ContentBottom) + currentBox.ActualMarginBottom,
                 CurrentLineBox = currentLine
             };
         }
@@ -218,6 +218,8 @@ namespace UHtml.Core.Dom
                                 + box.ActualPaddingBottom
                                 + box.ActualBorderBottomWidth);
 
+            box.ContentBottom = currentBottom;
+
         }
 
         private static void alignLine(RGraphics g, CssLineBox linebox)
@@ -228,7 +230,7 @@ namespace UHtml.Core.Dom
             ApplyRightToLeft(currentBox, linebox);
             BubbleRectangles(currentBox, linebox);
             ApplyVerticalAlignment(g, linebox);
-            linebox.AssignRectanglesToBoxes();
+            //linebox.AssignRectanglesToBoxes();
         }
     }
 

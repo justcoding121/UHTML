@@ -38,7 +38,7 @@ namespace UHtml.Core.Dom
 
         internal void AdjustMaxBottom()
         {
-         
+
         }
 
         /// <summary>
@@ -142,11 +142,32 @@ namespace UHtml.Core.Dom
         /// <returns></returns>
         internal List<CssRect> WordsOf(CssBox box)
         {
-            List<CssRect> r = new List<CssRect>();
-
+            var r = new List<CssRect>();
             foreach (CssRect word in Words)
                 if (word.OwnerBox.Equals(box))
                     r.Add(word);
+
+            return r;
+        }
+
+        /// <summary>
+        /// Return the words of the specified box and child inline boxes that live in this linebox
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        internal List<CssRect> WordsOf(CssBox box, List<CssRect> r)
+        {
+            foreach (CssRect word in Words)
+                if (word.OwnerBox.Equals(box))
+                    r.Add(word);
+
+            foreach (var child in box.Boxes)
+            {
+                if(child.Display == "inline")
+                {
+                    WordsOf(child, r);
+                }
+            }
 
             return r;
         }
@@ -161,30 +182,33 @@ namespace UHtml.Core.Dom
         /// <param name="b"></param>
         internal void UpdateRectangle(CssBox box, double x, double y, double r, double b)
         {
-            double leftspacing = box.ActualBorderLeftWidth + box.ActualPaddingLeft;
-            double rightspacing = box.ActualBorderRightWidth + box.ActualPaddingRight;
-            double topspacing = box.ActualBorderTopWidth + box.ActualPaddingTop;
-            double bottomspacing = box.ActualBorderBottomWidth + box.ActualPaddingTop;
+            //double leftspacing = box.ActualBorderLeftWidth + box.ActualPaddingLeft;
+            //double rightspacing = box.ActualBorderRightWidth + box.ActualPaddingRight;
+            //double topspacing = box.ActualBorderTopWidth + box.ActualPaddingTop;
+            //double bottomspacing = box.ActualBorderBottomWidth + box.ActualPaddingTop;
 
-            x -= leftspacing;
-            r += rightspacing;
+            //x -= leftspacing;
+            //r += rightspacing;
 
-            if (!box.IsImage)
-            {
-                y -= topspacing;
-                b += bottomspacing;
-            }
+            //if (!box.IsImage)
+            //{
+            //    y -= topspacing;
+            //    b += bottomspacing;
+            //}
 
-            if (!Rectangles.ContainsKey(box))
+            if (RelatedBoxes.Any(bb => bb == box))
             {
-                Rectangles.Add(box, RRect.FromCoordinates(x, y, r, b));
-            }
-            else
-            {
-                RRect f = Rectangles[box];
-                Rectangles[box] = RRect.FromCoordinates(
-                    Math.Min(f.X, x), Math.Min(f.Y, y),
-                    Math.Max(f.X2, r), Math.Max(f.Y2, b));
+                if (!Rectangles.ContainsKey(box))
+                {
+                    Rectangles.Add(box, RRect.FromCoordinates(x, y, r, b));
+                }
+                else
+                {
+                    RRect f = Rectangles[box];
+                    Rectangles[box] = RRect.FromCoordinates(
+                        Math.Min(f.X, x), Math.Min(f.Y, y),
+                        Math.Max(f.X2, r), Math.Max(f.Y2, b));
+                }
             }
 
             //inline blocks don't need to propagate up the size of child rectangles?
@@ -214,51 +238,30 @@ namespace UHtml.Core.Dom
         /// <param name="baseline">baseline</param>
         internal void SetBaseLine(RGraphics g, CssBox b, double baseline)
         {
-            //TODO: Aqui me quede, checar poniendo "by the" con un font-size de 3em
-            List<CssRect> ws = WordsOf(b);
-
             if (!Rectangles.ContainsKey(b))
+            {
                 return;
+            }
 
             RRect r = Rectangles[b];
 
-            //Save top of words related to the top of rectangle
-            double gap = 0f;
+            //TODO: Aqui me quede, checar poniendo "by the" con un font-size de 3em
+            List<CssRect> ws = WordsOf(b, new List<CssRect>());
 
             if (ws.Count > 0)
             {
-                gap = ws[0].Top - r.Y1;
-            }
-            else
-            {
-                CssRect firstw = b.FirstWordOccourence(b, this);
+                var diff = baseline - ws[0].Top - ws[0].Height;
 
-                if (firstw != null)
+                foreach (var word in ws)
                 {
-                    gap = firstw.Top - r.Y1;
+                    if (!word.IsImage)
+                    {
+                        word.Top += diff;
+                        //word.Bottom += diff;
+                    }
                 }
             }
 
-            //New top that words will have
-            //float newtop = baseline - (Height - OwnerBox.FontDescent - 3); //OLD
-            double newtop = baseline; // -GetBaseLineHeight(b, g); //OLD
-
-            if (b.ParentBox != null &&
-                b.ParentBox.Rectangles.ContainsKey(this) &&
-                r.Height < b.ParentBox.Rectangles[this].Height)
-            {
-                //Do this only if rectangle is shorter than parent's
-                double recttop = newtop - gap;
-                RRect newr = new RRect(r.X, recttop, r.Width, r.Height);
-                Rectangles[b] = newr;
-                b.OffsetRectangle(this, gap);
-            }
-
-            foreach (var word in ws)
-            {
-                if (!word.IsImage)
-                    word.Top = newtop;
-            }
         }
 
         /// <summary>

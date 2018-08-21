@@ -357,6 +357,12 @@ namespace UHtml.Core.Dom
         }
 
         /// <summary>
+        ///  Max bottom of the contents inside this box when box is inline-block. Otherwise defaults to zero.
+        ///  For inline-blocks this is needed to determine baseline for vertical-alignment
+        /// </summary>
+        internal double ContentBottom { get; set; }
+
+        /// <summary>
         /// Create new css box for the given parent with the given html tag.<br/>
         /// </summary>
         /// <param name="tag">the html tag to define the box</param>

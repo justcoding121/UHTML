@@ -124,7 +124,7 @@ namespace UHtml.Core.Dom
                 CurX = layoutCoreStatus.CurX,
                 CurY = layoutCoreStatus.CurY,
                 Right = currentBox.ActualRight + currentBox.ActualMarginRight,
-                Bottom = layoutCoreStatus.Bottom + currentBox.ActualMarginBottom
+                Bottom = currentBox.ActualBottom + currentBox.ActualMarginBottom
             };
 
         }
