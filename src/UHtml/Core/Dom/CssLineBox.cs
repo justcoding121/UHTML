@@ -243,15 +243,14 @@ namespace UHtml.Core.Dom
                 return;
             }
 
-            RRect r = Rectangles[b];
+            var r = Rectangles[b];
+            var diff = baseline - r.Y2;
 
-            //TODO: Aqui me quede, checar poniendo "by the" con un font-size de 3em
+            ////TODO: Aqui me quede, checar poniendo "by the" con un font-size de 3em
             List<CssRect> ws = WordsOf(b, new List<CssRect>());
 
             if (ws.Count > 0)
             {
-                var diff = baseline - ws[0].Top - ws[0].Height;
-
                 foreach (var word in ws)
                 {
                     if (!word.IsImage)
@@ -262,6 +261,31 @@ namespace UHtml.Core.Dom
                 }
             }
 
+            moveBox(b, diff);
+            
+        }
+
+
+        private static void moveBox(CssBox currentBox, double yDiff)
+        {
+            //if (currentBox.IsInlineBlock)
+            //{
+                currentBox.Location = new RPoint(currentBox.Location.X, currentBox.Location.Y + yDiff);
+
+                if (currentBox.Words.Count > 0)
+                {
+                    foreach (var word in currentBox.Words)
+                    {
+                        word.Left = word.Left;
+                        word.Top = word.Top + yDiff;
+                    }
+                }
+            //}
+
+            foreach (var box in currentBox.Boxes)
+            {
+                moveBox(box, yDiff);
+            }
         }
 
         /// <summary>
