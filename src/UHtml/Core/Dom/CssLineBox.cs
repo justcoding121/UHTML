@@ -256,7 +256,6 @@ namespace UHtml.Core.Dom
                     if (!word.IsImage)
                     {
                         word.Top += diff;
-                        //word.Bottom += diff;
                     }
                 }
             }
@@ -268,18 +267,19 @@ namespace UHtml.Core.Dom
 
         private static void moveBox(CssBox currentBox, double yDiff)
         {
+          
+            currentBox.Location = new RPoint(currentBox.Location.X, currentBox.Location.Y + yDiff);
+
             //if (currentBox.IsInlineBlock)
             //{
-                currentBox.Location = new RPoint(currentBox.Location.X, currentBox.Location.Y + yDiff);
-
-                if (currentBox.Words.Count > 0)
-                {
-                    foreach (var word in currentBox.Words)
-                    {
-                        word.Left = word.Left;
-                        word.Top = word.Top + yDiff;
-                    }
-                }
+            //if (currentBox.Words.Count > 0)
+            //    {
+            //        foreach (var word in currentBox.Words)
+            //        {
+            //            word.Left = word.Left;
+            //            word.Top = word.Top + yDiff;
+            //        }
+            //    }
             //}
 
             foreach (var box in currentBox.Boxes)
