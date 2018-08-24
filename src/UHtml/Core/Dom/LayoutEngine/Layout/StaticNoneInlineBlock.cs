@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
@@ -38,19 +39,23 @@ namespace UHtml.Core.Dom
 
             foreach (var inlineBox in currentBox.Boxes)
             {
-                if (inlineBox.Width != CssConstants.Auto &&
-                               !string.IsNullOrEmpty(inlineBox.Width))
+                if (inlineBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(inlineBox.Width) 
+                    && layoutCoreStatus.CurX + inlineBox.ActualWidth > rightLimit)
                 {
-                    if (layoutCoreStatus.CurX + inlineBox.ActualWidth > rightLimit)
-                    {
-                        alignLine(g, currentLine);
-                        currentLine = new CssLineBox(currentBox);
-                        layoutCoreStatus.CurX = leftLimit;
-                        curY = maxBottom;
-                    }
+                    curY = alignLine(g, currentLine);
+                    layoutCoreStatus.CurX = leftLimit;
+  
+                    layoutCoreStatus.Bottom = curY;
+                    layoutCoreStatus.Right = leftLimit;
+
+                    currentLine = new CssLineBox(currentBox);
+                    layoutCoreStatus.CurrentLine = currentLine;
+                }
+                else
+                {
+                    currentLine = layoutCoreStatus.CurrentLine;
                 }
 
-                currentLine = layoutCoreStatus.CurrentLine;
 
                 layoutCoreStatus = LayoutRecursively(g, inlineBox, layoutCoreStatus.CurX, curY,
                       layoutCoreStatus.CurrentLine, leftLimit, rightLimit, layoutCoreStatus.Bottom);
@@ -65,7 +70,7 @@ namespace UHtml.Core.Dom
 
             if(layoutCoreStatus.CurrentLine!=null)
             {
-                alignLine(g, layoutCoreStatus.CurrentLine);
+                layoutCoreStatus.Bottom = alignLine(g, layoutCoreStatus.CurrentLine);
                 layoutCoreStatus.CurrentLine = null;
             }
 
@@ -126,32 +131,36 @@ namespace UHtml.Core.Dom
 
             }
 
-            //if(layoutCoreStatus.CurrentLine!=null)
-            //{
-            //    alignLine(g, layoutCoreStatus.CurrentLine);
-            //}
+            if (layoutCoreStatus.CurrentLine != null)
+            {
+                maxBottom = Math.Max(maxBottom, alignLine(g, layoutCoreStatus.CurrentLine));
+            }
 
 
             if (layoutCoreStatus.Right + currentBox.ActualPaddingRight
                    + currentBox.ActualBorderRightWidth
                    + currentBox.ActualMarginRight > rightLimit)
             {
-                alignLine(g, currentLine);
-                currentLine = new CssLineBox(currentBox);
 
-                layoutCoreStatus.CurX = leftLimit;
-                layoutCoreStatus.CurY = maxBottom;
+                maxBottom = alignLine(g, currentLine);
+                currentLine = new CssLineBox(currentBox.ContainingBlock);
 
-                var xDiff = currentBox.Location.X - layoutCoreStatus.CurX;
-                var yDiff = currentBox.Location.Y - layoutCoreStatus.CurY;
+                var xDiff = currentBox.Location.X - currentBox.ActualMarginLeft - leftLimit;
+                var yDiff = currentBox.Location.Y - currentBox.ActualMarginBottom - maxBottom;
 
                 moveBox(currentBox, xDiff, yDiff);
+
+                layoutCoreStatus.CurX -= xDiff;
+                layoutCoreStatus.CurY -= yDiff;
+
                 layoutCoreStatus.Right -= xDiff;
+                layoutCoreStatus.Bottom -= yDiff;
+
+                boxLeftLimit -= xDiff;
+                top -= yDiff;
             }
-            else
-            {
-                currentLine.ReportExistanceOfBox(currentBox);
-            }
+         
+            currentLine.ReportExistanceOfBox(currentBox);
 
             setInlineBlockBoxSize(currentBox, boxLeftLimit, layoutCoreStatus.Right, top, layoutCoreStatus.Bottom);
 
@@ -222,14 +231,14 @@ namespace UHtml.Core.Dom
 
         }
 
-        private static void alignLine(RGraphics g, CssLineBox linebox)
+        private static double alignLine(RGraphics g, CssLineBox linebox)
         {
             var currentBox = linebox.OwnerBox;
 
             ApplyHorizontalAlignment(g, linebox);
             ApplyRightToLeft(currentBox, linebox);
             BubbleRectangles(currentBox, linebox);
-            ApplyVerticalAlignment(g, linebox);
+            return ApplyVerticalAlignment(g, linebox);
             //linebox.AssignRectanglesToBoxes();
         }
     }

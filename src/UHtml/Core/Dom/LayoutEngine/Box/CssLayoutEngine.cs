@@ -312,7 +312,7 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="g"></param>
         /// <param name="lineBox"></param>
-        private static void ApplyVerticalAlignment(RGraphics g, CssLineBox lineBox)
+        private static double ApplyVerticalAlignment(RGraphics g, CssLineBox lineBox)
         {
             double baseline = Single.MinValue;
             foreach (var box in lineBox.Rectangles.Keys)
@@ -321,6 +321,8 @@ namespace UHtml.Core.Dom
             }
 
             var boxes = new List<CssBox>(lineBox.Rectangles.Keys);
+            double maxBottom = Double.MinValue;
+
             foreach (CssBox box in boxes)
             {
                 //Important notes on http://www.w3.org/TR/CSS21/tables.html#height-layout
@@ -352,7 +354,18 @@ namespace UHtml.Core.Dom
                         lineBox.SetBaseLine(g, box, baseline);
                         break;
                 }
+
+                if(box.IsInlineBlock)
+                {
+                    maxBottom = Math.Max(maxBottom, box.ActualBottom + box.ActualMarginBottom);
+                }
+                else
+                {
+                    maxBottom = Math.Max(maxBottom, lineBox.Rectangles[box].Y2);
+                }
             }
+
+            return maxBottom;
         }
 
         /// <summary>

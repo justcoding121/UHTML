@@ -260,7 +260,15 @@ namespace UHtml.Core.Dom
                 }
             }
 
-            moveBox(b, diff);
+            if(b.IsInline)
+            {
+                r.Y += diff;
+            }
+
+            if (b.IsInlineBlock)
+            {
+                moveBox(b, diff);
+            }
             
         }
 
@@ -270,17 +278,16 @@ namespace UHtml.Core.Dom
           
             currentBox.Location = new RPoint(currentBox.Location.X, currentBox.Location.Y + yDiff);
 
-            //if (currentBox.IsInlineBlock)
-            //{
-            //if (currentBox.Words.Count > 0)
-            //    {
-            //        foreach (var word in currentBox.Words)
-            //        {
-            //            word.Left = word.Left;
-            //            word.Top = word.Top + yDiff;
-            //        }
-            //    }
-            //}
+
+            if (currentBox.Words.Count > 0)
+            {
+                foreach (var word in currentBox.Words)
+                {
+                    word.Left = word.Left;
+                    word.Top = word.Top + yDiff;
+                }
+            }
+
 
             foreach (var box in currentBox.Boxes)
             {

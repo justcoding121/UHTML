@@ -47,6 +47,7 @@ namespace UHtml.Core.Dom
                     CurrentLineBox = layoutCoreStatus.CurrentLine,
                     CurX = layoutCoreStatus.CurX + currentBox.ActualMarginRight,
                     CurY = layoutCoreStatus.CurY,
+                    Right  = layoutCoreStatus.Right,
                     Bottom = layoutCoreStatus.Bottom
                 };
 

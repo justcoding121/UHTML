@@ -99,7 +99,7 @@ namespace UHtml.Core.Dom
 
             if (layoutCoreStatus.CurrentLine != null)
             {
-                alignLine(g, layoutCoreStatus.CurrentLine);
+                layoutCoreStatus.Bottom = alignLine(g, layoutCoreStatus.CurrentLine);
                 layoutCoreStatus.CurrentLine = null;
             }
 
