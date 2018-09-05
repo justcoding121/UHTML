@@ -357,7 +357,7 @@ namespace UHtml.Core.Dom
 
                 if(box.IsInlineBlock)
                 {
-                    maxBottom = Math.Max(maxBottom, box.ActualBottom + box.ActualMarginBottom);
+                    maxBottom = Math.Max(maxBottom, Math.Max(box.ContentBottom, box.ActualBottom + box.ActualMarginBottom));
                 }
                 else
                 {

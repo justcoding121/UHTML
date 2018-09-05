@@ -42,14 +42,18 @@ namespace UHtml.Core.Dom
                 if (inlineBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(inlineBox.Width) 
                     && layoutCoreStatus.CurX + inlineBox.ActualWidth > rightLimit)
                 {
-                    curY = alignLine(g, currentLine);
+                    if(!layoutCoreStatus.CurrentLine.IsEmpty())
+                    {
+                        curY = alignLine(g, currentLine);
+                        currentLine = new CssLineBox(currentBox);
+                        layoutCoreStatus.CurrentLine = currentLine;
+                    }
+               
                     layoutCoreStatus.CurX = leftLimit;
   
                     layoutCoreStatus.Bottom = curY;
                     layoutCoreStatus.Right = leftLimit;
-
-                    currentLine = new CssLineBox(currentBox);
-                    layoutCoreStatus.CurrentLine = currentLine;
+                  
                 }
                 else
                 {
@@ -68,7 +72,7 @@ namespace UHtml.Core.Dom
                 maxBottom = Math.Max(maxBottom, layoutCoreStatus.Bottom);
             }
 
-            if(layoutCoreStatus.CurrentLine!=null)
+            if(layoutCoreStatus.CurrentLine!=null && !layoutCoreStatus.CurrentLine.IsEmpty())
             {
                 layoutCoreStatus.Bottom = alignLine(g, layoutCoreStatus.CurrentLine);
                 layoutCoreStatus.CurrentLine = null;
@@ -131,7 +135,7 @@ namespace UHtml.Core.Dom
 
             }
 
-            if (layoutCoreStatus.CurrentLine != null)
+            if (layoutCoreStatus.CurrentLine != null && !layoutCoreStatus.CurrentLine.IsEmpty())
             {
                 maxBottom = Math.Max(maxBottom, alignLine(g, layoutCoreStatus.CurrentLine));
             }
@@ -141,10 +145,12 @@ namespace UHtml.Core.Dom
                    + currentBox.ActualBorderRightWidth
                    + currentBox.ActualMarginRight > rightLimit)
             {
-
-                maxBottom = alignLine(g, currentLine);
-                currentLine = new CssLineBox(currentBox.ContainingBlock);
-
+                if(!currentLine.IsEmpty())
+                {
+                    maxBottom = alignLine(g, currentLine);
+                    currentLine = new CssLineBox(currentBox.ContainingBlock);
+                }
+              
                 var xDiff = currentBox.Location.X - currentBox.ActualMarginLeft - leftLimit;
                 var yDiff = currentBox.Location.Y - currentBox.ActualMarginBottom - maxBottom;
 

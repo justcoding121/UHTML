@@ -97,7 +97,7 @@ namespace UHtml.Core.Dom
                 }
             }
 
-            if (layoutCoreStatus.CurrentLine != null)
+            if (layoutCoreStatus.CurrentLine != null && !layoutCoreStatus.CurrentLine.IsEmpty())
             {
                 layoutCoreStatus.Bottom = alignLine(g, layoutCoreStatus.CurrentLine);
                 layoutCoreStatus.CurrentLine = null;

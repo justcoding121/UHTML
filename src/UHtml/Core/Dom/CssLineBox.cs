@@ -107,6 +107,21 @@ namespace UHtml.Core.Dom
         }
 
         /// <summary>
+        /// Returns true if this line does'nt have anything in it
+        /// </summary>
+        /// <returns></returns>
+        internal bool IsEmpty()
+        {
+            if (RelatedBoxes.Count == 0 && Words.Count == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
         /// Lets the linebox add the word an its box to their lists if necessary.
         /// </summary>
         /// <param name="word"></param>
@@ -275,6 +290,10 @@ namespace UHtml.Core.Dom
 
         private static void moveBox(CssBox currentBox, double yDiff)
         {
+            if(currentBox.IsInlineBlock)
+            {
+                currentBox.ContentBottom += yDiff;
+            }
           
             currentBox.Location = new RPoint(currentBox.Location.X, currentBox.Location.Y + yDiff);
 

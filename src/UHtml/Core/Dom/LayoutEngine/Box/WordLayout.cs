@@ -1,6 +1,7 @@
 ﻿using System;
 using UHtml.Adapters;
 using UHtml.Core.Utils;
+using System.Linq;
 
 namespace UHtml.Core.Dom
 {
@@ -34,19 +35,58 @@ namespace UHtml.Core.Dom
                     maxRight = curX;
                 }
 
-                foreach (var word in box.Words)
+                ////create new line if needed
+                //if ((box.WhiteSpace != CssConstants.NoWrap
+                //    && box.WhiteSpace != CssConstants.Pre
+                //    && curX + box.Words[0].Width > rightLimit
+                //     && (box.WhiteSpace != CssConstants.PreWrap || !box.Words[0].IsSpaces))
+                //    || box.Words[0].IsLineBreak)
+                //{
+                //    maxRight = rightLimit;
+                //    curX = leftLimit;
+                //    curY = alignLine(g, currentLineBox);
+                //    currentLineBox = new CssLineBox(box.ContainingBlock);
+                //}
+
+                //var biggestWordWidth = box.Words.Select(x => x.Width).Max();
+
+                //if(curX + biggestWordWidth > rightLimit)
+                //{
+                //    rightLimit = curX + biggestWordWidth;
+                //}
+
+                bool firstNewLine = true;
+                for (int i=0;i<box.Words.Count;i++)
                 {
+                    var word = box.Words[i];
+
                     //create new line if needed
                     if ((box.WhiteSpace != CssConstants.NoWrap
                         && box.WhiteSpace != CssConstants.Pre
                         && curX + word.Width > rightLimit
                          && (box.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces))
-                        || word.IsLineBreak)
+                         || word.IsLineBreak)
                     {
                         maxRight = rightLimit;
                         curX = leftLimit;
-                        curY = alignLine(g, currentLineBox);
-                        currentLineBox = new CssLineBox(box.ContainingBlock);
+
+                        if (!currentLineBox.IsEmpty())
+                        {
+                            curY = alignLine(g, currentLineBox);
+                            currentLineBox = new CssLineBox(box.ContainingBlock);
+                        }
+
+                        if(firstNewLine)
+                        {
+                            var longestWordLength = box.Words.Skip(i)
+                                                    .Take(box.Words.Count - i)
+                                                    .Select(x => x.Width)
+                                                    .Max();
+
+                            rightLimit = Math.Max(rightLimit, leftLimit + longestWordLength);
+                            firstNewLine = false;
+                        }
+
                     }
 
                     currentLineBox.ReportExistanceOf(word);
