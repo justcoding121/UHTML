@@ -66,9 +66,10 @@ namespace UHtml.Core.Dom
 
                 if (inlineBox.Display == "inline" || currentLine != layoutCoreStatus.CurrentLine)
                 {
-                    curY = layoutCoreStatus.CurY;
+                    curY = layoutCoreStatus.CurY;       
                 }
 
+                currentLine = layoutCoreStatus.CurrentLine;
                 maxBottom = Math.Max(maxBottom, layoutCoreStatus.Bottom);
             }
 

@@ -94,6 +94,7 @@ namespace UHtml.Core.Dom
                     layoutCoreStatus.CurY = result.CurY;
                     layoutCoreStatus.Bottom = result.Bottom;
                     layoutCoreStatus.Right = result.Right;
+                    layoutCoreStatus.CurrentLine = result.CurrentLine;
                 }
             }
 
