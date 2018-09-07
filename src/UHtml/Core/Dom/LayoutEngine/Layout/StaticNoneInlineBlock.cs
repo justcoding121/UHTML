@@ -150,21 +150,22 @@ namespace UHtml.Core.Dom
                 {
                     maxBottom = alignLine(g, currentLine);
                     currentLine = new CssLineBox(currentBox.ContainingBlock);
+
+                    var xDiff = currentBox.Location.X - currentBox.ActualMarginLeft - leftLimit;
+                    var yDiff = currentBox.Location.Y - currentBox.ActualMarginBottom - maxBottom;
+
+                    moveBox(currentBox, xDiff, yDiff);
+
+                    layoutCoreStatus.CurX -= xDiff;
+                    layoutCoreStatus.CurY -= yDiff;
+
+                    layoutCoreStatus.Right -= xDiff;
+                    layoutCoreStatus.Bottom -= yDiff;
+
+                    boxLeftLimit -= xDiff;
+                    top -= yDiff;
                 }
-              
-                var xDiff = currentBox.Location.X - currentBox.ActualMarginLeft - leftLimit;
-                var yDiff = currentBox.Location.Y - currentBox.ActualMarginBottom - maxBottom;
 
-                moveBox(currentBox, xDiff, yDiff);
-
-                layoutCoreStatus.CurX -= xDiff;
-                layoutCoreStatus.CurY -= yDiff;
-
-                layoutCoreStatus.Right -= xDiff;
-                layoutCoreStatus.Bottom -= yDiff;
-
-                boxLeftLimit -= xDiff;
-                top -= yDiff;
             }
          
             currentLine.ReportExistanceOfBox(currentBox);
@@ -245,8 +246,9 @@ namespace UHtml.Core.Dom
             ApplyHorizontalAlignment(g, linebox);
             ApplyRightToLeft(currentBox, linebox);
             BubbleRectangles(currentBox, linebox);
-            return ApplyVerticalAlignment(g, linebox);
+            var result = ApplyVerticalAlignment(g, linebox);
             //linebox.AssignRectanglesToBoxes();
+            return result;
         }
     }
 

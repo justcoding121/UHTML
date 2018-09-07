@@ -136,8 +136,8 @@ namespace UHtml.Core.Dom
         /// </summary>
         /// <param name="box"></param>
         private static void SetBlockBoxSize(CssBox box,
-            double leftLimit,
-            double rightLimit,
+            double left,
+            double right,
             double top, double bottom)
         {
 
@@ -149,7 +149,7 @@ namespace UHtml.Core.Dom
                                 + box.ActualPaddingLeft
                                 + box.ActualBorderRightWidth
                                 + box.ActualPaddingRight
-                                : (rightLimit - leftLimit)
+                                : (right - left)
                                 - box.ActualMarginLeft
                                 - box.ActualMarginRight
                                 ,

@@ -113,16 +113,16 @@ namespace UHtml.Core.Dom
 
                 maxBottom = box.ActualBottom;
 
-                if (box.Width == CssConstants.Auto)
-                {
+                //if (box.Width == CssConstants.Auto)
+                //{
                     //use the maximum right hit during word layout
                     box.ActualRight = maxRight;
-                }
-                else
-                {
-                    //use the fixed width
-                    box.ActualRight = initialX + box.ActualWidth;
-                }
+                //}
+                //else
+                //{
+                //    //use the fixed width
+                //    box.ActualRight = initialX + box.ActualWidth;
+                //}
             }
 
             return new WordLayoutStatus()
