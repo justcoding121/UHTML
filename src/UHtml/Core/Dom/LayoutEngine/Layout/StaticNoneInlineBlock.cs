@@ -7,7 +7,7 @@ using UHtml.Core.Parse;
 using UHtml.Core.Utils;
 
 namespace UHtml.Core.Dom
-{ 
+{
     internal static partial class CssLayoutEngine
     {
         public static LayoutProgress LayoutInlineBlockBoxes(RGraphics g,
@@ -34,26 +34,26 @@ namespace UHtml.Core.Dom
             };
 
 
-            var maxBottom = 0.0;
+            var maxRight = 0.0;
             curY = layoutCoreStatus.CurY;
 
             foreach (var inlineBox in currentBox.Boxes)
             {
-                if (inlineBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(inlineBox.Width) 
+                if (inlineBox.Width != CssConstants.Auto && !string.IsNullOrEmpty(inlineBox.Width)
                     && layoutCoreStatus.CurX + inlineBox.ActualWidth > rightLimit)
                 {
-                    if(!layoutCoreStatus.CurrentLine.IsEmpty())
+                    if (!layoutCoreStatus.CurrentLine.IsEmpty())
                     {
                         curY = alignLine(g, currentLine);
                         currentLine = new CssLineBox(currentBox);
                         layoutCoreStatus.CurrentLine = currentLine;
                     }
-               
+
                     layoutCoreStatus.CurX = leftLimit;
-  
+
                     layoutCoreStatus.Bottom = curY;
                     layoutCoreStatus.Right = leftLimit;
-                  
+
                 }
                 else
                 {
@@ -66,14 +66,14 @@ namespace UHtml.Core.Dom
 
                 if (inlineBox.Display == "inline" || currentLine != layoutCoreStatus.CurrentLine)
                 {
-                    curY = layoutCoreStatus.CurY;       
+                    curY = layoutCoreStatus.CurY;
                 }
 
                 currentLine = layoutCoreStatus.CurrentLine;
-                maxBottom = Math.Max(maxBottom, layoutCoreStatus.Bottom);
+                maxRight = Math.Max(maxRight, layoutCoreStatus.MaxRight);
             }
 
-            if(layoutCoreStatus.CurrentLine!=null && !layoutCoreStatus.CurrentLine.IsEmpty())
+            if (layoutCoreStatus.CurrentLine != null && !layoutCoreStatus.CurrentLine.IsEmpty())
             {
                 layoutCoreStatus.Bottom = alignLine(g, layoutCoreStatus.CurrentLine);
                 layoutCoreStatus.CurrentLine = null;
@@ -82,7 +82,14 @@ namespace UHtml.Core.Dom
             SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.Bottom);
 
 
-            return layoutCoreStatus;
+            return new LayoutProgress()
+            {
+                CurX = layoutCoreStatus.CurX,
+                CurY = layoutCoreStatus.CurY,
+                Bottom = layoutCoreStatus.Bottom,
+                Right = layoutCoreStatus.Right,
+                MaxRight = maxRight
+            };
         }
 
         public static StaticNoneInlineBlockLayoutProgress LayoutStaticNoneInlineBlock(RGraphics g,
@@ -112,9 +119,10 @@ namespace UHtml.Core.Dom
                 CurX = boxLeftLimit,
                 CurY = top + currentBox.ActualBorderTopWidth + currentBox.ActualPaddingTop,
                 Bottom = maxBottom,
-                Right = boxLeftLimit,
+                Right = boxLeftLimit
             };
 
+            var maxRight = 0.0;
             foreach (var box in currentBox.Boxes)
             {
 
@@ -127,14 +135,12 @@ namespace UHtml.Core.Dom
 
                 if (result != null)
                 {
-                    layoutCoreStatus.CurX = result.CurX;
-                    layoutCoreStatus.CurY = result.CurY;
-                    layoutCoreStatus.Right = result.Right;
-                    layoutCoreStatus.Bottom = result.Bottom;
-                    layoutCoreStatus.CurrentLine = result.CurrentLine;
+                    layoutCoreStatus = result;
+                    maxRight = Math.Max(maxRight, result.MaxRight);
                 }
-
             }
+
+            layoutCoreStatus.MaxRight = maxRight;
 
             if (layoutCoreStatus.CurrentLine != null && !layoutCoreStatus.CurrentLine.IsEmpty())
             {
@@ -146,7 +152,7 @@ namespace UHtml.Core.Dom
                    + currentBox.ActualBorderRightWidth
                    + currentBox.ActualMarginRight > rightLimit)
             {
-                if(!currentLine.IsEmpty())
+                if (!currentLine.IsEmpty())
                 {
                     maxBottom = alignLine(g, currentLine);
                     currentLine = new CssLineBox(currentBox.ContainingBlock);
@@ -160,6 +166,7 @@ namespace UHtml.Core.Dom
                     layoutCoreStatus.CurY -= yDiff;
 
                     layoutCoreStatus.Right -= xDiff;
+                    layoutCoreStatus.MaxRight -= xDiff;
                     layoutCoreStatus.Bottom -= yDiff;
 
                     boxLeftLimit -= xDiff;
@@ -167,7 +174,7 @@ namespace UHtml.Core.Dom
                 }
 
             }
-         
+
             currentLine.ReportExistanceOfBox(currentBox);
 
             setInlineBlockBoxSize(currentBox, boxLeftLimit, layoutCoreStatus.Right, top, layoutCoreStatus.Bottom);
@@ -183,6 +190,7 @@ namespace UHtml.Core.Dom
                 CurX = layoutCoreStatus.Right,
                 CurY = layoutCoreStatus.CurY,
                 Right = layoutCoreStatus.Right,
+                MaxRight = Math.Max(layoutCoreStatus.Right, layoutCoreStatus.MaxRight),
                 Bottom = Math.Max(currentBox.ActualBottom, currentBox.ContentBottom) + currentBox.ActualMarginBottom,
                 CurrentLineBox = currentLine
             };
@@ -258,6 +266,7 @@ namespace UHtml.Core.Dom
         public double CurY { get; set; }
 
         public double Right { get; set; }
+        public double MaxRight { get; set; }
         public double Bottom { get; internal set; }
 
         public CssLineBox CurrentLineBox { get; set; }

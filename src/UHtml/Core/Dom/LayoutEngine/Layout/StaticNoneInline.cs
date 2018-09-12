@@ -48,7 +48,8 @@ namespace UHtml.Core.Dom
                     CurX = layoutCoreStatus.CurX + currentBox.ActualMarginRight,
                     CurY = layoutCoreStatus.CurY,
                     Right  = layoutCoreStatus.Right,
-                    Bottom = layoutCoreStatus.Bottom
+                    Bottom = layoutCoreStatus.Bottom,
+                    MaxRight = layoutCoreStatus.MaxRight
                 };
 
             }
@@ -63,9 +64,11 @@ namespace UHtml.Core.Dom
             layoutCoreStatus.CurY = status.CurY;
             layoutCoreStatus.Bottom = status.Bottom;
             layoutCoreStatus.Right = status.Right;
+            layoutCoreStatus.MaxRight = status.MaxRight;
             layoutCoreStatus.CurrentLine = status.CurrentLineBox;
 
-            var maxRight = layoutCoreStatus.Right;
+            var right = layoutCoreStatus.Right;
+            var maxRight = layoutCoreStatus.MaxRight;
 
             if (currentBox.Boxes.Count > 0)
             {
@@ -83,11 +86,13 @@ namespace UHtml.Core.Dom
                         layoutCoreStatus.CurX = result.CurX;
                         layoutCoreStatus.CurY = result.CurY;
                         layoutCoreStatus.Right = result.Right;
+                        layoutCoreStatus.MaxRight = result.MaxRight;
                         layoutCoreStatus.Bottom = result.Bottom;
                         layoutCoreStatus.CurrentLine = result.CurrentLine;
                     }
 
-                    maxRight = Math.Max(maxRight, layoutCoreStatus.Right);
+                    right = Math.Max(right, layoutCoreStatus.Right);
+                    maxRight = Math.Max(maxRight, layoutCoreStatus.MaxRight);
                 }
               
             }
@@ -97,13 +102,15 @@ namespace UHtml.Core.Dom
                         + currentBox.ActualBorderRightWidth
                         + currentBox.ActualMarginRight;
 
+            right = Math.Max(right, layoutCoreStatus.CurX);
 
             return new StaticNoneInlineLayoutProgress()
             {
                 CurrentLineBox = layoutCoreStatus.CurrentLine,
                 CurX = layoutCoreStatus.CurX,
                 CurY = layoutCoreStatus.CurY,
-                Right = Math.Max(maxRight, layoutCoreStatus.CurX),
+                Right = right,
+                MaxRight = Math.Max(maxRight, right),
                 Bottom = layoutCoreStatus.Bottom
             };
         }
@@ -139,6 +146,7 @@ namespace UHtml.Core.Dom
         public double CurY { get; set; }
 
         public double Right { get; internal set; }
+        public double MaxRight { get; set; }
         public double Bottom { get; internal set; }
 
         public CssLineBox CurrentLineBox { get; set; }

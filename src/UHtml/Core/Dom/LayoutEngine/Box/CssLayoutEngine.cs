@@ -510,7 +510,5 @@ namespace UHtml.Core.Dom
             }
             return result;
         }
-
-
     }
 }

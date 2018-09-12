@@ -9,99 +9,425 @@ namespace UHtml.Core
         /// http://www.w3.org/TR/CSS21/sample.html
         /// </remarks>
         public const string DefaultStyleSheet = @"
-        html, address,
-        blockquote,
-        body, dd, div,
-        dl, dt, fieldset, form,
-        frame, frameset,
-        h1, h2, h3, h4,
-        h5, h6, noframes,
-        ol, p, ul, center,
-        dir, menu, pre   { display: block }
-        li              { display: list-item }
-        head            { display: none }
-        table           { display: table }
-        tr              { display: table-row }
-        thead           { display: table-header-group }
-        tbody           { display: table-row-group }
-        tfoot           { display: table-footer-group }
-        col             { display: table-column }
-        colgroup        { display: table-column-group }
-        td, th          { display: table-cell }
-        caption         { display: table-caption }
-        th              { font-weight: bolder; text-align: center }
-        caption         { text-align: center }
-        body            { margin: 8px }
-        h1              { font-size: 2em; margin: .67em 0 }
-        h2              { font-size: 1.5em; margin: .75em 0 }
-        h3              { font-size: 1.17em; margin: .83em 0 }
-        h4, p,
-        blockquote, ul,
-        fieldset, form,
-        ol, dl, dir,
-        menu            { margin: 1.12em 0 }
-        h5              { font-size: .83em; margin: 1.5em 0 }
-        h6              { font-size: .75em; margin: 1.67em 0 }
-        h1, h2, h3, h4,
-        h5, h6, b,
-        strong          { font-weight: bolder; }
-        blockquote      { margin-left: 40px; margin-right: 40px }
-        i, cite, em,
-        var, address    { font-style: italic }
-        pre, tt, code,
-        kbd, samp       { font-family: monospace }
-        pre             { white-space: pre }
-        button, textarea,
-        input, select   { display: inline-block }
-        big             { font-size: 1.17em }
-        small, sub, sup { font-size: .83em }
-        sub             { vertical-align: sub }
-        sup             { vertical-align: super }
-        table           { border-spacing: 2px; }
-        thead, tbody,
-        tfoot, tr       { vertical-align: middle }
-        td, th          { vertical-align: inherit }
-        s, strike, del  { text-decoration: line-through }
-        hr              { border: 1px inset; }
-        ol, ul, dir,
-        menu, dd        { margin-left: 40px }
-        ol              { list-style-type: decimal }
-        ol ul, ul ol,
-        ul ul, ol ol    { margin-top: 0; margin-bottom: 0 }
-        ol ul, ul ul   { list-style-type: circle }
-        ul ul ul, 
-        ol ul ul, 
-        ul ol ul        { list-style-type: square }
-        u, ins          { text-decoration: underline }
-        br:before       { content: ""\A"" }
-        :before, :after { white-space: pre-line }
-        center          { text-align: center }
-        :link, :visited { text-decoration: underline }
-        :focus          { outline: thin dotted invert }
-
-        /* Begin bidirectionality settings (do not change) */
-        BDO[DIR=""ltr""]  { direction: ltr; unicode-bidi: bidi-override }
-        BDO[DIR=""rtl""]  { direction: rtl; unicode-bidi: bidi-override }
-
-        *[DIR=""ltr""]    { direction: ltr; unicode-bidi: embed }
-        *[DIR=""rtl""]    { direction: rtl; unicode-bidi: embed }
-
-        @media print {
-          h1            { page-break-before: always }
-          h1, h2, h3,
-          h4, h5, h6    { page-break-after: avoid }
-          ul, ol, dl    { page-break-before: avoid }
+        a {
+            color: #00C;
+            text-decoration: underline;
         }
 
-        /* Not in the specification but necessary */
-        a               { color: #0055BB; text-decoration:underline }
-        table           { border-color:#dfdfdf; }
-        td, th          { border-color:#dfdfdf; overflow: hidden; }
-        style, title,
-        script, link,
-        meta, area,
-        base, param     { display:none }
-        hr              { border-top-color: #9A9A9A; border-left-color: #9A9A9A; border-bottom-color: #EEEEEE; border-right-color: #EEEEEE; }
-        pre             { font-size: 10pt; margin-top: 15px; }";
+        a:visited {
+	        color: #800080;
+        }
+
+        abbr {
+	        border-bottom-style: dotted;
+	        border-bottom-width: 1px;
+        }
+
+        address {
+	        display: block;
+	        font-style: italic;
+	        padding-left: 2px;
+	        padding-right: 2px;
+        }
+
+        area {
+	        display: none;
+        }
+
+        audio {
+	        display: none;
+        }
+
+        audio[controls] {
+	        display: inline;
+        }
+
+        b {
+	        font-weight: bold;
+        }
+
+        base {
+	        display: none;
+        }
+
+        bdo {
+	        direction: rtl;
+	        unicode-bidi: bidi-override;
+        }
+
+        blockquote {
+	        display: block;
+	        margin: 1em 10px 1em 40px;
+        }
+
+        [dir=rtl] blockquote {
+	        margin: 1em 10px 1em 40px;
+        }
+
+        body {
+	        display: block;
+	        margin: 8px;
+        }
+
+        button {
+	        border-width: 2px;
+	        color: #000;
+	        display: inline-block;
+	        font-family: use-lang-def;
+	        font-size: 13px;
+	        font-weight: 400;
+	        padding: 1px 8px;
+	        text-align: center;
+	        text-indent: 0;
+	        white-space: nowrap;
+        }
+
+        caption {
+	        display: table-caption;
+	        text-align: center;
+        }
+
+        cite {
+	        font-style: italic;
+        }
+
+        code {
+	        font-family: use-lang-def;
+	        font-size: 0.81em;
+        }
+
+        col {
+	        display: table-column;
+        }
+
+        colgroup {
+	        display: table-column-group;
+        }
+
+        datalist {
+	        display: none;
+        }
+
+        dd {
+	        margin: 0 0 0 40px;
+        }
+
+        [dir=rtl] dd {
+	        margin: 0 40px 0 0;
+        }
+
+        del {
+	        text-decoration: line-through;
+        }
+
+        dfn {
+	        font-style: italic;
+        }
+
+        div {
+	        display: block;
+        }
+
+        dl {
+	        display: block;
+	        margin: 1em 0;
+        }
+
+        dt {
+	        display: block;
+        }
+
+        em {
+	        font-style: italic;
+        }
+
+        fieldset {
+	        border-style: groove;
+	        border-width: 2px;
+	        display: block;
+	        margin-left: 2px;
+	        margin-right: 2px;
+	        padding: 0.33em 0.67em 0.75em;
+        }
+
+        form {
+	        display: block;
+        }
+
+        h1 {
+	        display: block;
+	        font-size: 2em;
+	        font-weight: bold;
+	        margin: 0.67em 0;
+        }
+
+        h2 {
+	        display: block;
+	        font-size: 1.5em;
+	        font-weight: bold;
+	        margin: 0.83em 0;
+        }
+
+        h3 {
+	        display: block;
+	        font-size: 1.17em;
+	        font-weight: bold;
+	        margin: 1em 0;
+        }
+
+        h4 {
+	        display: block;
+	        font-weight: bold;
+	        margin: 1em 0;
+        }
+
+        h5 {
+	        display: block;
+	        font-size: 0.83em;
+	        font-weight: bold;
+	        margin: 1.67em 0;
+        }
+
+        h6 {
+	        display: block;
+	        font-size: 0.67em;
+	        font-weight: bold;
+	        margin: 2.33em 0;
+        }
+
+        head {
+	        display: none;
+        }
+
+        hr {
+	        border-style: inset;
+	        border-width: 1px;
+	        box-sizing: content-box;
+	        display: block;
+	        height: 0;
+	        margin: 10px 0;
+	        text-align: center;
+        }
+
+        html {
+	        display: block;
+        }
+
+        i {
+	        font-style: italic;
+        }
+
+        iframe {
+	        border-style: inset;
+	        border-width: 2px;
+        }
+
+        input {
+	        border-width: 2px;
+	        color: #000;
+	        font-family: use-lang-def;
+	        font-size: 13px;
+	        font-weight: 400;
+	        padding: 1px;
+	        text-align: default;
+	        text-indent: 0;
+	        text-transform: none;
+        }
+
+        ins {
+	        text-decoration: underline;
+        }
+
+        kbd {
+	        font-family: use-lang-def;
+	        font-size: 0.81em;
+        }
+
+        keygen {
+	        border-width: 2px;
+	        color: #000;
+	        font-family: use-lang-def;
+	        font-size: 13px;
+	        font-weight: 400;
+	        padding: 1px;
+	        text-align: default;
+	        text-indent: 0;
+        }
+
+        legend {
+	        display: block;
+	        padding-left: 2px;
+	        padding-right: 2px;
+        }
+
+        li {
+	        display: list-item;
+        }
+
+        link {
+	        display: none;
+        }
+
+        menu {
+	        display: block;
+	        margin: 1em 0 1em 40px;
+	        padding-left: 2px;
+	        padding-right: 2px;
+        }
+
+        [dir=rtl] menu {
+	        margin: 1em 40px 1em 0;
+        }
+
+        meta {
+	        display: none;
+        }
+
+        noscript {
+	        display: none;
+        }
+
+        ol {
+	        padding: 0 40px 0 0;
+        }
+
+        optgroup {
+	        text-indent: 0;
+        }
+
+        option {
+	        text-indent: 0;
+        }
+
+        p {
+	        display: block;
+	        margin: 1em 0;
+        }
+
+        pre {
+	        display: block;
+	        font-family: use-lang-def;
+	        font-size: 0.81em;
+	        margin: 1em 0;
+	        white-space: pre;
+        }
+
+
+        samp {
+	        font-family: use-lang-def;
+	        font-size: 0.81em;
+        }
+
+        script {
+	        display: none;
+        }
+
+        select {
+	        border-width: 2px;
+	        color: #000;
+	        font-family: use-lang-def;
+	        font-size: 13px;
+	        font-weight: 400;
+	        padding: 1px;
+	        text-align: default;
+	        text-indent: 0;
+        }
+
+        strong {
+	        font-weight: bold;
+        }
+
+        style {
+	        display: none;
+        }
+
+        sub {
+	        vertical-align: sub;
+        }
+
+        sup {
+	        vertical-align: super;
+        }
+
+        table {
+	        border-spacing: 2px;
+	        display: table;
+	        text-indent: 0;
+        }
+
+        tbody {
+	        display: table-row-group;
+	        vertical-align: middle;
+        }
+
+        td {
+	        display: table-cell;
+	        padding: 1px;
+	        vertical-align: inherit;
+        }
+
+        textarea {
+	        border-width: 2px;
+	        color: #000;
+	        font-family: use-lang-def;
+	        font-size: 13px;
+	        font-weight: 400;
+	        line-height: normal;
+	        padding: 1px;
+	        text-align: default;
+	        text-indent: 0;
+	        text-transform: none;
+        }
+
+        tfoot {
+	        display: table-footer-group;
+	        vertical-align: middle;
+        }
+
+        th {
+	        display: table-cell;
+	        font-weight: bold;
+	        padding: 1px;
+	        vertical-align: inherit;
+        }
+
+        thead {
+	        display: table-header-group;
+	        vertical-align: middle;
+        }
+
+        title {
+	        display: none;
+        }
+
+        tr {
+	        display: table-row;
+	        vertical-align: inherit;
+        }
+
+        ul {
+	        display: block;
+	        list-style-position: outside;
+	        list-style-type: disc;
+	        margin: 1em 0;
+	        padding: 0 0 0 40px;
+        }
+
+        [dir=rtl] ul {
+	        padding: 0 40px 0 0;
+        }
+
+        var {
+	        font-style: italic;
+        }
+
+        video {
+	        display: inline;
+        }";
+   
+        //q {
+        //	quotes: "\"" "\"" "'" "'";
+        //}
+
     }
 }

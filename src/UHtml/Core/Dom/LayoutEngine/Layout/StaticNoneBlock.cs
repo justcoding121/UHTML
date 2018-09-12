@@ -82,19 +82,17 @@ namespace UHtml.Core.Dom
                              - currentBox.ActualPaddingRight
                              - currentBox.ActualBorderRightWidth;
 
+            var maxRight = 0.0;
             //child boxes here
             foreach (var box in currentBox.Boxes)
             {
                 var result = LayoutRecursively(g, box, layoutCoreStatus.CurX, layoutCoreStatus.CurY,
                      layoutCoreStatus.CurrentLine, currentMaxLeft, currentMaxRight, layoutCoreStatus.Bottom);
 
-                if (result != null)
+                if(result!=null)
                 {
-                    layoutCoreStatus.CurX = result.CurX;
-                    layoutCoreStatus.CurY = result.CurY;
-                    layoutCoreStatus.Bottom = result.Bottom;
-                    layoutCoreStatus.Right = result.Right;
-                    layoutCoreStatus.CurrentLine = result.CurrentLine;
+                    layoutCoreStatus = result;
+                    maxRight = Math.Max(maxRight, result.MaxRight);
                 }
             }
 
@@ -106,25 +104,29 @@ namespace UHtml.Core.Dom
 
             SetBlockBoxSize(currentBox, leftLimit, rightLimit, top, layoutCoreStatus.Bottom);
 
-            if (!currentBox.IsFixed)
+            var right = currentBox.ActualRight + currentBox.ActualMarginRight;
+            maxRight = Math.Max(maxRight, right);
+
+            if (currentBox.ParentBox == null)
             {
-                var actualWidth = Math.Max(currentBox.GetMinimumWidth()
-                        + currentBox.GetWidthMarginDeep(currentBox),
-                        currentBox.Size.Width < 90999 ?
-                        currentBox.ActualRight - currentBox.HtmlContainer.Root.Location.X
-                        : 0);
+                var actualWidth = maxRight - currentBox.HtmlContainer.Root.Location.X;
 
                 currentBox.HtmlContainer.ActualSize =
-                    CommonUtils.Max(currentBox.HtmlContainer.ActualSize,
-                    new RSize(actualWidth, currentBox.ActualBottom
-                    - currentBox.HtmlContainer.Root.Location.Y));
+                    new RSize(actualWidth, 
+                    layoutCoreStatus.Bottom 
+                    + currentBox.ActualMarginBottom 
+                    + currentBox.ActualPaddingBottom
+                    + currentBox.ActualBorderBottomWidth
+                    - currentBox.HtmlContainer.Root.Location.Y);
             }
+
 
             return new StaticNoneBlockLayoutProgress()
             {
                 CurX = layoutCoreStatus.CurX,
                 CurY = layoutCoreStatus.CurY,
-                Right = currentBox.ActualRight + currentBox.ActualMarginRight,
+                Right = right,
+                MaxRight = maxRight,
                 Bottom = currentBox.ActualBottom + currentBox.ActualMarginBottom
             };
 
@@ -171,6 +173,8 @@ namespace UHtml.Core.Dom
         public double CurY { get; set; }
 
         public double Right { get; set; }
+        public double MaxRight { get; set; }
+
         public double Bottom { get; internal set; }
 
     }

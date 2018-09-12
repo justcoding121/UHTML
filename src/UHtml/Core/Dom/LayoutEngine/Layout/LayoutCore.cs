@@ -82,6 +82,7 @@ namespace UHtml.Core.Dom
                                                     CurX = staticNoneBlockResult.CurX,
                                                     CurY = staticNoneBlockResult.CurY,
                                                     Right = staticNoneBlockResult.Right,
+                                                    MaxRight = staticNoneBlockResult.MaxRight,
                                                     Bottom = staticNoneBlockResult.Bottom,
 
                                                 };
@@ -103,6 +104,7 @@ namespace UHtml.Core.Dom
                                                 CurX = staticNoneInlineBlockResult.CurX,
                                                 CurY = staticNoneInlineBlockResult.CurY,
                                                 Right = staticNoneInlineBlockResult.Right,
+                                                MaxRight = staticNoneInlineBlockResult.MaxRight,
                                                 Bottom = staticNoneInlineBlockResult.Bottom,
                                                 CurrentLine = staticNoneInlineBlockResult.CurrentLineBox,
                                             };
@@ -122,6 +124,7 @@ namespace UHtml.Core.Dom
                                                 CurX = staticNoneInlineResult.CurX,
                                                 CurY = staticNoneInlineResult.CurY,
                                                 Right = staticNoneInlineResult.Right,
+                                                MaxRight = staticNoneInlineResult.MaxRight,
                                                 Bottom = staticNoneInlineResult.Bottom,
                                                 CurrentLine = staticNoneInlineResult.CurrentLineBox,
                                             };
@@ -146,6 +149,7 @@ namespace UHtml.Core.Dom
         public CssLineBox CurrentLine { get; set; }
 
         public double Right { get; set; }
+        public double MaxRight { get; set; }
         public double Bottom { get; internal set; }
 
     }

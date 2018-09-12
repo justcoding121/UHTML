@@ -22,41 +22,23 @@ namespace UHtml.Core.Dom
             double curX = initialX;
             double curY = initialY;
 
+            double right = initialX;
             double maxRight = initialX;
+
             double maxBottom = initialBottom;
 
             if (box.Words.Count > 0)
             {
-               currentLineBox = currentLineBox ?? new CssLineBox(box.ContainingBlock);
+                currentLineBox = currentLineBox ?? new CssLineBox(box.ContainingBlock);
 
                 if (DomUtils.DoesBoxHasWhitespace(box))
                 {
                     curX += box.ActualWordSpacing;
-                    maxRight = curX;
+                    right = curX;
                 }
 
-                ////create new line if needed
-                //if ((box.WhiteSpace != CssConstants.NoWrap
-                //    && box.WhiteSpace != CssConstants.Pre
-                //    && curX + box.Words[0].Width > rightLimit
-                //     && (box.WhiteSpace != CssConstants.PreWrap || !box.Words[0].IsSpaces))
-                //    || box.Words[0].IsLineBreak)
-                //{
-                //    maxRight = rightLimit;
-                //    curX = leftLimit;
-                //    curY = alignLine(g, currentLineBox);
-                //    currentLineBox = new CssLineBox(box.ContainingBlock);
-                //}
-
-                //var biggestWordWidth = box.Words.Select(x => x.Width).Max();
-
-                //if(curX + biggestWordWidth > rightLimit)
-                //{
-                //    rightLimit = curX + biggestWordWidth;
-                //}
-
                 bool firstNewLine = true;
-                for (int i=0;i<box.Words.Count;i++)
+                for (int i = 0; i < box.Words.Count; i++)
                 {
                     var word = box.Words[i];
 
@@ -67,7 +49,7 @@ namespace UHtml.Core.Dom
                          && (box.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces))
                          || word.IsLineBreak)
                     {
-                        maxRight = rightLimit;
+                        right = rightLimit;
                         curX = leftLimit;
 
                         if (!currentLineBox.IsEmpty())
@@ -76,7 +58,7 @@ namespace UHtml.Core.Dom
                             currentLineBox = new CssLineBox(box.ContainingBlock);
                         }
 
-                        if(firstNewLine)
+                        if (firstNewLine)
                         {
                             var longestWordLength = box.Words.Skip(i)
                                                     .Take(box.Words.Count - i)
@@ -96,6 +78,7 @@ namespace UHtml.Core.Dom
 
                     curX = word.Left + word.FullWidth;
 
+                    right = Math.Max(right, word.Right);
                     maxRight = Math.Max(maxRight, word.Right);
                     maxBottom = Math.Max(maxBottom, word.Bottom);
                 }
@@ -112,17 +95,8 @@ namespace UHtml.Core.Dom
                 }
 
                 maxBottom = box.ActualBottom;
+                box.ActualRight = right;
 
-                //if (box.Width == CssConstants.Auto)
-                //{
-                    //use the maximum right hit during word layout
-                    box.ActualRight = maxRight;
-                //}
-                //else
-                //{
-                //    //use the fixed width
-                //    box.ActualRight = initialX + box.ActualWidth;
-                //}
             }
 
             return new WordLayoutStatus()
@@ -131,6 +105,7 @@ namespace UHtml.Core.Dom
                 CurX = curX,
                 CurY = curY,
                 Right = box.ActualRight,
+                MaxRight = maxRight,
                 Bottom = maxBottom
             };
         }
@@ -142,6 +117,8 @@ namespace UHtml.Core.Dom
         internal double CurY;
 
         internal double Right;
+        internal double MaxRight;
+
         internal double Bottom;
 
         internal CssLineBox CurrentLineBox;
