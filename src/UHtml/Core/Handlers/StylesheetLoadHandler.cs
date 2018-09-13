@@ -1,8 +1,5 @@
-using PCLStorage;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
 using UHtml.Core.Entities;
 using UHtml.Core.Utils;
 
@@ -88,30 +85,31 @@ namespace UHtml.Core.Handlers
         /// <returns>the loaded stylesheet string</returns>
         private static string LoadStylesheetFromFile(HtmlContainerInt htmlContainer, string path)
         {
-            var filePath = CommonUtils.TryGetFileInfo(path);
-            if (filePath != null)
-            {
-                if (StorageUtils.FileExists(filePath))
-                {
-                    var file = FileSystem.Current.GetFileFromPathAsync(filePath).Result;
-                    using (var cssFileStream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
-                    {
-                        using (var sr = new StreamReader(cssFileStream))
-                        {
-                            return sr.ReadToEnd();
-                        }
-                    }
-                }
-                else
-                {
-                    htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "No stylesheet found by path: " + path);
-                }
-            }
-            else
-            {
-                htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Failed load image, invalid source: " + path);
-            }
-            return string.Empty;
+            //var filePath = CommonUtils.TryGetFileInfo(path);
+            //if (filePath != null)
+            //{
+            //    if (StorageUtils.FileExists(filePath))
+            //    {
+            //        var file = FileSystem.Current.GetFileFromPathAsync(filePath).Result;
+            //        using (var cssFileStream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
+            //        {
+            //            using (var sr = new StreamReader(cssFileStream))
+            //            {
+            //                return sr.ReadToEnd();
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "No stylesheet found by path: " + path);
+            //    }
+            //}
+            //else
+            //{
+            //    htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Failed load image, invalid source: " + path);
+            //}
+            //return string.Empty;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -122,20 +120,22 @@ namespace UHtml.Core.Handlers
         /// <returns>the loaded stylesheet string</returns>
         private static string LoadStylesheetFromUri(HtmlContainerInt htmlContainer, Uri uri)
         {
-            var handler = IocModule.Container.GetInstance<HttpClientHandler>();
-            using (var client = new HttpClient(handler))
-            {
-                var stylesheet = client.GetStringAsync(uri).Result;
-                try
-                {
-                    stylesheet = CorrectRelativeUrls(stylesheet, uri);
-                }
-                catch (Exception ex)
-                {
-                    htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
-                }
-                return stylesheet;
-            }
+            //var handler = IocModule.Container.GetInstance<HttpClientHandler>();
+            //using (var client = new HttpClient(handler))
+            //{
+            //    var stylesheet = client.GetStringAsync(uri).Result;
+            //    try
+            //    {
+            //        stylesheet = CorrectRelativeUrls(stylesheet, uri);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
+            //    }
+            //    return stylesheet;
+            //}
+
+            throw new NotImplementedException();
         }
 
         /// <summary>

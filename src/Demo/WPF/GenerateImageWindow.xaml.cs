@@ -4,6 +4,7 @@ using System.Windows.Media.Imaging;
 using UHtml.Demo.Common;
 using UHtml.WPF;
 using Microsoft.Win32;
+using System;
 
 namespace UHtml.Demo.WPF
 {
@@ -48,11 +49,13 @@ namespace UHtml.Demo.WPF
 
         private void GenerateImage()
         {
-            if (_imageBoxBorder.RenderSize.Width > 0 && _imageBoxBorder.RenderSize.Height > 0)
-            {
-                _generatedImage = HtmlRender.RenderToImage(_html, _imageBoxBorder.RenderSize, null, DemoUtils.OnStylesheetLoad, HtmlRenderingHelper.OnImageLoad);
-                _imageBox.Source = _generatedImage;
-            }
+            //if (_imageBoxBorder.RenderSize.Width > 0 && _imageBoxBorder.RenderSize.Height > 0)
+            //{
+            //    _generatedImage = HtmlRender.RenderToImage(_html, _imageBoxBorder.RenderSize, null, DemoUtils.OnStylesheetLoad, HtmlRenderingHelper.OnImageLoad);
+            //    _imageBox.Source = _generatedImage;
+            //}
+
+            throw new NotImplementedException();
         }
     }
 }

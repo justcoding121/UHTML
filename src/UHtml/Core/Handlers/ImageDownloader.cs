@@ -1,12 +1,5 @@
-﻿using PCLStorage;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using UHtml.Core.Utils;
 
 namespace UHtml.Core.Handlers
@@ -32,7 +25,7 @@ namespace UHtml.Core.Handlers
         /// <summary>
         /// the web client used to download image from URL (to cancel on dispose)
         /// </summary>
-        private readonly List<HttpClient> clients = new List<HttpClient>();
+       // private readonly List<HttpClient> clients = new List<HttpClient>();
 
         /// <summary>
         /// dictionary of image cache path to callbacks of download to handle multiple requests to download the same image 
@@ -68,11 +61,12 @@ namespace UHtml.Core.Handlers
 
             if (download)
             {
-                var tempPath = StorageUtils.GetTempFileName();
-                if (async)
-                   Task.Run(()=> DownloadImageFromUrlAsync(new DownloadData(imageUri, tempPath, filePath)));
-                else
-                    DownloadImageFromUrl(imageUri, tempPath, filePath);
+                //var tempPath = StorageUtils.GetTempFileName();
+                //if (async)
+                //   Task.Run(()=> DownloadImageFromUrlAsync(new DownloadData(imageUri, tempPath, filePath)));
+                //else
+                //    DownloadImageFromUrl(imageUri, tempPath, filePath);
+                throw new NotImplementedException();
             }
         }
 
@@ -93,30 +87,31 @@ namespace UHtml.Core.Handlers
         /// </summary>
         private void DownloadImageFromUrl(Uri source, string tempPath, string filePath)
         {
-            try
-            {
-                var handler = IocModule.Container.GetInstance<HttpClientHandler>();
-                using (var client = new HttpClient(handler))
-                {
-                    clients.Add(client);
+            throw new NotImplementedException();
+            //try
+            //{
+            //    var handler = IocModule.Container.GetInstance<HttpClientHandler>();
+            //    using (var client = new HttpClient(handler))
+            //    {
+            //        clients.Add(client);
 
-                    var response = client.GetAsync(source).Result;
-                    var result = response.Content.ReadAsByteArrayAsync().Result;
-                    var folder = StorageUtils.GetStorageFolder();
-                    var file = folder.CreateFileAsync(tempPath, CreationCollisionOption.ReplaceExisting).Result;
+            //        var response = client.GetAsync(source).Result;
+            //        var result = response.Content.ReadAsByteArrayAsync().Result;
+            //        var folder = StorageUtils.GetStorageFolder();
+            //        var file = folder.CreateFileAsync(tempPath, CreationCollisionOption.ReplaceExisting).Result;
 
-                    using (var stream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
-                    {
-                        stream.Write(result, 0, result.Length);
-                    }
+            //        using (var stream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
+            //        {
+            //            stream.Write(result, 0, result.Length);
+            //        }
 
-                    OnDownloadImageCompleted(client, response, source, tempPath, filePath, null, false);
-                }
-            }
-            catch (Exception ex)
-            {
-                OnDownloadImageCompleted(null,null, source, tempPath, filePath, ex, false);
-            }
+            //        OnDownloadImageCompleted(client, response, source, tempPath, filePath, null, false);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    OnDownloadImageCompleted(null,null, source, tempPath, filePath, ex, false);
+            //}
         }
 
         /// <summary>
@@ -126,30 +121,31 @@ namespace UHtml.Core.Handlers
         /// <param name="data">key value pair of URL and file info to download the file to</param>
         private void DownloadImageFromUrlAsync(object data)
         {
-            var downloadData = (DownloadData)data;
-            try
-            {
-                var handler = IocModule.Container.GetInstance<HttpClientHandler>();
-                var client = new HttpClient(handler);
-                clients.Add(client);
+            throw new NotImplementedException();
+            //var downloadData = (DownloadData)data;
+            //try
+            //{
+            //    var handler = IocModule.Container.GetInstance<HttpClientHandler>();
+            //    var client = new HttpClient(handler);
+            //    clients.Add(client);
 
-                var response = client.GetAsync(downloadData._uri).Result;
-                var result = response.Content.ReadAsByteArrayAsync().Result;
-                var folder = StorageUtils.GetStorageFolder();
-                var file = folder.CreateFileAsync(downloadData._tempPath, CreationCollisionOption.ReplaceExisting).Result;
+            //    var response = client.GetAsync(downloadData._uri).Result;
+            //    var result = response.Content.ReadAsByteArrayAsync().Result;
+            //    var folder = StorageUtils.GetStorageFolder();
+            //    var file = folder.CreateFileAsync(downloadData._tempPath, CreationCollisionOption.ReplaceExisting).Result;
 
-                using (var stream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
-                {
-                    stream.Write(result, 0, result.Length);
-                }
+            //    using (var stream = file.OpenAsync(FileAccess.ReadAndWrite).Result)
+            //    {
+            //        stream.Write(result, 0, result.Length);
+            //    }
 
-                OnDownloadImageAsyncCompleted(client, response, downloadData);
+            //    OnDownloadImageAsyncCompleted(client, response, downloadData);
 
-            }
-            catch (Exception ex)
-            {
-                OnDownloadImageCompleted(null,null,  downloadData._uri, downloadData._tempPath, downloadData._filePath, ex, false);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    OnDownloadImageCompleted(null,null,  downloadData._uri, downloadData._tempPath, downloadData._filePath, ex, false);
+            //}
         }
 
         /// <summary>
@@ -190,19 +186,20 @@ namespace UHtml.Core.Handlers
 
                 if (error == null)
                 {
-                    if (StorageUtils.FileExists(tempPath))
-                    {
-                        try
-                        {
-                            StorageUtils.Move(tempPath, filePath);
-                        }
-                        catch (Exception ex)
-                        {
-                            error = new Exception("Failed to move downloaded image from temp to cache location", ex);
-                        }
-                    }
+                    //if (StorageUtils.FileExists(tempPath))
+                    //{
+                    //    try
+                    //    {
+                    //        StorageUtils.Move(tempPath, filePath);
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        error = new Exception("Failed to move downloaded image from temp to cache location", ex);
+                    //    }
+                    //}
 
-                    error = StorageUtils.FileExists(filePath) ? null : (error ?? new Exception("Failed to download image, unknown error"));
+                    //error = StorageUtils.FileExists(filePath) ? null : (error ?? new Exception("Failed to download image, unknown error"));
+                    throw new NotImplementedException();
                 }
             }
 

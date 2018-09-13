@@ -96,7 +96,7 @@ namespace UHtml.Core
         /// <summary>
         /// Handler for downloading of images in the html
         /// </summary>
-        private ImageDownloader imageDownloader;
+        //private ImageDownloader imageDownloader;
 
         /// <summary>
         /// the text fore color use for selected text
@@ -503,7 +503,7 @@ namespace UHtml.Core
                 if (root != null)
                 {
                     selectionHandler = new SelectionHandler(root);
-                    imageDownloader = new ImageDownloader();
+                    //imageDownloader = new ImageDownloader();
                 }
             }
         }
@@ -522,9 +522,9 @@ namespace UHtml.Core
                     selectionHandler.Dispose();
                 selectionHandler = null;
 
-                if (imageDownloader != null)
-                    imageDownloader.Dispose();
-                imageDownloader = null;
+                //if (imageDownloader != null)
+                //    imageDownloader.Dispose();
+                //imageDownloader = null;
 
                 hoverBoxes = null;
             }
@@ -977,10 +977,10 @@ namespace UHtml.Core
         /// Get image downloader to be used to download images for the current html rendering.<br/>
         /// Lazy create single downloader to be used for all images in the current html.
         /// </summary>
-        internal ImageDownloader GetImageDownloader()
-        {
-            return imageDownloader;
-        }
+        //internal ImageDownloader GetImageDownloader()
+        //{
+        //    return imageDownloader;
+        //}
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

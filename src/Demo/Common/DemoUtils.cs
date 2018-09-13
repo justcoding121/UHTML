@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using UHtml.Core.Entities;
 
 namespace UHtml.Demo.Common
 {
@@ -37,12 +36,12 @@ namespace UHtml.Demo.Common
         /// <summary>
         /// Handle stylesheet resolve.
         /// </summary>
-        public static void OnStylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
-        {
-            var stylesheet = GetStylesheet(e.Src);
-            if (stylesheet != null)
-                e.SetStyleSheet = stylesheet;
-        }
+        //public static void OnStylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
+        //{
+        //    var stylesheet = GetStylesheet(e.Src);
+        //    if (stylesheet != null)
+        //        e.SetStyleSheet = stylesheet;
+        //}
 
         /// <summary>
         /// Get stylesheet by given key.

@@ -47,9 +47,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="SimpleInjector, Version=3.3.2.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SimpleInjector.3.3.2\lib\net45\SimpleInjector.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SimpleInjector, Version=4.3.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.4.3.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -76,10 +75,6 @@
     <ProjectReference Include="..\..\UHtml.WPF\UHtml.WPF.csproj">
       <Project>{7e4e8db5-85ad-4388-bdcb-38c6f423b8b0}</Project>
       <Name>UHtml.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UHtml\UHtml.csproj">
-      <Project>{c04b679f-52a7-4d24-8ac6-eadb9b9c20ef}</Project>
-      <Name>UHtml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -415,7 +415,11 @@ namespace UHtml.Core.Dom
         private static void ApplyCenterAlignment(RGraphics g, CssLineBox line)
         {
             if (line.Words.Count == 0)
+            {
                 return;
+            }
+
+            //var words = line.Words.Concat(line.RelatedBoxes.Select(x => x.Bounds)).ToList();
 
             CssRect lastWord = line.Words[line.Words.Count - 1];
             double right = line.OwnerBox.ActualRight - line.OwnerBox.ActualPaddingRight - line.OwnerBox.ActualBorderRightWidth;
@@ -448,10 +452,11 @@ namespace UHtml.Core.Dom
         private static void ApplyRightAlignment(RGraphics g, CssLineBox line)
         {
             if (line.Words.Count == 0)
+            {
                 return;
+            }
 
-
-            CssRect lastWord = line.Words[line.Words.Count - 1];
+            var lastWord = line.Words[line.Words.Count - 1];
             double right = line.OwnerBox.ActualRight - line.OwnerBox.ActualPaddingRight - line.OwnerBox.ActualBorderRightWidth;
             double diff = right - lastWord.Right - lastWord.OwnerBox.ActualBorderRightWidth - lastWord.OwnerBox.ActualPaddingRight;
 

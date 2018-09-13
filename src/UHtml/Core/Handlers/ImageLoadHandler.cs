@@ -1,9 +1,7 @@
-using PCLStorage;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using UHtml.Adapters;
 using UHtml.Adapters.Entities;
@@ -268,17 +266,18 @@ namespace UHtml.Core.Handlers
         /// <param name="source">the file path to get the image from</param>
         private void SetImageFromFile(string src)
         {
-            if (StorageUtils.FileExists(src))
-            {
-                if (htmlContainer.AvoidAsyncImagesLoading)
-                    LoadImageFromFile(src);
-                else
-                    Task.Run(()=> LoadImageFromFile(src));
-            }
-            else
-            {
-                ImageLoadComplete();
-            }
+            //if (StorageUtils.FileExists(src))
+            //{
+            //    if (htmlContainer.AvoidAsyncImagesLoading)
+            //        LoadImageFromFile(src);
+            //    else
+            //        Task.Run(()=> LoadImageFromFile(src));
+            //}
+            //else
+            //{
+            //    ImageLoadComplete();
+            //}
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -288,24 +287,26 @@ namespace UHtml.Core.Handlers
         /// <param name="source">the file path to get the image from</param>
         private void LoadImageFromFile(string source)
         {
-            try
-            {
-                var file = FileSystem.Current.GetFileFromPathAsync(source).Result;
-                var imageFileStream = file.OpenAsync(FileAccess.ReadAndWrite).Result;
-                lock (loadCompleteCallback)
-                {
-                    this.imageFileStream = imageFileStream;
-                    if (!disposed)
-                        image = htmlContainer.Adapter.ImageFromStream(this.imageFileStream);
-                    releaseImageObject = true;
-                }
-                ImageLoadComplete();
-            }
-            catch (Exception ex)
-            {
-                htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from disk: " + source, ex);
-                ImageLoadComplete();
-            }
+            //try
+            //{
+            //    var file = FileSystem.Current.GetFileFromPathAsync(source).Result;
+            //    var imageFileStream = file.OpenAsync(FileAccess.ReadAndWrite).Result;
+            //    lock (loadCompleteCallback)
+            //    {
+            //        this.imageFileStream = imageFileStream;
+            //        if (!disposed)
+            //            image = htmlContainer.Adapter.ImageFromStream(this.imageFileStream);
+            //        releaseImageObject = true;
+            //    }
+            //    ImageLoadComplete();
+            //}
+            //catch (Exception ex)
+            //{
+            //    htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from disk: " + source, ex);
+            //    ImageLoadComplete();
+            //}
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -315,15 +316,17 @@ namespace UHtml.Core.Handlers
         /// </summary>
         private void SetImageFromUrl(Uri source)
         {
-            var filePath = CommonUtils.GetLocalfilePath(source);
-            if (StorageUtils.FileExists(filePath) && filePath.Length > 0)
-            {
-                SetImageFromFile(filePath);
-            }
-            else
-            {
-                htmlContainer.GetImageDownloader().DownloadImage(source, filePath, !htmlContainer.AvoidAsyncImagesLoading, OnDownloadImageCompleted);
-            }
+        //    var filePath = CommonUtils.GetLocalfilePath(source);
+        //    if (StorageUtils.FileExists(filePath) && filePath.Length > 0)
+        //    {
+        //        SetImageFromFile(filePath);
+        //    }
+        //    else
+        //    {
+        //        htmlContainer.GetImageDownloader().DownloadImage(source, filePath, !htmlContainer.AvoidAsyncImagesLoading, OnDownloadImageCompleted);
+        //    }
+
+        throw new NotImplementedException();
         }
 
         /// <summary>

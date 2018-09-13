@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using UHtml.Adapters.Entities;
 using System.Linq;
-using PCLStorage;
 
 namespace UHtml.Core.Utils
 {
@@ -171,10 +169,11 @@ namespace UHtml.Core.Utils
         /// <returns>file info or null if not valid</returns>
         public static string TryGetFileInfo(string path)
         {
-            if(StorageUtils.FileExists(path))
-                return path;
+            //if(StorageUtils.FileExists(path))
+            //    return path;
 
-            return null;
+            //return null;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -182,16 +181,16 @@ namespace UHtml.Core.Utils
         /// </summary>
         /// <param name="client">the web client to get the response content type from</param>
         /// <returns>response content type or null</returns>
-        public static string GetResponseContentType(HttpResponseMessage response)
-        {
-            foreach (var header in response.Content.Headers)
-            {
-                if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
-                    return header.Value.FirstOrDefault();
-            }
+        //public static string GetResponseContentType(HttpResponseMessage response)
+        //{
+        //    foreach (var header in response.Content.Headers)
+        //    {
+        //        if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+        //            return header.Value.FirstOrDefault();
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         /// <summary>
         /// Gets the representation of the online uri on the local disk.
@@ -200,66 +199,67 @@ namespace UHtml.Core.Utils
         /// <returns>The path of the file on the disk.</returns>
         public static string GetLocalfilePath(Uri imageUri)
         {
-            StringBuilder fileNameBuilder = new StringBuilder();
-            string absoluteUri = imageUri.AbsoluteUri;
-            int lastSlash = absoluteUri.LastIndexOf('/');
-            if (lastSlash == -1)
-            {
-                return null;
-            }
+            //StringBuilder fileNameBuilder = new StringBuilder();
+            //string absoluteUri = imageUri.AbsoluteUri;
+            //int lastSlash = absoluteUri.LastIndexOf('/');
+            //if (lastSlash == -1)
+            //{
+            //    return null;
+            //}
 
-            string uriUntilSlash = absoluteUri.Substring(0, lastSlash);
-            fileNameBuilder.Append(uriUntilSlash.GetHashCode().ToString());
-            fileNameBuilder.Append('_');
+            //string uriUntilSlash = absoluteUri.Substring(0, lastSlash);
+            //fileNameBuilder.Append(uriUntilSlash.GetHashCode().ToString());
+            //fileNameBuilder.Append('_');
 
-            string restOfUri = absoluteUri.Substring(lastSlash + 1);
-            int indexOfParams = restOfUri.IndexOf('?');
-            if (indexOfParams == -1)
-            {
-                string ext = ".png";
-                int indexOfDot = restOfUri.IndexOf('.');
-                if (indexOfDot > -1)
-                {
-                    ext = restOfUri.Substring(indexOfDot);
-                    restOfUri = restOfUri.Substring(0, indexOfDot);
-                }
+            //string restOfUri = absoluteUri.Substring(lastSlash + 1);
+            //int indexOfParams = restOfUri.IndexOf('?');
+            //if (indexOfParams == -1)
+            //{
+            //    string ext = ".png";
+            //    int indexOfDot = restOfUri.IndexOf('.');
+            //    if (indexOfDot > -1)
+            //    {
+            //        ext = restOfUri.Substring(indexOfDot);
+            //        restOfUri = restOfUri.Substring(0, indexOfDot);
+            //    }
 
-                fileNameBuilder.Append(restOfUri);
-                fileNameBuilder.Append(ext);
-            }
-            else
-            {
-                int indexOfDot = restOfUri.IndexOf('.');
-                if (indexOfDot == -1 || indexOfDot > indexOfParams)
-                {
-                    //The uri is not for a filename
-                    fileNameBuilder.Append(restOfUri);
-                    fileNameBuilder.Append(".png");
-                }
-                else if (indexOfParams > indexOfDot)
-                {
-                    //Adds the filename without extension.
-                    fileNameBuilder.Append(restOfUri, 0, indexOfDot);
-                    //Adds the parameters
-                    fileNameBuilder.Append(restOfUri, indexOfParams, restOfUri.Length - indexOfParams);
-                    //Adds the filename extension.
-                    fileNameBuilder.Append(restOfUri, indexOfDot, indexOfParams - indexOfDot);
-                }
-            }
+            //    fileNameBuilder.Append(restOfUri);
+            //    fileNameBuilder.Append(ext);
+            //}
+            //else
+            //{
+            //    int indexOfDot = restOfUri.IndexOf('.');
+            //    if (indexOfDot == -1 || indexOfDot > indexOfParams)
+            //    {
+            //        //The uri is not for a filename
+            //        fileNameBuilder.Append(restOfUri);
+            //        fileNameBuilder.Append(".png");
+            //    }
+            //    else if (indexOfParams > indexOfDot)
+            //    {
+            //        //Adds the filename without extension.
+            //        fileNameBuilder.Append(restOfUri, 0, indexOfDot);
+            //        //Adds the parameters
+            //        fileNameBuilder.Append(restOfUri, indexOfParams, restOfUri.Length - indexOfParams);
+            //        //Adds the filename extension.
+            //        fileNameBuilder.Append(restOfUri, indexOfDot, indexOfParams - indexOfDot);
+            //    }
+            //}
 
-            var validFileName = GetValidFileName(fileNameBuilder.ToString());
-            if (validFileName.Length > 25)
-            {
-                validFileName = validFileName.Substring(0, 24) + validFileName.Substring(24).GetHashCode() + Path.GetExtension(validFileName);
-            }
+            //var validFileName = GetValidFileName(fileNameBuilder.ToString());
+            //if (validFileName.Length > 25)
+            //{
+            //    validFileName = validFileName.Substring(0, 24) + validFileName.Substring(24).GetHashCode() + Path.GetExtension(validFileName);
+            //}
 
-            if (_tempPath == null)
-            {
-                _tempPath = StorageUtils.GetTempPath();
-                StorageUtils.CreateTempDirIfNotExists(_tempPath);
-            }
+            //if (_tempPath == null)
+            //{
+            //    _tempPath = StorageUtils.GetTempPath();
+            //    StorageUtils.CreateTempDirIfNotExists(_tempPath);
+            //}
 
-            return PortablePath.Combine(_tempPath, validFileName);
+            throw new NotImplementedException();
+            //return PortablePath.Combine(_tempPath, validFileName);
         }
 
         /// <summary>

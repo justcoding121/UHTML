@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using UHtml.Core.Entities;
 using UHtml.Demo.Common;
 using UHtml.WPF;
 
@@ -39,10 +38,10 @@ namespace UHtml.Demo.WPF
         {
             InitializeComponent();
 
-            _htmlPanel.RenderError += OnRenderError;
-            _htmlPanel.LinkClicked += OnLinkClicked;
-            _htmlPanel.StylesheetLoad += HtmlRenderingHelper.OnStylesheetLoad;
-            _htmlPanel.ImageLoad += HtmlRenderingHelper.OnImageLoad;
+            //_htmlPanel.RenderError += OnRenderError;
+            //_htmlPanel.LinkClicked += OnLinkClicked;
+           //_htmlPanel.StylesheetLoad += HtmlRenderingHelper.OnStylesheetLoad;
+            //_htmlPanel.ImageLoad += HtmlRenderingHelper.OnImageLoad;
             _htmlPanel.LoadComplete += (sender, args) => _htmlPanel.ScrollToElement("C4");
 
             LoadSamples();
@@ -191,35 +190,35 @@ namespace UHtml.Demo.WPF
         /// <summary>
         /// Show error raised from html renderer.
         /// </summary> 
-        private void OnRenderError(object sender, RoutedEvenArgs<HtmlRenderErrorEventArgs> args)
-        {
-            Dispatcher.BeginInvoke(new Action(() => MessageBox.Show(args.Data.Message + (args.Data.Exception != null ? "\r\n" + args.Data.Exception : null), "Error in Html Renderer", MessageBoxButton.OK)));
-        }
+        //private void OnRenderError(object sender, RoutedEvenArgs<HtmlRenderErrorEventArgs> args)
+        //{
+        //    Dispatcher.BeginInvoke(new Action(() => MessageBox.Show(args.Data.Message + (args.Data.Exception != null ? "\r\n" + args.Data.Exception : null), "Error in Html Renderer", MessageBoxButton.OK)));
+        //}
 
         /// <summary>
         /// On specific link click handle it here.
         /// </summary>
-        private void OnLinkClicked(object sender, RoutedEvenArgs<HtmlLinkClickedEventArgs> args)
-        {
-            if (args.Data.Link == "SayHello")
-            {
-                MessageBox.Show("Hello you!");
-                args.Data.Handled = true;
-            }
-            else if (args.Data.Link == "ShowSampleForm")
-            {
-                var w = new SampleWindow();
-                var window = Window.GetWindow(this);
-                if (window != null)
-                {
-                    w.Owner = window;
-                    w.Width = window.Width * 0.8;
-                    w.Height = window.Height * 0.8;
-                    w.ShowDialog();
-                }
-                args.Data.Handled = true;
-            }
-        }
+        //private void OnLinkClicked(object sender, RoutedEvenArgs<HtmlLinkClickedEventArgs> args)
+        //{
+        //    if (args.Data.Link == "SayHello")
+        //    {
+        //        MessageBox.Show("Hello you!");
+        //        args.Data.Handled = true;
+        //    }
+        //    else if (args.Data.Link == "ShowSampleForm")
+        //    {
+        //        var w = new SampleWindow();
+        //        var window = Window.GetWindow(this);
+        //        if (window != null)
+        //        {
+        //            w.Owner = window;
+        //            w.Width = window.Width * 0.8;
+        //            w.Height = window.Height * 0.8;
+        //            w.ShowDialog();
+        //        }
+        //        args.Data.Handled = true;
+        //    }
+        //}
 
   
 

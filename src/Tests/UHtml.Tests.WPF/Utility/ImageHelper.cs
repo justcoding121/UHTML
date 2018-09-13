@@ -27,13 +27,15 @@ namespace UHtml.Tests.WPF.Utility
                 PixelFormat.Format32bppRgb))
             {
 
-                var actualResultBitmapSource = HtmlRender.RenderToImage(testHtml,
-                    new System.Windows.Size(width, height));
+                //var actualResultBitmapSource = HtmlRender.RenderToImage(testHtml,
+                //    new System.Windows.Size(width, height));
 
-                using (var actualResult = ToBitmap(actualResultBitmapSource))
-                {
-                   return TestFileManager.WriteResultFile(testFile, actualResult);
-                }
+                //using (var actualResult = ToBitmap(actualResultBitmapSource))
+                //{
+                //   return TestFileManager.WriteResultFile(testFile, actualResult);
+                //}
+
+                throw new NotImplementedException();
 
             }
         }
