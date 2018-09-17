@@ -163,11 +163,11 @@ namespace UHtml.Core.Dom
         /// </summary>
         private static void BubbleRectangles(CssBox box, CssLineBox line)
         {
-            if (box.IsInlineBlock && line.RelatedBoxes.Any(x=> x == box))
+            if (box.IsInlineBlock && line.RelatedBoxes.Any(x => x == box))
             {
-                double  x = box.ClientLeft,
-                        y = box.ClientTop, 
-                        r = box.ClientRight, 
+                double x = box.ClientLeft,
+                        y = box.ClientTop,
+                        r = box.ClientRight,
                         b = box.ContentBottom;
 
                 line.UpdateRectangle(box, x, y, r, b);
@@ -185,8 +185,8 @@ namespace UHtml.Core.Dom
                         // handle if line is wrapped for the first text element where parent has left margin\padding
                         var left = word.Left;
 
-                        if (box == box.ParentBox.Boxes[0] && word == box.Words[0] && word == line.Words[0] && line != line.OwnerBox.LineBoxes[0] && !word.IsLineBreak)
-                            left -= box.ParentBox.ActualMarginLeft + box.ParentBox.ActualBorderLeftWidth + box.ParentBox.ActualPaddingLeft;
+                        //if (box == box.ParentBox.Boxes[0] && word == box.Words[0] && word == line.Words[0] && line != line.OwnerBox.LineBoxes[0] && !word.IsLineBreak)
+                        //    left -= box.ParentBox.ActualMarginLeft + box.ParentBox.ActualBorderLeftWidth + box.ParentBox.ActualPaddingLeft;
 
 
                         x = Math.Min(x, left);
@@ -315,15 +315,14 @@ namespace UHtml.Core.Dom
         private static double ApplyVerticalAlignment(RGraphics g, CssLineBox lineBox)
         {
             double baseline = Single.MinValue;
-            foreach (var box in lineBox.Rectangles.Keys)
+            foreach (var box in lineBox.RelatedBoxes)
             {
                 baseline = Math.Max(baseline, lineBox.Rectangles[box].Y2);
             }
 
-            var boxes = new List<CssBox>(lineBox.Rectangles.Keys);
             double maxBottom = Double.MinValue;
 
-            foreach (CssBox box in boxes)
+            foreach (CssBox box in lineBox.RelatedBoxes)
             {
                 //Important notes on http://www.w3.org/TR/CSS21/tables.html#height-layout
                 switch (box.VerticalAlign)
@@ -355,7 +354,7 @@ namespace UHtml.Core.Dom
                         break;
                 }
 
-                if(box.IsInlineBlock)
+                if (box.IsInlineBlock)
                 {
                     maxBottom = Math.Max(maxBottom, Math.Max(box.ContentBottom, box.ActualBottom + box.ActualMarginBottom));
                 }
@@ -414,31 +413,33 @@ namespace UHtml.Core.Dom
         /// <param name="line"></param>
         private static void ApplyCenterAlignment(RGraphics g, CssLineBox line)
         {
-            if (line.Words.Count == 0)
+            if (line.RelatedBoxes.Count == 0)
             {
                 return;
             }
 
-            //var words = line.Words.Concat(line.RelatedBoxes.Select(x => x.Bounds)).ToList();
-
-            CssRect lastWord = line.Words[line.Words.Count - 1];
+            var lastWord = line.Rectangles[line.RelatedBoxes[line.RelatedBoxes.Count - 1]];
             double right = line.OwnerBox.ActualRight - line.OwnerBox.ActualPaddingRight - line.OwnerBox.ActualBorderRightWidth;
-            double diff = right - lastWord.Right - lastWord.OwnerBox.ActualBorderRightWidth - lastWord.OwnerBox.ActualPaddingRight;
+            double diff = right - lastWord.X2;
+
             diff /= 2;
 
-            if (diff > 0)
+            if (diff != 0)
             {
-                foreach (CssRect word in line.Words)
+                for (int i = 0; i < line.RelatedBoxes.Count; i++)
                 {
-                    word.Left += diff;
-                }
+                    var box = line.RelatedBoxes[i];
+                    moveBoxLeftDown(box, diff * -1, 0.0);
 
-                if (line.Rectangles.Count > 0)
-                {
-                    foreach (CssBox b in ToList(line.Rectangles.Keys))
+                    RRect r = line.Rectangles[box];
+                    r.X += diff;
+
+                    while (line.Rectangles.ContainsKey(box.parentBox) && box.ParentBox.IsInline)
                     {
-                        RRect r = line.Rectangles[b];
-                        line.Rectangles[b] = new RRect(r.X + diff, r.Y, r.Width, r.Height);
+                        box = box.parentBox;
+
+                        r = line.Rectangles[box];
+                        r.X += diff;
                     }
                 }
             }
@@ -451,31 +452,35 @@ namespace UHtml.Core.Dom
         /// <param name="line"></param>
         private static void ApplyRightAlignment(RGraphics g, CssLineBox line)
         {
-            if (line.Words.Count == 0)
+            if (line.RelatedBoxes.Count == 0)
             {
                 return;
             }
 
-            var lastWord = line.Words[line.Words.Count - 1];
+            var lastWord = line.Rectangles[line.RelatedBoxes[line.RelatedBoxes.Count - 1]];
             double right = line.OwnerBox.ActualRight - line.OwnerBox.ActualPaddingRight - line.OwnerBox.ActualBorderRightWidth;
-            double diff = right - lastWord.Right - lastWord.OwnerBox.ActualBorderRightWidth - lastWord.OwnerBox.ActualPaddingRight;
+            double diff = right - lastWord.X2;
 
-            if (diff > 0)
+            if (diff != 0)
             {
-                foreach (CssRect word in line.Words)
+                for (int i = 0; i < line.RelatedBoxes.Count; i++)
                 {
-                    word.Left += diff;
-                }
+                    var box = line.RelatedBoxes[i];
+                    moveBoxLeftDown(box, diff * -1, 0.0);
 
-                if (line.Rectangles.Count > 0)
-                {
-                    foreach (CssBox b in ToList(line.Rectangles.Keys))
+                    RRect r = line.Rectangles[box];
+                    r.X += diff;
+
+                    while (line.Rectangles.ContainsKey(box.parentBox) && box.ParentBox.IsInline)
                     {
-                        RRect r = line.Rectangles[b];
-                        line.Rectangles[b] = new RRect(r.X + diff, r.Y, r.Width, r.Height);
+                        box = box.parentBox;
+
+                        r = line.Rectangles[box];
+                        r.X += diff;
                     }
                 }
             }
+
         }
 
         /// <summary>

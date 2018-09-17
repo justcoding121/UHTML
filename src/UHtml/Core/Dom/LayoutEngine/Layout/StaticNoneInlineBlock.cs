@@ -160,7 +160,7 @@ namespace UHtml.Core.Dom
                     var xDiff = currentBox.Location.X - currentBox.ActualMarginLeft - leftLimit;
                     var yDiff = currentBox.Location.Y - currentBox.ActualMarginBottom - maxBottom;
 
-                    moveBox(currentBox, xDiff, yDiff);
+                    moveBoxLeftDown(currentBox, xDiff, yDiff);
 
                     layoutCoreStatus.CurX -= xDiff;
                     layoutCoreStatus.CurY -= yDiff;
@@ -175,9 +175,10 @@ namespace UHtml.Core.Dom
 
             }
 
-            currentLine.ReportExistanceOfBox(currentBox);
-
             setInlineBlockBoxSize(currentBox, boxLeftLimit, layoutCoreStatus.Right, top, layoutCoreStatus.Bottom);
+
+            currentBox.ContentBottom = layoutCoreStatus.Bottom;
+            currentLine.ReportExistanceOf(currentBox);
 
             layoutCoreStatus.Right +=
                    currentBox.ActualPaddingRight
@@ -196,7 +197,7 @@ namespace UHtml.Core.Dom
             };
         }
 
-        private static void moveBox(CssBox currentBox, double xDiff, double yDiff)
+        private static void moveBoxLeftDown(CssBox currentBox, double xDiff, double yDiff)
         {
             currentBox.Location = new RPoint(currentBox.Location.X - xDiff, currentBox.Location.Y - yDiff);
 
@@ -204,14 +205,14 @@ namespace UHtml.Core.Dom
             {
                 foreach (var word in currentBox.Words)
                 {
-                    word.Left = word.Left - xDiff;
-                    word.Top = word.Top - yDiff;
+                    word.Left -= xDiff;
+                    word.Top -= yDiff;
                 }
             }
 
             foreach (var box in currentBox.Boxes)
             {
-                moveBox(box, xDiff, yDiff);
+                moveBoxLeftDown(box, xDiff, yDiff);
             }
         }
 
@@ -242,9 +243,6 @@ namespace UHtml.Core.Dom
                                 + box.ActualPaddingTop
                                 + box.ActualPaddingBottom
                                 + box.ActualBorderBottomWidth);
-
-            box.ContentBottom = currentBottom;
-
         }
 
         private static double alignLine(RGraphics g, CssLineBox linebox)
@@ -253,7 +251,6 @@ namespace UHtml.Core.Dom
 
             ApplyHorizontalAlignment(g, linebox);
             ApplyRightToLeft(currentBox, linebox);
-            BubbleRectangles(currentBox, linebox);
             var result = ApplyVerticalAlignment(g, linebox);
             //linebox.AssignRectanglesToBoxes();
             return result;

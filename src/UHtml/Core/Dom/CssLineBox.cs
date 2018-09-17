@@ -112,7 +112,7 @@ namespace UHtml.Core.Dom
         /// <returns></returns>
         internal bool IsEmpty()
         {
-            if (RelatedBoxes.Count == 0 && Words.Count == 0)
+            if (RelatedBoxes.Count == 0)
             {
                 return true;
             }
@@ -125,29 +125,33 @@ namespace UHtml.Core.Dom
         /// Lets the linebox add the word an its box to their lists if necessary.
         /// </summary>
         /// <param name="word"></param>
-        internal void ReportExistanceOf(CssRect word)
+        internal void ReportExistanceOf(CssBox box, CssRect word)
         {
             if (!Words.Contains(word))
             {
                 Words.Add(word);
             }
 
-            if (!RelatedBoxes.Contains(word.OwnerBox))
+            if (!RelatedBoxes.Contains(box))
             {
-                RelatedBoxes.Add(word.OwnerBox);
+                RelatedBoxes.Add(box);
             }
+
+            UpdateRectangle(box, word.Left, word.Top, word.Right, word.Bottom);
         }
 
         /// <summary>
         /// Lets the linebox add the word an its box to their lists if necessary.
         /// </summary>
         /// <param name="word"></param>
-        internal void ReportExistanceOfBox(CssBox box)
+        internal void ReportExistanceOf(CssBox box)
         {
             if (!RelatedBoxes.Contains(box))
             {
                 RelatedBoxes.Add(box);
             }
+
+            UpdateRectangle(box, box.ClientLeft, box.ClientTop, box.ClientRight, box.ContentBottom);
         }
 
         /// <summary>
@@ -178,7 +182,7 @@ namespace UHtml.Core.Dom
 
             foreach (var child in box.Boxes)
             {
-                if(child.Display == "inline")
+                if (child.Display == "inline")
                 {
                     WordsOf(child, r);
                 }
@@ -197,33 +201,16 @@ namespace UHtml.Core.Dom
         /// <param name="b"></param>
         internal void UpdateRectangle(CssBox box, double x, double y, double r, double b)
         {
-            //double leftspacing = box.ActualBorderLeftWidth + box.ActualPaddingLeft;
-            //double rightspacing = box.ActualBorderRightWidth + box.ActualPaddingRight;
-            //double topspacing = box.ActualBorderTopWidth + box.ActualPaddingTop;
-            //double bottomspacing = box.ActualBorderBottomWidth + box.ActualPaddingTop;
-
-            //x -= leftspacing;
-            //r += rightspacing;
-
-            //if (!box.IsImage)
-            //{
-            //    y -= topspacing;
-            //    b += bottomspacing;
-            //}
-
-            if (RelatedBoxes.Any(bb => bb == box))
+            if (!Rectangles.ContainsKey(box))
             {
-                if (!Rectangles.ContainsKey(box))
-                {
-                    Rectangles.Add(box, RRect.FromCoordinates(x, y, r, b));
-                }
-                else
-                {
-                    RRect f = Rectangles[box];
-                    Rectangles[box] = RRect.FromCoordinates(
-                        Math.Min(f.X, x), Math.Min(f.Y, y),
-                        Math.Max(f.X2, r), Math.Max(f.Y2, b));
-                }
+                Rectangles.Add(box, RRect.FromCoordinates(x, y, r, b));
+            }
+            else
+            {
+                RRect f = Rectangles[box];
+                Rectangles[box] = RRect.FromCoordinates(
+                    Math.Min(f.X, x), Math.Min(f.Y, y),
+                    Math.Max(f.X2, r), Math.Max(f.Y2, b));
             }
 
             //inline blocks don't need to propagate up the size of child rectangles?
@@ -241,7 +228,11 @@ namespace UHtml.Core.Dom
         {
             foreach (CssBox b in Rectangles.Keys)
             {
-                b.Rectangles.Add(this, Rectangles[b]);
+                if(b.IsInline)
+                {
+                    b.Rectangles.Add(this, Rectangles[b]);
+                }
+               
             }
         }
 
@@ -275,26 +266,34 @@ namespace UHtml.Core.Dom
                 }
             }
 
-            if(b.IsInline)
-            {
-                r.Y += diff;
-            }
-
             if (b.IsInlineBlock)
             {
                 moveBox(b, diff);
             }
-            
+
+            if (b.IsInline)
+            {
+                r.Y += diff;
+
+                while(Rectangles.ContainsKey(b.parentBox) && b.ParentBox.IsInline)
+                {
+                    b = b.parentBox;
+                    r = Rectangles[b];
+
+                    r.Y += diff;
+                }
+            }
+
         }
 
 
         private static void moveBox(CssBox currentBox, double yDiff)
         {
-            if(currentBox.IsInlineBlock)
+            if (currentBox.IsInlineBlock)
             {
                 currentBox.ContentBottom += yDiff;
             }
-          
+
             currentBox.Location = new RPoint(currentBox.Location.X, currentBox.Location.Y + yDiff);
 
 

@@ -71,8 +71,6 @@ namespace UHtml.Core.Dom
 
                     }
 
-                    currentLineBox.ReportExistanceOf(word);
-
                     word.Left = curX;
                     word.Top = curY;
 
@@ -81,6 +79,8 @@ namespace UHtml.Core.Dom
                     right = Math.Max(right, word.Right);
                     maxRight = Math.Max(maxRight, word.Right);
                     maxBottom = Math.Max(maxBottom, word.Bottom);
+
+                    currentLineBox.ReportExistanceOf(box, word);
                 }
 
                 if (box.Height == CssConstants.Auto)
