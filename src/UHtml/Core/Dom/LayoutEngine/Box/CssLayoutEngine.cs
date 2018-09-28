@@ -433,6 +433,7 @@ namespace UHtml.Core.Dom
 
                     RRect r = line.Rectangles[box];
                     r.X += diff;
+                    line.Rectangles[box] = r;
 
                     while (line.Rectangles.ContainsKey(box.parentBox) && box.ParentBox.IsInline)
                     {
@@ -440,6 +441,7 @@ namespace UHtml.Core.Dom
 
                         r = line.Rectangles[box];
                         r.X += diff;
+                        line.Rectangles[box] = r;
                     }
                 }
             }
@@ -470,6 +472,7 @@ namespace UHtml.Core.Dom
 
                     RRect r = line.Rectangles[box];
                     r.X += diff;
+                    line.Rectangles[box] = r;
 
                     while (line.Rectangles.ContainsKey(box.parentBox) && box.ParentBox.IsInline)
                     {
@@ -477,6 +480,7 @@ namespace UHtml.Core.Dom
 
                         r = line.Rectangles[box];
                         r.X += diff;
+                        line.Rectangles[box] = r;
                     }
                 }
             }

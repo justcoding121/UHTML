@@ -221,6 +221,151 @@ namespace UHtml.Core.Dom
             }
         }
 
+        internal void SetHorizontalOffsets()
+        {
+            for (int i = 0; i < RelatedBoxes.Count; i++)
+            {
+                //First word of the inline box
+                if (i == 0 && RelatedBoxes[i].IsInline)
+                {
+                    var words = WordsOf(RelatedBoxes[i]);
+
+                    if (words.Count > 0 && Words.Count > 0)
+                    {
+                        if (words[0] == Words[0])
+                        {
+                            var box = RelatedBoxes[i];
+                            var rectangle = Rectangles[RelatedBoxes[i]];
+
+                            var leftOffset = box.ActualBorderLeftWidth + box.ActualPaddingLeft;
+                            rectangle.X -= leftOffset;
+                            rectangle.Width += leftOffset;
+
+                            Rectangles[box] = rectangle;
+                            leftOffset += box.ActualMarginLeft;
+
+                            while (box.ParentBox != null && box.ParentBox.IsInline && box.ParentBox.Boxes[0] == box)
+                            {
+                                box = box.parentBox;
+                                rectangle = Rectangles[box];
+
+                                leftOffset += box.ActualBorderLeftWidth + box.ActualPaddingLeft;
+                                rectangle.X -= leftOffset;
+                                rectangle.Width += leftOffset;
+                                Rectangles[box] = rectangle;
+                                leftOffset += box.ActualMarginLeft;
+                            }
+                        }
+                    }
+                }
+
+                if (i == RelatedBoxes.Count - 1 && RelatedBoxes[i].IsInline)
+                {
+                    var words = WordsOf(RelatedBoxes[i]);
+
+                    //last word of the inline box
+                    if (words.Count > 0 && Words.Count > 0)
+                    {
+                        if (words[words.Count - 1] == Words[Words.Count - 1])
+                        {
+                            var box = RelatedBoxes[i];
+                            var rectangle = Rectangles[RelatedBoxes[i]];
+
+                            var rightOffset = box.ActualBorderRightWidth + box.ActualPaddingRight;
+                            rectangle.Width += rightOffset;
+                            Rectangles[box] = rectangle;
+                            rightOffset += box.ActualMarginRight;
+
+                            while (box.ParentBox != null && box.ParentBox.IsInline && box.ParentBox.Boxes[box.ParentBox.Boxes.Count - 1] == box)
+                            {
+                                box = box.parentBox;
+                                rectangle = Rectangles[box];
+
+                                rightOffset += box.ActualBorderRightWidth + box.ActualPaddingRight;
+                                rectangle.Width += rightOffset;
+                                Rectangles[box] = rectangle;
+                                rightOffset += box.ActualMarginRight;
+                            }
+                        }
+                    }
+
+                }
+
+                if (i > 0 && i < RelatedBoxes.Count - 1 || RelatedBoxes[i].IsInlineBlock)
+                {
+                    var box = RelatedBoxes[i];
+                    var rectangle = Rectangles[RelatedBoxes[i]];
+
+                    var leftOffset = box.ActualBorderLeftWidth + box.ActualPaddingLeft;
+                    rectangle.X -= leftOffset;
+                    rectangle.Width += leftOffset;
+                    leftOffset += box.ActualMarginLeft;
+
+                    var rightOffset = box.ActualBorderRightWidth + box.ActualPaddingRight;
+                    rectangle.Width += rightOffset;
+                    rightOffset += box.ActualMarginRight;
+
+                    Rectangles[box] = rectangle;
+
+                    while (box.ParentBox != null && box.ParentBox.IsInline)
+                    {
+                        box = box.parentBox;
+                        rectangle = Rectangles[box];
+
+                        leftOffset += box.ActualBorderLeftWidth + box.ActualPaddingLeft;
+                        rectangle.X -= leftOffset;
+                        rectangle.Width += leftOffset;
+                        leftOffset += box.ActualMarginLeft;
+
+                        rightOffset += box.ActualBorderRightWidth + box.ActualPaddingRight;
+                        rectangle.Width += rightOffset;
+                        rightOffset += box.ActualMarginRight;
+
+                        Rectangles[box] = rectangle;
+                    }
+
+                }
+            }
+        }
+
+
+        internal void SetVerticalOffsets()
+        {
+            for (int i = 0; i < RelatedBoxes.Count; i++)
+            {
+                var box = RelatedBoxes[i];
+                var rectangle = Rectangles[RelatedBoxes[i]];
+
+                var topOffset = box.ActualBorderTopWidth + box.ActualPaddingTop;
+                rectangle.Y -= topOffset;
+                rectangle.Height += topOffset;
+                topOffset += box.ActualMarginTop;
+
+                var bottomOffset = box.ActualBorderBottomWidth + box.ActualPaddingBottom;
+                rectangle.Height += bottomOffset;
+                bottomOffset += box.ActualMarginBottom;
+
+                Rectangles[RelatedBoxes[i]] = rectangle;
+
+                while (box.ParentBox != null && box.ParentBox.IsInline)
+                {
+                    box = box.parentBox;
+                    rectangle = Rectangles[box];
+
+                    topOffset += box.ActualBorderTopWidth + box.ActualPaddingTop;
+                    rectangle.Y -= topOffset;
+                    rectangle.Height += topOffset;
+                    topOffset += box.ActualMarginTop;
+
+                    bottomOffset = box.ActualBorderBottomWidth + box.ActualPaddingBottom;
+                    rectangle.Height += bottomOffset;
+                    bottomOffset += box.ActualMarginBottom;
+
+                    Rectangles[box] = rectangle;
+                }
+            }
+        }
+
         /// <summary>
         /// Copies the rectangles to their specified box
         /// </summary>
@@ -228,11 +373,11 @@ namespace UHtml.Core.Dom
         {
             foreach (CssBox b in Rectangles.Keys)
             {
-                if(b.IsInline)
+                if (b.IsInline)
                 {
                     b.Rectangles.Add(this, Rectangles[b]);
                 }
-               
+
             }
         }
 
@@ -274,13 +419,16 @@ namespace UHtml.Core.Dom
             if (b.IsInline)
             {
                 r.Y += diff;
+                Rectangles[b] = r;
 
-                while(Rectangles.ContainsKey(b.parentBox) && b.ParentBox.IsInline)
+                while (Rectangles.ContainsKey(b.parentBox) && b.ParentBox.IsInline)
                 {
                     b = b.parentBox;
                     r = Rectangles[b];
 
                     r.Y += diff;
+
+                    Rectangles[b] = r;
                 }
             }
 
@@ -296,6 +444,23 @@ namespace UHtml.Core.Dom
 
             currentBox.Location = new RPoint(currentBox.Location.X, currentBox.Location.Y + yDiff);
 
+            //needed? since currentBox.Rectangles should do this anyway
+            foreach(var lineBox in currentBox.LineBoxes)
+            {
+                foreach(var kvPair in lineBox.Rectangles.ToList())
+                {
+                    var rectangle = kvPair.Value;
+                    rectangle.Y += yDiff;
+                    lineBox.Rectangles[kvPair.Key] = rectangle;
+                }
+            }
+
+            foreach (var kvPair in currentBox.Rectangles.ToList())
+            {
+                var rectangle = kvPair.Value;
+                rectangle.Y += yDiff;
+                currentBox.Rectangles[kvPair.Key] = rectangle;
+            }
 
             if (currentBox.Words.Count > 0)
             {
@@ -305,7 +470,6 @@ namespace UHtml.Core.Dom
                     word.Top = word.Top + yDiff;
                 }
             }
-
 
             foreach (var box in currentBox.Boxes)
             {
@@ -345,5 +509,7 @@ namespace UHtml.Core.Dom
             }
             return string.Join(" ", ws);
         }
+
+
     }
 }

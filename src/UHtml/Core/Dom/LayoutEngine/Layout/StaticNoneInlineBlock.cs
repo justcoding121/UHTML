@@ -201,13 +201,20 @@ namespace UHtml.Core.Dom
         {
             currentBox.Location = new RPoint(currentBox.Location.X - xDiff, currentBox.Location.Y - yDiff);
 
-            if (currentBox.Words.Count > 0)
+            foreach (var word in currentBox.Words)
             {
-                foreach (var word in currentBox.Words)
-                {
-                    word.Left -= xDiff;
-                    word.Top -= yDiff;
-                }
+                word.Left -= xDiff;
+                word.Top -= yDiff;
+            }
+
+            foreach (var kvPair in currentBox.Rectangles.Select(x => new Tuple<CssLineBox, RRect>(x.Key, x.Value)).ToList())
+            {
+                var rectangle = kvPair.Item2;
+
+                rectangle.X -= xDiff;
+                rectangle.Y -= yDiff;
+
+                currentBox.rectangles[kvPair.Item1] = rectangle;
             }
 
             foreach (var box in currentBox.Boxes)
@@ -249,10 +256,13 @@ namespace UHtml.Core.Dom
         {
             var currentBox = linebox.OwnerBox;
 
+            linebox.SetHorizontalOffsets();
             ApplyHorizontalAlignment(g, linebox);
             ApplyRightToLeft(currentBox, linebox);
+
+            linebox.SetVerticalOffsets();
             var result = ApplyVerticalAlignment(g, linebox);
-            //linebox.AssignRectanglesToBoxes();
+            linebox.AssignRectanglesToBoxes();
             return result;
         }
     }
